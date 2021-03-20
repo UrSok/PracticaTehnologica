@@ -21,5 +21,5 @@ yarn package
 
 ## Documentation
 
-[React](https://reactjs.org/docs/getting-started.html)
-[React Router](https://reactrouter.com/web/guides/quick-start)
+* [React](https://reactjs.org/docs/getting-started.html)
+* [React Router](https://reactrouter.com/web/guides/quick-start)
