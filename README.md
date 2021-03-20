@@ -23,6 +23,7 @@ yarn package
 
 * [React](https://reactjs.org/docs/getting-started.html)
 * [React Router](https://reactrouter.com/web/guides/quick-start)
+* [React Pro Sidebar](https://github.com/azouaoui-med/react-pro-sidebar)
 
 ## Miscellaneous
 
