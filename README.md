@@ -1,7 +1,7 @@
 ## Install
 
-Instal node js.
-Use `yarn` in terminal in project folder to install all dependencies.
+* Instal node js.
+* Use `yarn` in terminal in project folder to install all dependencies.
 
 ## Starting Development
 
