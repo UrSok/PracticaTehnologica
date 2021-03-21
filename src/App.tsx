@@ -1,16 +1,38 @@
 import React from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import Home from './components/Home';
-import './App.global.css';
+import { ProSidebar, Menu, MenuItem } from 'react-pro-sidebar';
+import { Switch, Route, Link, useLocation } from 'react-router-dom';
+import Home from './pages/Home';
+import './App.global.scss';
+import Test from './pages/Test';
+import PagesData from './constant_data/PagesData';
 
 export default function App() {
+  const location = useLocation();
   return (
-    <Router>
+    <div className="App">
+      <ProSidebar>
+        <Menu iconShape="round">
+          {PagesData.map((item) => {
+            return (
+              <MenuItem
+                key={item.key}
+                active={location.pathname === item.path}
+                icon={
+                  location.pathname === item.path ? item.iconActive : item.icon
+                }
+              >
+                <Link to={item.path} />
+              </MenuItem>
+            );
+          })}
+        </Menu>
+      </ProSidebar>
       <div className="MainContent">
         <Switch>
-          <Route path="/" component={Home} />
+          <Route path={PagesData[0].path} exact component={Home} />
+          <Route path={PagesData[1].path} component={Test} />
         </Switch>
       </div>
-    </Router>
+    </div>
   );
 }

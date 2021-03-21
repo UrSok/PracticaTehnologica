@@ -1,10 +1,11 @@
 import React from 'react';
+import PageTitle from '../components/PageTitle';
 
 const Home: React.FC = () => {
   return (
     <div>
-      <div className="Hello">
-        <h2>Welcome home</h2>
+      <div className="Home">
+        <PageTitle PageName="Home" />
       </div>
     </div>
   );

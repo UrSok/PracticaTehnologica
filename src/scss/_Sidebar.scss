@@ -1,0 +1,40 @@
+$sidebar-bg-color: transparent !default;
+$sidebar-width: 100% !default;
+$icon-bg-color: transparent !default;
+$highlight-color: #ffffff !default;
+$icon-size: 1.6em !default;
+$sidebar-color: #dddddd !default;
+
+@import '~react-pro-sidebar/dist/scss/styles.scss';
+
+.pro-sidebar {
+  width: initial;
+  min-width: initial;
+  .pro-menu-item {
+    &:not(:first-child) {
+      margin-top: 5px;
+    }
+
+    .pro-inner-item {
+      padding: 2px 12px !important;
+      .pro-icon-wrapper {
+        margin: 0 !important;
+        padding: 13px !important;
+        border-radius: 10px !important;
+      }
+    }
+  }
+
+  .pro-icon svg {
+    width: 1.6em;
+    height: 1.6em;
+  }
+
+  .pro-menu-item.active {
+    .pro-inner-item {
+      .pro-icon-wrapper {
+        background-color: rgba(255, 255, 255, 0.178) !important;
+      }
+    }
+  }
+}
