@@ -1,5 +1,7 @@
 @import './scss/Variables';
 @import './scss/Sidebar';
+@import './scss/IconButton';
+@import './scss/MusicPlayerBar';
 
 body {
   margin: 0;
@@ -18,8 +20,12 @@ body {
   margin: 8px;
   margin-left: 0;
   width: 100%;
-  height: 100%;
-  padding: 20px;
+  height: 97vh;
   border-radius: 15px;
   box-shadow: 0 0 10px 3px #0000003b;
+  .Content {
+    overflow: scroll;
+    height: 300px;
+    padding: 20px;
+  }
 }

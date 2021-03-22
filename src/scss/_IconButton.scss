@@ -1,0 +1,16 @@
+.IconButton {
+  background-color: transparent;
+  border: none;
+  color: #f0f0f0;
+  padding: 12px 16px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.PlayPauseButton {
+  color: $accent-color;
+}
+
+.PlayPauseButton:hover {
+  color: $accent-color;
+}
