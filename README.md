@@ -1,6 +1,7 @@
 ## Install
 
-* Instal node js.
+* Install node js.
+* Use `npm install --global yarn` in terminal.
 * Use `yarn` in terminal in project folder to install all dependencies.
 
 ## Starting Development
@@ -24,6 +25,7 @@ yarn package
 * [React](https://reactjs.org/docs/getting-started.html)
 * [React Router](https://reactrouter.com/web/guides/quick-start)
 * [React Pro Sidebar](https://github.com/azouaoui-med/react-pro-sidebar)
+* [React Player](https://github.com/cookpete/react-player)
 
 ## Miscellaneous
 
