@@ -3,6 +3,8 @@ import { ProSidebar, Menu, MenuItem } from 'react-pro-sidebar';
 import { Switch, Route, Link, useLocation } from 'react-router-dom';
 import { PathData, PagesData } from './constants/RoutesInfo';
 import './App.global.scss';
+import Home from './pages/Home';
+import Test from './pages/Test';
 
 export default function App() {
   const location = useLocation();
@@ -28,8 +30,8 @@ export default function App() {
       <div className="MainContent">
         <div className="Content">
           <Switch>
-            <Route path={PathData.Home} exact />
-            <Route path={PathData.Test} />
+            <Route path={PathData.Home} exact component={Home} />
+            <Route path={PathData.Test} component={Test} />
           </Switch>
         </div>
       </div>
