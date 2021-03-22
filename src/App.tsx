@@ -5,6 +5,7 @@ import Home from './pages/Home';
 import './App.global.scss';
 import Test from './pages/Test';
 import PagesData from './constant_data/PagesData';
+import MusicPlayer from './components/MusicPlayer';
 
 export default function App() {
   const location = useLocation();
@@ -28,10 +29,13 @@ export default function App() {
         </Menu>
       </ProSidebar>
       <div className="MainContent">
-        <Switch>
-          <Route path={PagesData[0].path} exact component={Home} />
-          <Route path={PagesData[1].path} component={Test} />
-        </Switch>
+        <div className="Content">
+          <Switch>
+            <Route path={PagesData[0].path} exact component={Home} />
+            <Route path={PagesData[1].path} component={Test} />
+          </Switch>
+        </div>
+        <MusicPlayer />
       </div>
     </div>
   );
