@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 import React from 'react';
 import { ProSidebar, Menu, MenuItem } from 'react-pro-sidebar';
 import { Switch, Route, Link, useLocation } from 'react-router-dom';
@@ -9,6 +11,9 @@ import MusicPlayer from './components/MusicPlayer';
 
 export default function App() {
   const location = useLocation();
+  // const database = new Database();
+  // const insert = database.insert('test');
+  // const result = database.fetchAll();
   return (
     <div className="App">
       <ProSidebar>
