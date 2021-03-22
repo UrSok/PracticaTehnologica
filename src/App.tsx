@@ -5,6 +5,7 @@ import { PathData, PagesData } from './constants/RoutesInfo';
 import './App.global.scss';
 import Home from './pages/Home';
 import Test from './pages/Test';
+import MusicPlayer from './components/MusicPlayer';
 
 export default function App() {
   const location = useLocation();
@@ -34,6 +35,7 @@ export default function App() {
             <Route path={PathData.Test} component={Test} />
           </Switch>
         </div>
+        <MusicPlayer />
       </div>
     </div>
   );
