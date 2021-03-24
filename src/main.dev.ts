@@ -15,6 +15,7 @@ import { app, BrowserWindow, shell } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
+import AppDb from './data-access/Database';
 
 export default class AppUpdater {
   constructor() {
@@ -52,6 +53,11 @@ const installExtensions = async () => {
 };
 
 const createWindow = async () => {
+  // Database start
+
+  const db = AppDb.instance;
+  db.Migrate();
+
   if (
     process.env.NODE_ENV === 'development' ||
     process.env.DEBUG_PROD === 'true'

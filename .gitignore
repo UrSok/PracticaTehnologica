@@ -50,3 +50,4 @@ npm-debug.log.*
 *.scss.d.ts
 a.mp3
 src/main.prod.js.LICENSE.txt
+data.db
