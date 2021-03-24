@@ -54,7 +54,6 @@ const installExtensions = async () => {
 
 const createWindow = async () => {
   // Database start
-
   const db = AppDb.instance;
   db.Migrate();
 
