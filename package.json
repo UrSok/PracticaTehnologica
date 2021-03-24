@@ -260,6 +260,7 @@
     "react-router-dom": "^5.2.0",
     "regenerator-runtime": "^0.13.5",
     "source-map-support": "^0.5.19",
+    "sql-template-strings": "^2.2.2",
     "sqlite": "^4.0.19"
   },
   "devEngines": {
