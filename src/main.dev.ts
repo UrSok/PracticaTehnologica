@@ -14,9 +14,9 @@ import path from 'path';
 import { app, BrowserWindow, shell } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
+import fs from 'fs';
 import MenuBuilder from './menu';
 import AppDb from './data-access/Database';
-import MusicManager from './managers/MusicManager';
 
 export default class AppUpdater {
   constructor() {
@@ -54,12 +54,20 @@ const installExtensions = async () => {
 };
 
 const createWindow = async () => {
-  // Database start
-  const db = AppDb.instance;
-  db.Migrate();
+  // Logging
+  log.transports.file.resolvePath = () => {
+    return path.join('log.txt');
+  };
 
-  // For testing
-  new MusicManager().addMusicFromPath(path.join('/music'));
+  // Database start
+  await AppDb.init();
+
+  // Creathe the default library if it doesn't exist
+  fs.mkdir(path.join('music'), (error) => {
+    if (error === null) {
+      log.info('Default music library was created!');
+    }
+  });
 
   if (
     process.env.NODE_ENV === 'development' ||
