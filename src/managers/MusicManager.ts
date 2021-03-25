@@ -3,9 +3,11 @@
 /* eslint-disable promise/always-return */
 import { scanRecursively } from '@bartozzz/scan-dir';
 import path from 'path';
+import log from 'electron-log';
 import { Music, SrcType } from '../data-access/models/Music';
 import { NullMusic } from '../data-access/null-models/Music';
 import MusicRepository from '../data-access/repositories/MusicRepository';
+import LogLocation from '../constants/LogLocation';
 
 export default class MusicManager {
   musicRepository = new MusicRepository();
@@ -24,18 +26,24 @@ export default class MusicManager {
     const regExp = new RegExp('^.+[.mp3|.ogg|.wav]$');
     scanRecursively(localPath, (fpath) => {
       if (fpath.match(regExp)) {
+        const absolutePath = path.resolve(fpath);
         this.musicRepository
-          .srcExists(fpath)
+          .srcExists(absolutePath)
           .then((result) => {
+            log.info(
+              `${LogLocation.MusicManager} ${
+                result ? 'Found an old file' : 'Found a new file'
+              }: ${absolutePath}`
+            );
             if (!result) {
               this.musicRepository.add({
-                src: path.resolve(fpath),
+                src: absolutePath,
                 src_type: SrcType.Local,
               });
             }
           })
           .catch((reason) => {
-            console.log(reason);
+            log.error(`${LogLocation.MusicManager} ${reason}`);
           });
       }
     });
