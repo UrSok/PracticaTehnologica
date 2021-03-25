@@ -30,6 +30,7 @@ yarn package
 - [Node Sqlite](https://github.com/kriasoft/node-sqlite)
 - [SQL Template Strings](https://github.com/felixfbecker/node-sql-template-strings)
 - [Scan Dir](https://github.com/Bartozzz/scan-dir)
+- [Music Metadata](https://github.com/Borewit/music-metadata)
 
 ## Miscellaneous
 
