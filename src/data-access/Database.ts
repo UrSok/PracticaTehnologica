@@ -19,7 +19,8 @@ export default class AppDb {
     this._db.open();
   }
 
-  public Migrate() {
-    this._db.migrate();
+  static async init() {
+    AppDb.instance = new AppDb();
+    this.instance.db.migrate();
   }
 }
