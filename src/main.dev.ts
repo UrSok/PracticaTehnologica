@@ -16,6 +16,7 @@ import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import AppDb from './data-access/Database';
+import MusicManager from './managers/MusicManager';
 
 export default class AppUpdater {
   constructor() {
@@ -56,6 +57,9 @@ const createWindow = async () => {
   // Database start
   const db = AppDb.instance;
   db.Migrate();
+
+  // For testing
+  new MusicManager().addMusicFromPath(path.join('/music'));
 
   if (
     process.env.NODE_ENV === 'development' ||
