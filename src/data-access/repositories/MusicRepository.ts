@@ -57,4 +57,17 @@ export default class MusicRepository {
       return NullMusic;
     }
   }
+
+  public async srcExists(src: string): Promise<boolean> {
+    try {
+      const { db } = this.appDb;
+      const result = await db.get<Music>(
+        SQL`SELECT * FROM Music WHERE src LIKE ${src}`
+      );
+      if (result === undefined) return false;
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
 }
