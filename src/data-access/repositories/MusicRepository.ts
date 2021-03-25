@@ -1,21 +1,27 @@
+/* eslint-disable promise/catch-or-return */
+import log from 'electron-log';
 import SQL from 'sql-template-strings';
+import LogLocation from '../../constants/LogLocation';
 import AppDb from '../Database';
-import { MusicNoId, Music } from '../models/Music';
+import { MusicNoId, Music, SrcType } from '../models/Music';
 import { NullMusic } from '../null-models/Music';
 
 export default class MusicRepository {
   appDb = AppDb.instance;
 
   public add(music: MusicNoId): boolean {
-    try {
-      const { db } = this.appDb;
-      db.run(
-        SQL`INSERT INTO Music(src, src_type) VALUES(${music.src}, ${music.src_type})`
-      );
-      return true;
-    } catch (error) {
-      return false;
-    }
+    const { db } = this.appDb;
+    let result = false;
+    db.run(
+      SQL`INSERT INTO Music(src, src_type) VALUES(${music.src}, ${music.src_type})`
+    )
+      .catch((reason) => {
+        log.info(`${LogLocation.MusicRepository} ${reason}`);
+      })
+      .finally(() => {
+        result = true;
+      });
+    return result;
   }
 
   public async getAll(): Promise<Music[]> {
