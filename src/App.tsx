@@ -7,6 +7,7 @@ import Home from './pages/Home';
 import Test from './pages/Test';
 import MusicPlayer from './components/MusicPlayer';
 import MusicManager from './managers/MusicManager';
+import RecentlyPlayed from './pages/RecentlyPlayed';
 
 export default function App() {
   const location = useLocation();
@@ -36,7 +37,7 @@ export default function App() {
         <div className="Content">
           <Switch>
             <Route path={PathData.Home} exact component={Home} />
-            <Route path={PathData.Test} component={Test} />
+            <Route path={PathData.RecentlyPlayed} component={RecentlyPlayed} />
           </Switch>
         </div>
         <MusicPlayer />
