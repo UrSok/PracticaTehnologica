@@ -65,7 +65,8 @@ export default class MusicPlayer extends React.Component<Props, State> {
         <ReactPlayer url={src} playing={playing} width="0" height="0" />
         <div className="MusicPlayerBar">
           <IconButton
-            icon={<BsIcons.BsSkipBackwardFill />}
+            icon={<BsIcons.BsFillSkipStartFill size="1.5em" />}
+            className="HoverIconButton"
             onClick={this.hadlePrevSong}
           />
           <IconButton
@@ -76,14 +77,24 @@ export default class MusicPlayer extends React.Component<Props, State> {
                 <BsIcons.BsPlayFill size="3em" />
               )
             }
-            className="PlayPauseButton"
+            className="HoverIconButton"
             onClick={this.handlePlayPause}
           />
           <IconButton
-            icon={<BsIcons.BsSkipForwardFill />}
+            icon={<BsIcons.BsFillSkipEndFill size="1.5em" />}
+            className="HoverIconButton"
             onClick={this.hadleNextSong}
           />
-          <p>{src}</p>
+          <IconButton
+            icon={<BsIcons.BsShuffle size="1em" />}
+            className="HoverIconButton"
+            onClick={this.handlePlayPause}
+          />
+          <IconButton
+            icon={<BsIcons.BsArrowRepeat size="1em" />}
+            className="HoverIconButton"
+            onClick={this.handlePlayPause}
+          />
         </div>
       </>
     );
