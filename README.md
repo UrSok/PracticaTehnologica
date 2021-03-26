@@ -1,7 +1,8 @@
 ## Install
 
-- Install node js.
-- Install python.
+- Install Node.js.
+- Install Python.
+- Install Visual Studio and choose C++ Build Tools in installer.
 - Use `npm install --global yarn` in terminal.
 - Use `yarn` in terminal in project folder to install all dependencies.
 
@@ -21,7 +22,7 @@ To package apps for the local platform:
 yarn package
 ```
 
-## Documentation
+## Libraries Documentation
 
 - [React](https://reactjs.org/docs/getting-started.html)
 - [React Router](https://reactrouter.com/web/guides/quick-start)
@@ -32,7 +33,13 @@ yarn package
 - [SQL Template Strings](https://github.com/felixfbecker/node-sql-template-strings)
 - [Scan Dir](https://github.com/Bartozzz/scan-dir)
 - [Music Metadata](https://github.com/Borewit/music-metadata)
+- [Sqlite3](https://github.com/mapbox/node-sqlite3)
+- [Sqlite Client](https://github.com/kriasoft/node-sqlite)
+- [Rc Scrollbars](https://github.com/sakhnyuk/rc-scrollbars)
 
 ## Miscellaneous
 
 - [React Components Examples](https://reactjsexample.com/)
+- [React Typescript Cheatsheet](https://react-typescript-cheatsheet.netlify.app/)
+- [React Typescript Cheatsheet(alternative)](https://github.com/typescript-cheatsheets/react)
+- [Typescript Documentation](https://www.typescriptlang.org/docs/)
