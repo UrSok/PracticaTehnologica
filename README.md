@@ -35,6 +35,7 @@ yarn package
 - [Music Metadata](https://github.com/Borewit/music-metadata)
 - [Sqlite3](https://github.com/mapbox/node-sqlite3)
 - [Sqlite Client](https://github.com/kriasoft/node-sqlite)
+- [Rc Scrollbars](https://github.com/sakhnyuk/rc-scrollbars)
 
 ## Miscellaneous
 
