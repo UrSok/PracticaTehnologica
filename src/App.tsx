@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { ProSidebar, Menu, MenuItem } from 'react-pro-sidebar';
-import { Switch, Route, Link, useLocation } from 'react-router-dom';
+import { Switch, Route, Link, useLocation, Redirect } from 'react-router-dom';
+import { Scrollbars } from 'rc-scrollbars';
 import { PathData, PagesData } from './constants/RoutesInfo';
 import './App.global.scss';
 import Home from './pages/Home';
-import Test from './pages/Test';
 import MusicPlayer from './components/MusicPlayer';
 import MusicManager from './managers/MusicManager';
 import RecentlyPlayed from './pages/RecentlyPlayed';
@@ -16,6 +16,7 @@ export default function App() {
   }, []);
   return (
     <div className="App">
+      <Redirect to="/" />
       <ProSidebar>
         <Menu iconShape="round">
           {PagesData.map((item) => {
@@ -34,12 +35,17 @@ export default function App() {
         </Menu>
       </ProSidebar>
       <div className="MainContent">
-        <div className="Content">
-          <Switch>
-            <Route path={PathData.Home} exact component={Home} />
-            <Route path={PathData.RecentlyPlayed} component={RecentlyPlayed} />
-          </Switch>
-        </div>
+        <Scrollbars autoHide>
+          <div className="Content">
+            <Switch>
+              <Route path={PathData.Home} exact component={Home} />
+              <Route
+                path={PathData.RecentlyPlayed}
+                component={RecentlyPlayed}
+              />
+            </Switch>
+          </div>
+        </Scrollbars>
         <MusicPlayer />
       </div>
     </div>

@@ -3,6 +3,13 @@
 @import './scss/IconButton';
 @import './scss/MusicPlayerBar';
 
+body,
+html,
+#root,
+.App {
+  height: 100%;
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -18,36 +25,17 @@ body {
 
 .MainContent {
   background-color: $main-content-bg-color;
-  margin: 8px;
-  margin-left: 0;
   width: 100%;
-  height: inherit;
+  margin: 10px;
+  margin-left: 0;
   border-radius: 15px;
   box-shadow: 0 0 10px 3px #0000003b;
-
-  .Content {
-    overflow-y: scroll;
-    height: 500px;
-    position: inherit;
-    padding: 20px;
-
-    /*Thinner scrollbar*/
-    /* &::-webkit-scrollbar {
-      height: 6px !important;
-      width: 6px !important;
-      background-color: transparent;
-    } */
-
-    /*Round corner scrollbar*/
-    &::-webkit-scrollbar-thumb {
-      border-radius: 3px !important;
+  position: relative;
+  .rc-scrollbars-container {
+    height: calc(100% - #{$player-height}) !important;
+    border-radius: 15px;
+    .Content {
+      padding: 20px;
     }
-
-    /*Hide top and bottom buttons of scrollbar */
-    /*who uses those, lol*/
-    &::-webkit-scrollbar-button {
-      display: none !important;
-    }
-    // overflow-y: hidden;
   }
 }
