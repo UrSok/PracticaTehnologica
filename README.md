@@ -1,6 +1,7 @@
 ## Install
 
 - Install node js.
+- Install python.
 - Use `npm install --global yarn` in terminal.
 - Use `yarn` in terminal in project folder to install all dependencies.
 
