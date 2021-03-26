@@ -1,9 +1,13 @@
 import React from 'react';
 import * as BsIcons from 'react-icons/bs';
+import * as RiIcons from 'react-icons/ri';
 
 export enum PathData {
   Home = '/',
-  Test = '/test',
+  RecentlyPlayed = '/recently',
+  MainLibrary = '/mainlibrary',
+  Albums = '/albums',
+  Artists = '/artists',
 }
 
 export const PagesData = [
@@ -15,10 +19,31 @@ export const PagesData = [
     iconActive: <BsIcons.BsHouseFill />,
   },
   {
-    key: 'test',
-    title: 'Test',
-    path: PathData.Test,
-    icon: <BsIcons.BsImage />,
-    iconActive: <BsIcons.BsImageFill />,
+    key: 'recentlyPlayed',
+    title: 'Recently Played',
+    path: PathData.RecentlyPlayed,
+    icon: <BsIcons.BsClock />,
+    iconActive: <BsIcons.BsClockFill />,
+  },
+  {
+    key: 'mainLibrary',
+    title: 'Main Library',
+    path: PathData.MainLibrary,
+    icon: <BsIcons.BsCollectionPlay />,
+    iconActive: <BsIcons.BsCollectionPlayFill />,
+  },
+  {
+    key: 'albums',
+    title: 'Albums',
+    path: PathData.Albums,
+    icon: <RiIcons.RiDiscLine />,
+    iconActive: <RiIcons.RiDiscFill />,
+  },
+  {
+    key: 'artists',
+    title: 'Artists',
+    path: PathData.Artists,
+    icon: <BsIcons.BsPerson />,
+    iconActive: <BsIcons.BsPersonFill />,
   },
 ];
