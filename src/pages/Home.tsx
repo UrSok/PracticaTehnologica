@@ -6,60 +6,25 @@ const Home: React.FC = () => {
     <div>
       <div className="Home">
         <PageTitle PageName="Home" />
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut nihil
-          suscipit rerum dolore ipsum ex nostrum corrupti expedita, praesentium
-          ea provident ipsa sunt fuga recusandae maxime, aperiam blanditiis
-          necessitatibus sint.
-        </p>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut nihil
-          suscipit rerum dolore ipsum ex nostrum corrupti expedita, praesentium
-          ea provident ipsa sunt fuga recusandae maxime, aperiam blanditiis
-          necessitatibus sint.
-        </p>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut nihil
-          suscipit rerum dolore ipsum ex nostrum corrupti expedita, praesentium
-          ea provident ipsa sunt fuga recusandae maxime, aperiam blanditiis
-          necessitatibus sint.
-        </p>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut nihil
-          suscipit rerum dolore ipsum ex nostrum corrupti expedita, praesentium
-          ea provident ipsa sunt fuga recusandae maxime, aperiam blanditiis
-          necessitatibus sint.
-        </p>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut nihil
-          suscipit rerum dolore ipsum ex nostrum corrupti expedita, praesentium
-          ea provident ipsa sunt fuga recusandae maxime, aperiam blanditiis
-          necessitatibus sint.
-        </p>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut nihil
-          suscipit rerum dolore ipsum ex nostrum corrupti expedita, praesentium
-          ea provident ipsa sunt fuga recusandae maxime, aperiam blanditiis
-          necessitatibus sint.
-        </p>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut nihil
-          suscipit rerum dolore ipsum ex nostrum corrupti expedita, praesentium
-          ea provident ipsa sunt fuga recusandae maxime, aperiam blanditiis
-          necessitatibus sint.
-        </p>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut nihil
-          suscipit rerum dolore ipsum ex nostrum corrupti expedita, praesentium
-          ea provident ipsa sunt fuga recusandae maxime, aperiam blanditiis
-          necessitatibus sint.
-        </p>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut nihil
-          suscipit rerum dolore ipsum ex nostrum corrupti expedita, praesentium
-          ea provident ipsa sunt fuga recusandae maxime, aperiam blanditiis
-          necessitatibus sint.
-        </p>
+        <p>Hot new releases</p>
+        <div className="Card">
+          <div>
+            <img
+              width="250"
+              height="250"
+              src="https://github.com/morpheusthewhite/spicetify-themes/raw/master/Dribbblish/base.png"
+              alt="test"
+            />
+          </div>
+          <div>
+            <img
+              width="250"
+              height="250"
+              src="https://github.com/morpheusthewhite/spicetify-themes/raw/master/Dribbblish/base.png"
+              alt="test"
+            />
+          </div>
+        </div>
       </div>
     </div>
   );
