@@ -1,7 +1,10 @@
 .MusicPlayerBar {
-  width: 100%;
+  width: fit-content;
   height: 70px;
-  background-color: red;
-  border-bottom-left-radius: inherit;
-  border-bottom-right-radius: inherit;
+  position: fixed;
+  bottom: 10px;
+  padding-left: 20px;
+  background-color: $main-content-bg-color;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
 }
