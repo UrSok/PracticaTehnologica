@@ -1,10 +1,8 @@
 .MusicPlayerBar {
   height: $player-height;
-  position: absolute;
   display: block;
+  position: relative;
   width: 100%;
-  left: 20px;
-  bottom: 0;
   border-bottom-left-radius: inherit;
   border-bottom-right-radius: inherit;
 }

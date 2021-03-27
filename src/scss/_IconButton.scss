@@ -7,6 +7,9 @@
   vertical-align: middle;
   // cursor: pointer;
 }
+.IconButton:focus {
+  outline: none;
+}
 
 .HoverIconButton:hover {
   color: $play-button-hover;

@@ -1,9 +1,12 @@
+/* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable promise/always-return */
 /* eslint-disable promise/catch-or-return */
 import React from 'react';
 import ReactPlayer from 'react-player';
 import * as BsIcons from 'react-icons/bs';
 import * as MdIcons from 'react-icons/md';
+import Slider, { createSliderWithTooltip } from 'rc-slider';
+import 'rc-slider/assets/index.css';
 import IconButton from './IconButton';
 import MusicManager from '../managers/MusicManager';
 import { NullMusic } from '../data-access/null-models/Music';
@@ -15,10 +18,16 @@ interface Props {
 interface State {
   playing: boolean;
   src: string;
+  played: number;
+  durationSeconds: number;
+  seeking: boolean;
 }
-
+const SliderWithTooltip = createSliderWithTooltip(Slider);
 export default class MusicPlayer extends React.Component<Props, State> {
   musicManager = new MusicManager();
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  player: any;
 
   constructor(props: Props) {
     super(props);
@@ -26,8 +35,67 @@ export default class MusicPlayer extends React.Component<Props, State> {
     this.state = {
       playing: false,
       src: MusicManager.currentlyPlayingMusic.src,
+      played: 0,
+      seeking: false,
+      durationSeconds: 0,
     };
   }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ref = (player: any) => {
+    this.player = player;
+  };
+
+  getTimeString = (value: number): string => {
+    const hours = Math.trunc(value / 3600);
+    const minutes = Math.trunc((value % 3600) / 60);
+    const seconds = Math.trunc((value % 3600) % 60);
+    return `
+      ${hours > 1 ? `${hours}:` : ''}${minutes}:${
+      seconds < 10 ? `0${seconds}` : seconds
+    }
+    `;
+  };
+
+  handleStartSeeking = () => {
+    this.setState({ seeking: true });
+  };
+
+  handleSeekChange = (value: number) => {
+    this.setState({
+      played: value,
+    });
+  };
+
+  handleEndSeeking = (value: number) => {
+    this.setState({
+      seeking: false,
+      played: value,
+    });
+    this.player.seekTo(value);
+  };
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  handleProgress = (state: any) => {
+    const { seeking } = this.state;
+    if (!seeking) {
+      this.setState(state);
+    }
+  };
+
+  handleEnded = () => {
+    // check the if the loop current or loop queue is on.
+    this.musicManager.nextSong();
+    this.setState(() => ({
+      playing: true,
+      src: MusicManager.currentlyPlayingMusic.src,
+    }));
+  };
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  handleDuration = (duration: any) => {
+    this.setState({ durationSeconds: duration });
+  };
 
   handlePlayPause = () => {
     if (MusicManager.currentlyPlayingMusic === NullMusic) {
@@ -79,12 +147,33 @@ export default class MusicPlayer extends React.Component<Props, State> {
   };
 
   render() {
-    const { playing } = this.state;
-    const { src } = this.state;
+    const { src, playing, played, durationSeconds } = this.state;
     return (
       <>
-        <ReactPlayer url={src} playing={playing} width="0" height="0" />
+        <ReactPlayer
+          ref={this.ref}
+          url={src}
+          playing={playing}
+          width="0"
+          height="0"
+          onDuration={this.handleDuration}
+          onProgress={this.handleProgress}
+          onEnded={this.handleEnded}
+        />
         <div className="MusicPlayerBar">
+          <SliderWithTooltip
+            min={0}
+            max={0.9999999}
+            step={0.000001}
+            value={played}
+            className="ProgressBar"
+            tipFormatter={() =>
+              `${this.getTimeString(played * durationSeconds)}`
+            }
+            onBeforeChange={this.handleStartSeeking}
+            onChange={this.handleSeekChange}
+            onAfterChange={this.handleEndSeeking}
+          />
           <IconButton
             icon={<BsIcons.BsFillSkipStartFill size="1.5em" />}
             className="HoverIconButton"
@@ -125,14 +214,6 @@ export default class MusicPlayer extends React.Component<Props, State> {
             icon={this.handleVolume(+this.getVolumeValue)}
             className="HoverIconButton"
             onClick={this.handlePlayPause}
-          />
-          <input
-            type="range"
-            id="volume-control"
-            name="volume"
-            min="0"
-            max="100"
-            // onInput="setVolumeValue(this.value)"
           />
         </div>
       </>
