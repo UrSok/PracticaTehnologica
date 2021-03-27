@@ -1,9 +1,17 @@
 import React from 'react';
+// import Grid from '@material-ui/core/Grid';
+// import GridLayout from 'react-grid-layout';
 import PageTitle from '../components/PageTitle';
 
 const Home: React.FC = () => {
   return (
     <div>
+      {/* <Grid
+        container
+        direction="row"
+        justify="space-evenly"
+        alignItems="center"
+      > */}
       <div className="Home">
         <PageTitle PageName="Home" />
         <p>Hot new releases</p>
@@ -58,6 +66,7 @@ const Home: React.FC = () => {
           </div>
         </div>
       </div>
+      {/* </Grid> */}
     </div>
   );
 };

@@ -3,6 +3,7 @@
 import React from 'react';
 import ReactPlayer from 'react-player';
 import * as BsIcons from 'react-icons/bs';
+import * as MdIcons from 'react-icons/md';
 import IconButton from './IconButton';
 import MusicManager from '../managers/MusicManager';
 import { NullMusic } from '../data-access/null-models/Music';
@@ -57,6 +58,26 @@ export default class MusicPlayer extends React.Component<Props, State> {
     }));
   };
 
+  getVolumeValue = () => {
+    return (document.getElementById('volume-control') as HTMLInputElement)
+      .value;
+  };
+
+  // setVolumeValue = (val: string) => {
+  //   const slider = document.getElementById('volume-control');
+  //   slider?.innerHTML = val;
+  // };
+
+  handleVolume = (volume: number) => {
+    if (volume === 0) {
+      return <BsIcons.BsVolumeMute />;
+    }
+    if (volume > 0 && volume < 51) {
+      return <BsIcons.BsVolumeDown />;
+    }
+    return <BsIcons.BsVolumeUp />;
+  };
+
   render() {
     const { playing } = this.state;
     const { src } = this.state;
@@ -94,6 +115,24 @@ export default class MusicPlayer extends React.Component<Props, State> {
             icon={<BsIcons.BsArrowRepeat size="1em" />}
             className="HoverIconButton"
             onClick={this.handlePlayPause}
+          />
+          <IconButton
+            icon={<MdIcons.MdQueueMusic size="1em" />}
+            className="HoverIconButton"
+            onClick={this.handlePlayPause}
+          />
+          <IconButton
+            icon={this.handleVolume(+this.getVolumeValue)}
+            className="HoverIconButton"
+            onClick={this.handlePlayPause}
+          />
+          <input
+            type="range"
+            id="volume-control"
+            name="volume"
+            min="0"
+            max="100"
+            // onInput="setVolumeValue(this.value)"
           />
         </div>
       </>
