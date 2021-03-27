@@ -36,6 +36,7 @@ yarn package
 - [Sqlite3](https://github.com/mapbox/node-sqlite3)
 - [Sqlite Client](https://github.com/kriasoft/node-sqlite)
 - [Rc Scrollbars](https://github.com/sakhnyuk/rc-scrollbars)
+- [Rc Slider](https://github.com/react-component/slider)
 
 ## Miscellaneous
 
