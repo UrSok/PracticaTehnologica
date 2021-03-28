@@ -1,9 +1,9 @@
 $sidebar-bg-color: transparent !default;
 $sidebar-width: 100% !default;
 $icon-bg-color: transparent !default;
-$highlight-color: $accent-color !default;
+$highlight-color: $sidebar-item-fg-hover-color !default;
 $icon-size: 1.6em !default;
-$sidebar-color: #dddddd !default;
+$sidebar-color: $sidebar-item-fg-color !default;
 
 @import '~react-pro-sidebar/dist/scss/styles.scss';
 

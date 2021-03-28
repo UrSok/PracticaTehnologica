@@ -1,7 +1,8 @@
 @import './scss/Variables';
 @import './scss/Sidebar';
-@import './scss/IconButton';
+@import './scss/Buttons';
 @import './scss/MusicPlayerBar';
+@import './scss/Slider';
 
 body,
 html,
@@ -13,29 +14,36 @@ html,
 body {
   margin: 0;
   padding: 0;
-  background-color: $main-bg-color;
-  color: #f0f0f0;
+  background-color: $secondary-bg-color;
+  color: $secondary-fg-color;
   overflow: hidden;
 }
 
 .App {
   display: flex;
-  align-items: stretch;
 }
 
 .MainContent {
-  background-color: $main-content-bg-color;
+  background-color: $main-bg-color;
   width: 100%;
   margin: 10px;
   margin-left: 0;
   border-radius: 15px;
   box-shadow: 0 0 10px 3px #0000003b;
-  position: relative;
   .rc-scrollbars-container {
     height: calc(100% - #{$player-height}) !important;
     border-radius: 15px;
     .Content {
       padding: 20px;
     }
+  }
+}
+
+.rc-scrollbars-thumb {
+  opacity: 0.8;
+  &:hover,
+  &:active {
+    cursor: default !important;
+    background-color: $main-fg-color !important;
   }
 }
