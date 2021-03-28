@@ -5,4 +5,27 @@
   width: 100%;
   border-bottom-left-radius: inherit;
   border-bottom-right-radius: inherit;
+
+  .ControlsAndMusicInfo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+    padding: 0 15px;
+    .IconButton {
+      margin: 0 7px;
+    }
+    .LeftControls {
+    }
+    .RightControls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      .VolumeBarContainer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+    }
+  }
 }

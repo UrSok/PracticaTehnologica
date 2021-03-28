@@ -15,7 +15,7 @@
 .rc-slider-rail {
   position: absolute;
   width: 100%;
-  background-color: #97652c;
+  background-color: $slider-bg-color;
   height: 4px;
   border-radius: 6px;
 }
@@ -24,18 +24,17 @@
   left: 0;
   height: 4px;
   border-radius: 6px;
-  background-color: #f8b36b;
+  background-color: $main-fg-color;
 }
 .rc-slider-handle {
   position: absolute;
   display: block;
   width: 12px;
   height: 12px;
-  top: -4px;
   touch-action: pan-x;
-  background: #f8b36b;
+  background: $main-fg-color;
   border-radius: 50%;
-  border: 3px solid #f8b36b;
+  border: 3px solid $main-fg-color;
   box-shadow: 0 0 3px rgba(32, 32, 32, 0.4);
 }
 .rc-slider-handle:focus {
@@ -216,7 +215,7 @@
   padding: 4px 0 8px 0;
 }
 .rc-slider-tooltip-inner {
-  padding: 6px 2px;
+  padding: 6px;
   min-width: 24px;
   height: 24px;
   font-size: 12px;
@@ -224,9 +223,9 @@
   color: #fff;
   text-align: center;
   text-decoration: none;
-  background-color: #6c6c6c;
+  background-color: $tooltip-bg-color;
   border-radius: 6px;
-  box-shadow: 0 0 4px #d9d9d9;
+  box-shadow: 0 0 4px $main-fg-color;
 }
 .rc-slider-tooltip-arrow {
   position: absolute;
@@ -240,7 +239,7 @@
   left: 50%;
   margin-left: -4px;
   border-width: 4px 4px 0;
-  border-top-color: #6c6c6c;
+  border-top-color: $tooltip-bg-color;
 }
 
 // Custom styles
@@ -262,7 +261,9 @@ $animation-speed: 0.3s !default;
     transition: height $animation-speed;
   }
   .rc-slider-handle {
-    visibility: hidden;
+    top: -4px;
+    opacity: 0;
+    transition: opacity $animation-speed;
   }
 
   &:hover,
@@ -276,8 +277,25 @@ $animation-speed: 0.3s !default;
       transition: height $animation-speed;
     }
     .rc-slider-handle {
-      visibility: visible;
-      transition: visibility $animation-speed;
+      opacity: 1;
+      transition: opacity $animation-speed;
+    }
+  }
+}
+
+.VolumeBar {
+  width: 72px;
+  height: 16px;
+  .rc-slider-handle {
+    top: 0;
+    opacity: 0;
+    transition: opacity $animation-speed;
+  }
+  &:hover,
+  &:active {
+    .rc-slider-handle {
+      opacity: 1;
+      transition: opacity $animation-speed;
     }
   }
 }

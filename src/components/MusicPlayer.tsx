@@ -5,6 +5,7 @@ import React from 'react';
 import ReactPlayer from 'react-player';
 import * as BsIcons from 'react-icons/bs';
 import * as MdIcons from 'react-icons/md';
+import * as BiIcons from 'react-icons/bi';
 import Slider, { createSliderWithTooltip } from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import IconButton from './IconButton';
@@ -21,6 +22,8 @@ interface State {
   played: number;
   durationSeconds: number;
   seeking: boolean;
+  volume: number;
+  volumeBeforeMute: number;
 }
 const SliderWithTooltip = createSliderWithTooltip(Slider);
 export default class MusicPlayer extends React.Component<Props, State> {
@@ -36,8 +39,10 @@ export default class MusicPlayer extends React.Component<Props, State> {
       playing: false,
       src: MusicManager.currentlyPlayingMusic.src,
       played: 0,
-      seeking: false,
       durationSeconds: 0,
+      seeking: false,
+      volume: 0.5,
+      volumeBeforeMute: 0,
     };
   }
 
@@ -112,10 +117,10 @@ export default class MusicPlayer extends React.Component<Props, State> {
 
   hadleNextSong = () => {
     this.musicManager.nextSong();
-    this.setState(() => ({
+    this.setState({
       playing: true,
       src: MusicManager.currentlyPlayingMusic.src,
-    }));
+    });
   };
 
   hadlePrevSong = () => {
@@ -126,34 +131,34 @@ export default class MusicPlayer extends React.Component<Props, State> {
     }));
   };
 
-  getVolumeValue = () => {
-    return (document.getElementById('volume-control') as HTMLInputElement)
-      .value;
+  handleVolumeChange = (volume: number) => {
+    this.setState({ volume });
   };
 
-  // setVolumeValue = (val: string) => {
-  //   const slider = document.getElementById('volume-control');
-  //   slider?.innerHTML = val;
-  // };
-
-  handleVolume = (volume: number) => {
-    if (volume === 0) {
-      return <BsIcons.BsVolumeMute />;
+  handleMuteUnmute = () => {
+    const { volume, volumeBeforeMute } = this.state;
+    if (volumeBeforeMute === 0) {
+      this.setState({
+        volumeBeforeMute: volume,
+        volume: 0,
+      });
+    } else {
+      this.setState({
+        volumeBeforeMute: 0,
+        volume: volumeBeforeMute,
+      });
     }
-    if (volume > 0 && volume < 51) {
-      return <BsIcons.BsVolumeDown />;
-    }
-    return <BsIcons.BsVolumeUp />;
   };
 
   render() {
-    const { src, playing, played, durationSeconds } = this.state;
+    const { src, playing, played, durationSeconds, volume } = this.state;
     return (
       <>
         <ReactPlayer
           ref={this.ref}
           url={src}
           playing={playing}
+          volume={volume}
           width="0"
           height="0"
           onDuration={this.handleDuration}
@@ -174,47 +179,67 @@ export default class MusicPlayer extends React.Component<Props, State> {
             onChange={this.handleSeekChange}
             onAfterChange={this.handleEndSeeking}
           />
-          <IconButton
-            icon={<BsIcons.BsFillSkipStartFill size="1.5em" />}
-            className="HoverIconButton"
-            onClick={this.hadlePrevSong}
-          />
-          <IconButton
-            icon={
-              playing ? (
-                <BsIcons.BsPauseFill size="3em" />
-              ) : (
-                <BsIcons.BsPlayFill size="3em" />
-              )
-            }
-            className="HoverIconButton"
-            onClick={this.handlePlayPause}
-          />
-          <IconButton
-            icon={<BsIcons.BsFillSkipEndFill size="1.5em" />}
-            className="HoverIconButton"
-            onClick={this.hadleNextSong}
-          />
-          <IconButton
-            icon={<BsIcons.BsShuffle size="1em" />}
-            className="HoverIconButton"
-            onClick={this.handlePlayPause}
-          />
-          <IconButton
-            icon={<BsIcons.BsArrowRepeat size="1em" />}
-            className="HoverIconButton"
-            onClick={this.handlePlayPause}
-          />
-          <IconButton
-            icon={<MdIcons.MdQueueMusic size="1em" />}
-            className="HoverIconButton"
-            onClick={this.handlePlayPause}
-          />
-          <IconButton
-            icon={this.handleVolume(+this.getVolumeValue)}
-            className="HoverIconButton"
-            onClick={this.handlePlayPause}
-          />
+          <div className="ControlsAndMusicInfo">
+            <div className="LeftControls">
+              <IconButton
+                icon={<BsIcons.BsFillSkipStartFill className="icon" />}
+                onClick={this.hadlePrevSong}
+              />
+              <IconButton
+                icon={
+                  playing ? (
+                    <BsIcons.BsPauseFill className="icon" />
+                  ) : (
+                    <BsIcons.BsPlayFill className="icon" />
+                  )
+                }
+                className="PlayPauseButton"
+                onClick={this.handlePlayPause}
+              />
+              <IconButton
+                icon={<BsIcons.BsFillSkipEndFill className="icon" />}
+                onClick={this.hadleNextSong}
+              />
+              <IconButton
+                icon={<BiIcons.BiShuffle className="icon" />}
+                onClick={this.handlePlayPause}
+              />
+              <IconButton
+                icon={<BsIcons.BsArrowRepeat className="icon" />}
+                onClick={this.handlePlayPause}
+              />
+            </div>
+            <div className="RightControls">
+              <IconButton
+                icon={<MdIcons.MdQueueMusic className="icon" />}
+                onClick={this.handlePlayPause}
+              />
+              <div className="VolumeBarContainer">
+                <IconButton
+                  icon={
+                    // eslint-disable-next-line no-nested-ternary
+                    volume === 0 ? (
+                      <BsIcons.BsVolumeMute className="icon" />
+                    ) : volume < 0.51 ? (
+                      <BsIcons.BsVolumeDown className="icon" />
+                    ) : (
+                      <BsIcons.BsVolumeUp className="icon" />
+                    )
+                  }
+                  onClick={this.handleMuteUnmute}
+                />
+                <SliderWithTooltip
+                  min={0}
+                  max={1}
+                  step={0.01}
+                  className="VolumeBar"
+                  value={volume}
+                  tipFormatter={() => `${Math.trunc(volume * 100)}%`}
+                  onChange={this.handleVolumeChange}
+                />
+              </div>
+            </div>
+          </div>
         </div>
       </>
     );
