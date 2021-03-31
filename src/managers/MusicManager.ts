@@ -4,20 +4,21 @@
 import { scanRecursively } from '@bartozzz/scan-dir';
 import path from 'path';
 import log from 'electron-log';
-import { Music, SrcType } from '../data-access/models/Music';
-import { NullMusic } from '../data-access/null-models/Music';
+import * as musicMedatada from 'music-metadata';
+import { Music, MusicWithMetadata, SrcType } from '../data-access/models/Music';
+import { NullMusicWithMetadata } from '../data-access/null-models/Music';
 import MusicRepository from '../data-access/repositories/MusicRepository';
 import LogLocation from '../constants/LogLocation';
 
 export default class MusicManager {
   musicRepository = new MusicRepository();
 
-  static queue = new Array<Music>();
+  static queue = new Array<MusicWithMetadata>();
 
   static currentlyPlayingPosition = -1;
 
-  static get currentlyPlayingMusic(): Music {
-    if (MusicManager.queue.length === 0) return NullMusic;
+  static get currentlyPlayingMusic(): MusicWithMetadata {
+    if (MusicManager.queue.length === 0) return NullMusicWithMetadata;
     return MusicManager.queue[MusicManager.currentlyPlayingPosition];
   }
 
@@ -49,15 +50,48 @@ export default class MusicManager {
     });
   }
 
-  public async queueAll(): Promise<boolean> {
-    try {
-      const result = await this.musicRepository.getAll();
-      MusicManager.queue = result;
-      MusicManager.currentlyPlayingPosition = 0;
-      return true;
-    } catch (error) {
-      return false;
-    }
+  private getFileNameWithoutExtension(src: string) {
+    const fileNameWithExtenston = src.split('\\').reverse()[0];
+    const extenstion = fileNameWithExtenston.split('.').reverse()[0];
+    const fileName = fileNameWithExtenston.replace(`.${extenstion}`, '');
+    return fileName;
+  }
+
+  private async getMusicWithMetadata(music: Music): Promise<MusicWithMetadata> {
+    const metadata = await musicMedatada.parseFile(music.src);
+    return {
+      ...music,
+      title:
+        metadata.common.title !== undefined
+          ? metadata.common.title
+          : this.getFileNameWithoutExtension(music.src),
+      artists: metadata.common.artists,
+      album: metadata.common.album,
+      albumArt:
+        metadata.common.picture !== undefined
+          ? `data:${
+              metadata.common.picture[0].format
+            };base64,${metadata.common.picture[0].data.toString('base64')}`
+          : metadata.common.picture,
+    };
+  }
+
+  private async getMusicArrayWithMetadata(
+    musicList: Array<Music>
+  ): Promise<MusicWithMetadata[]> {
+    const result = await Promise.all(
+      musicList.map(async (music) => {
+        const musicWithMetadata = await this.getMusicWithMetadata(music);
+        return musicWithMetadata;
+      })
+    );
+    return result;
+  }
+
+  public async queueAll() {
+    const musicList = await this.musicRepository.getAll();
+    MusicManager.queue = await this.getMusicArrayWithMetadata(musicList);
+    MusicManager.currentlyPlayingPosition = 0;
   }
 
   public nextSong() {

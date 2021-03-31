@@ -12,10 +12,46 @@
     align-items: center;
     height: 100%;
     padding: 0 15px;
+    // background: radial-gradient(ellipse at right 50% bottom -80px, $main-bg-color-rgba, $main-bg-color 70%);
     .IconButton {
       margin: 0 7px;
     }
     .LeftControls {
+    }
+    .MusicInfo {
+      // Fix the positioning later
+      display: flex;
+      @media (max-width: 785px) {
+        width: 320px;
+      }
+      @media (max-width: 937px) {
+        width: 300px;
+      }
+      .AlbumArt {
+        width: $album-art-size;
+        height: $album-art-size;
+        border-radius: 3px;
+      }
+      .TextContainer {
+        margin-left: 12px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        white-space: nowrap;
+        overflow: hidden;
+        .Title {
+          font-size: 14px;
+          font-weight: 500;
+          font-size: 14px;
+          line-height: 20px;
+          letter-spacing: 0;
+        }
+        .ArtistAlbum {
+          font-size: 12px;
+          letter-spacing: 0.015em;
+          line-height: 18px;
+        }
+      }
     }
     .RightControls {
       display: flex;
