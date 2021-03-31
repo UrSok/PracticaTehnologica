@@ -37,6 +37,7 @@ yarn package
 - [Sqlite Client](https://github.com/kriasoft/node-sqlite)
 - [Rc Scrollbars](https://github.com/sakhnyuk/rc-scrollbars)
 - [Rc Slider](https://github.com/react-component/slider)
+- [Roboto Fontface](https://www.npmjs.com/package/roboto-fontface)
 
 ## Miscellaneous
 
