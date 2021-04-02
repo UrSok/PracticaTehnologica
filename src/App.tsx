@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import { ProSidebar, Menu, MenuItem } from 'react-pro-sidebar';
-import { Switch, Route, Link, useLocation, Redirect } from 'react-router-dom';
+import { Switch, Route, Link, useLocation, useHistory } from 'react-router-dom';
 import { Scrollbars } from 'rc-scrollbars';
+import * as Ioios from 'react-icons/io';
 import { PathData, PagesData } from './constants/RoutesInfo';
 import './App.global.scss';
 import Home from './pages/Home';
@@ -9,33 +10,51 @@ import MusicPlayer from './components/MusicPlayer';
 import MusicManager from './managers/MusicManager';
 import RecentlyPlayed from './pages/RecentlyPlayed';
 import MainLibrary from './pages/MainLibrary';
+import Queue from './pages/Queue';
+import Navigation from './utils/Navigation';
+import IconButton from './components/IconButton';
 
 export default function App() {
   const location = useLocation();
+  const history = useHistory();
+  if (!Navigation.history) {
+    Navigation.init(history);
+    Navigation.replace(PathData.Home);
+  }
   useEffect(() => {
     new MusicManager().addMusicFromPath('music');
   }, []);
+  // console.log(history);
   return (
     <div className="App">
-      <Redirect to="/" />
       <ProSidebar>
         <Menu iconShape="round">
           {PagesData.map((item) => {
+            const isActive = Navigation.currentLocationIs(item.path);
             return (
               <MenuItem
                 key={item.key}
-                active={location.pathname === item.path}
-                icon={
-                  location.pathname === item.path ? item.iconActive : item.icon
-                }
-              >
-                <Link to={item.path} />
-              </MenuItem>
+                active={isActive}
+                icon={isActive ? item.iconActive : item.icon}
+                onClick={() => Navigation.push(item.path)}
+              />
             );
           })}
         </Menu>
       </ProSidebar>
       <div className="MainContent">
+        <div className="HeaderBar">
+          <IconButton
+            icon={<Ioios.IoIosArrowBack className="icon" />}
+            onClick={() => Navigation.goBack()}
+            disabled={Navigation.isFirstVisitedLocation()}
+          />
+          <IconButton
+            icon={<Ioios.IoIosArrowForward className="icon" />}
+            onClick={() => Navigation.goForward()}
+            disabled={Navigation.isLastVisitedLocation()}
+          />
+        </div>
         <Scrollbars autoHide>
           <div className="Content">
             <Switch>
@@ -45,6 +64,7 @@ export default function App() {
                 component={RecentlyPlayed}
               />
               <Route path={PathData.MainLibrary} component={MainLibrary} />
+              <Route path={PathData.Queue} component={Queue} />
             </Switch>
           </div>
         </Scrollbars>

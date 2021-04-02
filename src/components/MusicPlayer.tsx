@@ -1,18 +1,21 @@
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable promise/always-return */
 /* eslint-disable promise/catch-or-return */
-import React from 'react';
+import React, { useContext } from 'react';
 import ReactPlayer from 'react-player';
 import * as BsIcons from 'react-icons/bs';
 import * as MdIcons from 'react-icons/md';
 import * as BiIcons from 'react-icons/bi';
 import Slider, { createSliderWithTooltip } from 'rc-slider';
+import { Link, useHistory, useLocation, withRouter } from 'react-router-dom';
 import 'rc-slider/assets/index.css';
 import IconButton from './IconButton';
 import MusicManager from '../managers/MusicManager';
 import { NullMusicWithMetadata } from '../data-access/null-models/Music';
 import { MusicWithMetadata } from '../data-access/models/Music';
 import noAlbumArt from '../../assets/no-album-art.png';
+import { PagesData, PathData, QueuePage } from '../constants/RoutesInfo';
+import Navigation from '../utils/Navigation';
 
 interface State {
   playing: boolean;
@@ -188,18 +191,25 @@ export default class MusicPlayer extends React.Component<{}, State> {
     }
   };
 
+  handleQueueVisibility = () => {
+    if (!Navigation.currentLocationIs(PathData.Queue)) {
+      Navigation.push(PathData.Queue);
+    } else {
+      Navigation.goBack();
+    }
+  };
+
   render() {
     const { src, playing, played, durationSeconds, volume } = this.state;
     const { artists, title, album, albumArt } = this.state;
     return (
       <>
         <ReactPlayer
+          style={{ display: 'none' }}
           ref={this.ref}
           url={src}
           playing={playing}
           volume={volume}
-          width="0" // change to display none in css
-          height="0"
           onDuration={this.handleDuration}
           onProgress={this.handleProgress}
           onEnded={this.handleEnded}
@@ -263,7 +273,7 @@ export default class MusicPlayer extends React.Component<{}, State> {
             <div className="RightControls">
               <IconButton
                 icon={<MdIcons.MdQueueMusic className="icon" />}
-                onClick={this.handlePlayPause}
+                onClick={this.handleQueueVisibility}
               />
               <div className="VolumeBarContainer">
                 <IconButton

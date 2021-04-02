@@ -1,7 +1,7 @@
 .IconButton {
   background-color: transparent;
   border: none;
-  color: $accent-color;
+  color: $secondary-fg-color;
   font-size: 16px;
   vertical-align: middle;
   padding: 0;
@@ -14,26 +14,44 @@
     outline: none;
   }
   &:hover {
-    color: $play-button-hover;
+    color: $main-fg-color;
+    cursor: default;
   }
 }
 
 .PlayPauseButton {
-  // color: $main-fg-color;
+  color: $main-fg-color;
   .icon {
     padding-top: 2px;
     width: 3em;
     height: 3em;
   }
-  /* &:hover {
-    color: $main-fg-color;
-  } */
+  &:hover {
+    .icon {
+      transform: scale(1.0625);
+    }
+  }
 }
 
 .VolumeButton {
-  // position: absolute;
-  // right: 20px;
   float: right;
   padding-top: 15px;
   padding-right: 20px;
+}
+
+.HeaderBar {
+  .IconButton {
+    color: $main-fg-color;
+    margin-right: 10px;
+    .icon {
+      width: 1.3em;
+      height: 1.3em;
+    }
+    &:hover {
+      color: $secondary-fg-color;
+    }
+    &:disabled {
+      color: $slider-bg-color;
+    }
+  }
 }
