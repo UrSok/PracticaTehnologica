@@ -10,11 +10,9 @@ import Slider, { createSliderWithTooltip } from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import IconButton from './IconButton';
 import MusicManager from '../managers/MusicManager';
-import { NullMusic } from '../data-access/null-models/Music';
-
-interface Props {
-  message?: string;
-}
+import { NullMusicWithMetadata } from '../data-access/null-models/Music';
+import { MusicWithMetadata } from '../data-access/models/Music';
+import noAlbumArt from '../../assets/no-album-art.png';
 
 interface State {
   playing: boolean;
@@ -24,25 +22,35 @@ interface State {
   seeking: boolean;
   volume: number;
   volumeBeforeMute: number;
+  title?: string;
+  artists?: string;
+  album?: string;
+  albumArt?: string;
 }
+
 const SliderWithTooltip = createSliderWithTooltip(Slider);
-export default class MusicPlayer extends React.Component<Props, State> {
+// eslint-disable-next-line @typescript-eslint/ban-types
+export default class MusicPlayer extends React.Component<{}, State> {
   musicManager = new MusicManager();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   player: any;
 
-  constructor(props: Props) {
-    super(props);
+  constructor() {
+    super({});
 
     this.state = {
       playing: false,
-      src: MusicManager.currentlyPlayingMusic.src,
+      src: '',
       played: 0,
       durationSeconds: 0,
       seeking: false,
       volume: 0.5,
       volumeBeforeMute: 0,
+      title: '',
+      artists: '',
+      album: '',
+      albumArt: '',
     };
   }
 
@@ -91,10 +99,12 @@ export default class MusicPlayer extends React.Component<Props, State> {
   handleEnded = () => {
     // check the if the loop current or loop queue is on.
     this.musicManager.nextSong();
+    const music = MusicManager.currentlyPlayingMusic;
     this.setState(() => ({
       playing: true,
-      src: MusicManager.currentlyPlayingMusic.src,
+      src: music.src,
     }));
+    this.showMetadata(music);
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -102,33 +112,61 @@ export default class MusicPlayer extends React.Component<Props, State> {
     this.setState({ durationSeconds: duration });
   };
 
-  handlePlayPause = () => {
-    if (MusicManager.currentlyPlayingMusic === NullMusic) {
-      this.musicManager.queueAll().then(() => {
-        this.setState({
-          src: MusicManager.currentlyPlayingMusic.src,
-        });
+  showMetadata = (music: MusicWithMetadata) => {
+    let artistsString: string;
+    if (music.artists !== undefined) {
+      artistsString = '';
+      music.artists.forEach((artist, index) => {
+        artistsString += `${artist}${
+          music.artists!.length - 1 !== index ? ', ' : ''
+        }`;
       });
     }
-    this.setState(({ playing }) => ({
+    this.setState(() => ({
+      title: music.title,
+      artists: artistsString,
+      album: music.album,
+      albumArt: music.albumArt !== undefined ? music.albumArt : noAlbumArt,
+    }));
+  };
+
+  handlePlayPause = () => {
+    const { playing } = this.state;
+    if (
+      !playing &&
+      MusicManager.currentlyPlayingMusic === NullMusicWithMetadata
+    ) {
+      this.musicManager.queueAll().then(() => {
+        const music = MusicManager.currentlyPlayingMusic;
+        this.setState(() => ({
+          src: music.src,
+        }));
+        this.showMetadata(music);
+      });
+    }
+    this.setState(() => ({
       playing: !playing,
     }));
   };
 
   hadleNextSong = () => {
     this.musicManager.nextSong();
+    const music = MusicManager.currentlyPlayingMusic;
     this.setState({
       playing: true,
-      src: MusicManager.currentlyPlayingMusic.src,
+      src: music.src,
     });
+    this.showMetadata(music);
   };
 
   hadlePrevSong = () => {
     this.musicManager.prevSong();
+    const music = MusicManager.currentlyPlayingMusic;
     this.setState(() => ({
       playing: true,
-      src: MusicManager.currentlyPlayingMusic.src,
+      src: music.src,
     }));
+    this.showMetadata(music);
   };
 
   handleVolumeChange = (volume: number) => {
@@ -152,6 +190,7 @@ export default class MusicPlayer extends React.Component<Props, State> {
 
   render() {
     const { src, playing, played, durationSeconds, volume } = this.state;
+    const { artists, title, album, albumArt } = this.state;
     return (
       <>
         <ReactPlayer
@@ -159,7 +198,7 @@ export default class MusicPlayer extends React.Component<Props, State> {
           url={src}
           playing={playing}
           volume={volume}
-          width="0"
+          width="0" // change to display none in css
           height="0"
           onDuration={this.handleDuration}
           onProgress={this.handleProgress}
@@ -209,6 +248,18 @@ export default class MusicPlayer extends React.Component<Props, State> {
                 onClick={this.handlePlayPause}
               />
             </div>
+            {MusicManager.currentlyPlayingMusic !== NullMusicWithMetadata && (
+              <div className="MusicInfo">
+                <img src={albumArt} alt="album-art" className="AlbumArt" />
+                <div className="TextContainer">
+                  <div className="Title">{title}</div>
+                  <div className="ArtistAlbum">
+                    {artists !== undefined ? `${artists} — ` : ''}
+                    {album}
+                  </div>
+                </div>
+              </div>
+            )}
             <div className="RightControls">
               <IconButton
                 icon={<MdIcons.MdQueueMusic className="icon" />}
