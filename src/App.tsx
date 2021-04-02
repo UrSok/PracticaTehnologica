@@ -8,6 +8,7 @@ import Home from './pages/Home';
 import MusicPlayer from './components/MusicPlayer';
 import MusicManager from './managers/MusicManager';
 import RecentlyPlayed from './pages/RecentlyPlayed';
+import MainLibrary from './pages/MainLibrary';
 
 export default function App() {
   const location = useLocation();
@@ -43,6 +44,7 @@ export default function App() {
                 path={PathData.RecentlyPlayed}
                 component={RecentlyPlayed}
               />
+              <Route path={PathData.MainLibrary} component={MainLibrary} />
             </Switch>
           </div>
         </Scrollbars>
