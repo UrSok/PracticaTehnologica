@@ -2,15 +2,24 @@ import React from 'react';
 import * as BsIcons from 'react-icons/bs';
 import * as RiIcons from 'react-icons/ri';
 
+interface PageData {
+  key: string;
+  title: string;
+  path: PathData;
+  icon?: JSX.Element;
+  iconActive?: JSX.Element;
+}
+
 export enum PathData {
   Home = '/',
   RecentlyPlayed = '/recently',
   MainLibrary = '/mainlibrary',
   Albums = '/albums',
   Artists = '/artists',
+  Queue = '/queue',
 }
 
-export const PagesData = [
+export const PagesData: PageData[] = [
   {
     key: 'home',
     title: 'Home',
@@ -47,3 +56,9 @@ export const PagesData = [
     iconActive: <BsIcons.BsPersonFill />,
   },
 ];
+
+export const QueuePage: PageData = {
+  key: 'queue',
+  title: 'Queue',
+  path: PathData.Queue,
+};
