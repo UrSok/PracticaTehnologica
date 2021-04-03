@@ -1,0 +1,20 @@
+.Table {
+  table {
+    width: 100%;
+
+    td:hover {
+      color: #ffb86c; // $main-fg-color
+    }
+
+    th {
+      top: 70px;
+      position: sticky;
+      text-align: left;
+    }
+
+    th,
+    td {
+      padding: 15px;
+    }
+  }
+}

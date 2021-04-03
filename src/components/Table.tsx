@@ -1,72 +1,36 @@
 import React from 'react';
+import { MusicWithMetadata } from '../data-access/models/Music';
+import '../scss/_Table.scss';
 
 interface Props {
-  message?: string;
+  musicList: MusicWithMetadata[];
 }
 
-interface State {
-  playlist: [
-    {
-      id: number;
-      title: string;
-      artist: string;
-      album: string;
-    }
-  ];
-}
-
-export default class Table extends React.Component<Props, State> {
+// eslint-disable-next-line @typescript-eslint/ban-types
+export default class Table extends React.Component<Props, {}> {
+  // eslint-disable-next-line @typescript-eslint/no-useless-constructor
   constructor(props: Props) {
     super(props);
-    this.state = {
-      playlist: [
-        {
-          id: 1,
-          title: 'Shape Of My Heart',
-          artist: 'Sting',
-          album: 'TST',
-        },
-        // {
-        //   id: 2,
-        //   title: 'Wind Of Change',
-        //   artist: 'Scorpions',
-        //   album: 'CW',
-        // },
-      ],
-    };
   }
 
   renderTableData() {
-    const { playlist } = this.state;
-    return playlist.map(
-      (
-        song: { id: number; title: string; artist: string; album: string }
-        // index: number
-      ) => {
-        const { id, title, artist, album } = song;
-        return (
-          <tr key={id}>
-            <td>{title}</td>
-            <td>{artist}</td>
-            <td>{album}</td>
-          </tr>
-        );
-      }
-    );
+    const { musicList } = this.props;
+    return musicList.map((song) => {
+      const { id, title, artists, album } = song;
+      return (
+        <tr key={id}>
+          <td>{title}</td>
+          <td>{artists}</td>
+          <td>{album}</td>
+        </tr>
+      );
+    });
   }
-
-  // renderTableHeader() {
-  //   const { playlist } = this.state;
-  //   const header = Object.keys(playlist[0]);
-  //   return header.map((key) => {
-  //     return <th key={playlist.id}>{key.toUpperCase()}</th>;
-  //   });
-  // }
 
   render() {
     return (
-      <div>
-        <table id="playlist">
+      <div className="Table">
+        <table>
           <thead>
             <tr>
               <th>TITLE</th>

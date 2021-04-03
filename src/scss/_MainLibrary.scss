@@ -1,44 +1,22 @@
-th,
-td {
-  padding: 15px;
-}
-
-th {
-  top: 70px;
+.StickyHeader {
+  top: '30px';
   position: sticky;
-  text-align: left;
-  background-color: #44475a;
-}
+  background-color: #44475a; // $main-bg-color
 
-td:hover {
-  color: #ffb86c;
-}
+  .Input {
+    padding-left: 15px;
 
-table {
-  width: 100%;
-}
-
-#input-container {
-  position: relative;
-}
-
-// #input-container >
-input {
-  background-color: #44475a;
-  border-radius: 0;
-  // background-image: url('https://github.com/morpheusthewhite/spicetify-themes/raw/master/Dribbblish/base.png');
-  background-position: 10px 10px;
-  background-repeat: no-repeat;
-  width: 90%;
-  // font-size: 16px;
-  padding: 12px 20px 12px 40px;
-  border: 1px solid #44475a;
-  border-bottom: 1px solid #ffb86c;
-  margin-bottom: 12px;
-}
-
-#input-container > IconButton {
-  position: absolute;
-  top: 12px;
-  left: 15px;
+    input {
+      background-color: #44475a; // $main-bg-color
+      border-radius: 0;
+      background-position: left;
+      background-repeat: no-repeat;
+      width: 90%;
+      // font-size: 16px;
+      padding: 12px 20px 12px 10px;
+      border: 1px solid #44475a;
+      border-bottom: 1px solid #ffb86c;
+      margin-bottom: 12px;
+    }
+  }
 }
