@@ -199,6 +199,51 @@ export default class MusicPlayer extends React.Component<{}, State> {
     }
   };
 
+  // handleRepeat = () => {
+  //   // while (true) {
+  //   const { played } = this.state;
+  //   const { durationSeconds } = this.state;
+  //   if (played === durationSeconds) {
+  //     const music = MusicManager.currentlyPlayingMusic;
+  //     // this.musicManager.queue = music;
+  //     this.setState(() => ({
+  //       played: 0,
+  //       playing: true,
+  //       src: music.src,
+  //     }));
+  //     this.showMetadata(music);
+  //   }
+  //   // }
+  // };
+
+  // handleShuffle = () => {
+  //   let position = MusicManager.currentlyPlayingPosition;
+  //   position = this.shuffleArray(MusicManager.queue);
+  //   const music = MusicManager.currentlyPlayingMusic;
+  //   this.setState(() => ({
+  //     playing: true,
+  //     src: music.src,
+  //   }));
+  //   this.showMetadata(music);
+  // };
+
+  // shuffleArray = (array: MusicWithMetadata[]) => {
+  //   let currentIndex = array.length;
+  //   let temporaryValue;
+  //   let randomIndex;
+  //   // While there remain elements to shuffle...
+  //   while (currentIndex !== 0) {
+  //     // Pick a remaining element...
+  //     randomIndex = Math.floor(Math.random() * currentIndex);
+  //     currentIndex -= 1;
+  //     // And swap it with the current element.
+  //     temporaryValue = array[currentIndex];
+  //     array[currentIndex] = array[randomIndex];
+  //     array[randomIndex] = temporaryValue;
+  //   }
+  //   return randomIndex;
+  // };
+
   render() {
     const { src, playing, played, durationSeconds, volume } = this.state;
     const { artists, title, album, albumArt } = this.state;
