@@ -7,14 +7,14 @@ import { PathData, PagesData } from './constants/RoutesInfo';
 import './App.global.scss';
 import Home from './pages/Home';
 import MusicPlayer from './components/MusicPlayer';
-import MusicManager from './managers/MusicManager';
+import MusicManager from './back-end/managers/MusicManager';
 import RecentlyPlayed from './pages/RecentlyPlayed';
 import MainLibrary from './pages/MainLibrary';
 import Queue from './pages/Queue';
 import Navigation from './utils/Navigation';
 import IconButton from './components/IconButton';
 import Settings from './pages/Settings';
-import LibraryManager from './managers/LibraryMananger';
+import LibraryManager from './back-end/managers/LibraryMananger';
 import { AppClassNames, ButtonsClassNames } from './constants/ClassNames';
 
 export default function App() {

@@ -6,9 +6,12 @@ import React from 'react';
 import Switch from 'react-switch';
 import * as IoIcons from 'react-icons/io5';
 import Button from '../Button';
-import LibraryManager from '../../managers/LibraryMananger';
+import LibraryManager from '../../back-end/managers/LibraryMananger';
 import SettingsSection from './SettingsSection';
-import { Library, LibraryNoPath } from '../../data-access/models/Library';
+import {
+  Library,
+  LibraryNoPath,
+} from '../../back-end/data-access/models/Library';
 import { AudioSourcesClassNames } from '../../constants/ClassNames';
 import IconButton from '../IconButton';
 

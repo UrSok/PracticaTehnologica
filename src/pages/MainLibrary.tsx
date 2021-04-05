@@ -3,7 +3,7 @@ import * as BsIcons from 'react-icons/bs';
 import PageTitle from '../components/PageTitle';
 import Table from '../components/Table';
 import { PagesClassNames } from '../constants/ClassNames';
-import MusicManager from '../managers/MusicManager';
+import MusicManager from '../back-end/managers/MusicManager';
 
 const MainLibrary: React.FC = () => {
   return (

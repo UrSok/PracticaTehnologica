@@ -8,11 +8,11 @@ import * as MdIcons from 'react-icons/md';
 import * as BiIcons from 'react-icons/bi';
 import Slider, { createSliderWithTooltip } from 'rc-slider';
 import IconButton from './IconButton';
-import MusicManager from '../managers/MusicManager';
+import MusicManager from '../back-end/managers/MusicManager';
 import {
   MusicWithMetadata,
   NullMusicWithMetadata,
-} from '../data-access/models/Music';
+} from '../back-end/data-access/models/Music';
 import noAlbumArt from '../../assets/no-album-art.png';
 import { PathData } from '../constants/RoutesInfo';
 import Navigation from '../utils/Navigation';
