@@ -1,0 +1,19 @@
+.AudioSource {
+  .Item {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    align-items: center;
+    &:not(:first-child) {
+      margin-top: 20px;
+    }
+    .PathInfo {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      .Path {
+        margin-left: 5px;
+      }
+    }
+  }
+}
