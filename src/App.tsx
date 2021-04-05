@@ -7,7 +7,6 @@ import { PathData, PagesData } from './constants/RoutesInfo';
 import './App.global.scss';
 import Home from './pages/Home';
 import MusicPlayer from './components/MusicPlayer';
-import MusicManager from './back-end/managers/MusicManager';
 import RecentlyPlayed from './pages/RecentlyPlayed';
 import MainLibrary from './pages/MainLibrary';
 import Queue from './pages/Queue';
