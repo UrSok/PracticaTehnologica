@@ -55,3 +55,36 @@
     }
   }
 }
+
+.Button {
+  background-color: $secondary-bg-color;
+  border: none;
+  color: $secondary-fg-color;
+  font-size: 16px;
+  padding: 5px 32px;
+  border-radius: 20px;
+  font-weight: 500;
+  box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.06), 0 1px 2px 0 rgba(0, 0, 0, 0.16);
+  &:focus {
+    outline: none;
+  }
+  &:hover {
+    background-color: $main-fg-color;
+  }
+}
+
+.AudioSource {
+  .Item {
+    .PathInfo {
+      .IconButton {
+        .icon {
+          width: 1em;
+          height: 1em;
+        }
+      }
+    }
+  }
+  .AddSourceButton {
+    margin-top: 10px !important;
+  }
+}
