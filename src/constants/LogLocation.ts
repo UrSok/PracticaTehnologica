@@ -1,7 +1,9 @@
 enum LogLocation {
+  Database = '[Database]',
   MusicRepository = '[MusicRepository]',
   MusicManager = '[MusicManager]',
-  Database = '[Database]',
+  LibraryRepository = '[LibraryRepository]',
+  LibraryManager = '[LibraryManager]',
 }
 
 export default LogLocation;
