@@ -1,4 +1,5 @@
 import React from 'react';
+import { ButtonsClassNames } from '../constants/ClassNames';
 
 interface Props {
   text: string;
@@ -13,7 +14,7 @@ const Button: React.FC<Props> = (props: Props) => {
   return (
     <button
       type="button"
-      className={`Button ${className}`}
+      className={`${ButtonsClassNames.Button} ${className}`}
       onClick={onClick}
       disabled={disabled}
     >

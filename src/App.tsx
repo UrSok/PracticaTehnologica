@@ -15,6 +15,7 @@ import Navigation from './utils/Navigation';
 import IconButton from './components/IconButton';
 import Settings from './pages/Settings';
 import LibraryManager from './managers/LibraryMananger';
+import { AppClassNames, ButtonsClassNames } from './constants/ClassNames';
 
 export default function App() {
   const location = useLocation();
@@ -28,7 +29,7 @@ export default function App() {
   }, []);
   // console.log(history);
   return (
-    <div className="App">
+    <div className={AppClassNames.Main}>
       <ProSidebar>
         <Menu iconShape="round">
           {PagesData.map((item) => {
@@ -44,21 +45,23 @@ export default function App() {
           })}
         </Menu>
       </ProSidebar>
-      <div className="MainContent">
-        <div className="HeaderBar">
+      <div className={AppClassNames.MainContent}>
+        <div className={AppClassNames.HeaderBar}>
           <IconButton
-            icon={<Ioios.IoIosArrowBack className="icon" />}
+            icon={<Ioios.IoIosArrowBack className={ButtonsClassNames.Icon} />}
             onClick={() => Navigation.goBack()}
             disabled={Navigation.isFirstVisitedLocation()}
           />
           <IconButton
-            icon={<Ioios.IoIosArrowForward className="icon" />}
+            icon={
+              <Ioios.IoIosArrowForward className={ButtonsClassNames.Icon} />
+            }
             onClick={() => Navigation.goForward()}
             disabled={Navigation.isLastVisitedLocation()}
           />
         </div>
         <Scrollbars autoHide>
-          <div className="Content">
+          <div className={AppClassNames.Content}>
             <Switch>
               <Route path={PathData.Home} exact component={Home} />
               <Route

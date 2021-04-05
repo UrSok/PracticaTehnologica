@@ -16,6 +16,7 @@ import { MusicWithMetadata } from '../data-access/models/Music';
 import noAlbumArt from '../../assets/no-album-art.png';
 import { PagesData, PathData, QueuePage } from '../constants/RoutesInfo';
 import Navigation from '../utils/Navigation';
+import { ButtonsClassNames } from '../constants/ClassNames';
 
 interface State {
   playing: boolean;
@@ -276,30 +277,40 @@ export default class MusicPlayer extends React.Component<{}, State> {
           <div className="ControlsAndMusicInfo">
             <div className="LeftControls">
               <IconButton
-                icon={<BsIcons.BsFillSkipStartFill className="icon" />}
+                icon={
+                  <BsIcons.BsFillSkipStartFill
+                    className={ButtonsClassNames.Icon}
+                  />
+                }
                 onClick={this.hadlePrevSong}
               />
               <IconButton
                 icon={
                   playing ? (
-                    <BsIcons.BsPauseFill className="icon" />
+                    <BsIcons.BsPauseFill className={ButtonsClassNames.Icon} />
                   ) : (
-                    <BsIcons.BsPlayFill className="icon" />
+                    <BsIcons.BsPlayFill className={ButtonsClassNames.Icon} />
                   )
                 }
                 className="PlayPauseButton"
                 onClick={this.handlePlayPause}
               />
               <IconButton
-                icon={<BsIcons.BsFillSkipEndFill className="icon" />}
+                icon={
+                  <BsIcons.BsFillSkipEndFill
+                    className={ButtonsClassNames.Icon}
+                  />
+                }
                 onClick={this.hadleNextSong}
               />
               <IconButton
-                icon={<BiIcons.BiShuffle className="icon" />}
+                icon={<BiIcons.BiShuffle className={ButtonsClassNames.Icon} />}
                 onClick={this.handlePlayPause}
               />
               <IconButton
-                icon={<BsIcons.BsArrowRepeat className="icon" />}
+                icon={
+                  <BsIcons.BsArrowRepeat className={ButtonsClassNames.Icon} />
+                }
                 onClick={this.handlePlayPause}
               />
             </div>
@@ -317,7 +328,9 @@ export default class MusicPlayer extends React.Component<{}, State> {
             )}
             <div className="RightControls">
               <IconButton
-                icon={<MdIcons.MdQueueMusic className="icon" />}
+                icon={
+                  <MdIcons.MdQueueMusic className={ButtonsClassNames.Icon} />
+                }
                 onClick={this.handleQueueVisibility}
               />
               <div className="VolumeBarContainer">
@@ -325,11 +338,15 @@ export default class MusicPlayer extends React.Component<{}, State> {
                   icon={
                     // eslint-disable-next-line no-nested-ternary
                     volume === 0 ? (
-                      <BsIcons.BsVolumeMute className="icon" />
+                      <BsIcons.BsVolumeMute
+                        className={ButtonsClassNames.Icon}
+                      />
                     ) : volume < 0.51 ? (
-                      <BsIcons.BsVolumeDown className="icon" />
+                      <BsIcons.BsVolumeDown
+                        className={ButtonsClassNames.Icon}
+                      />
                     ) : (
-                      <BsIcons.BsVolumeUp className="icon" />
+                      <BsIcons.BsVolumeUp className={ButtonsClassNames.Icon} />
                     )
                   }
                   onClick={this.handleMuteUnmute}

@@ -2,6 +2,7 @@ import React from 'react';
 // import Grid from '@material-ui/core/Grid';
 // import GridLayout from 'react-grid-layout';
 import PageTitle from '../components/PageTitle';
+import { PagesClassNames } from '../constants/ClassNames';
 
 const Home: React.FC = () => {
   return (
@@ -12,7 +13,7 @@ const Home: React.FC = () => {
         justify="space-evenly"
         alignItems="center"
       > */}
-      <div className="Home">
+      <div className={PagesClassNames.Home}>
         <PageTitle PageName="Home" />
         <p>Hot new releases</p>
         <div className="Card">

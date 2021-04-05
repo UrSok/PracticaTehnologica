@@ -1,6 +1,7 @@
 import React from 'react';
 import AudioSourcesSettings from '../components/settings/AudioSourcesSettings';
 import PageTitle from '../components/PageTitle';
+import { PagesClassNames } from '../constants/ClassNames';
 
 class Settings extends React.Component {
   constructor() {
@@ -9,7 +10,7 @@ class Settings extends React.Component {
 
   render() {
     return (
-      <div className="Settings">
+      <div className={PagesClassNames.Settings}>
         <PageTitle PageName="Settings" />
         <AudioSourcesSettings />
       </div>

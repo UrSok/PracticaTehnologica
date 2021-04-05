@@ -2,11 +2,12 @@ import React from 'react';
 // import Carousel, { Dots, slidesToShowPlugin } from '@brainhubeu/react-carousel';
 // import '@brainhubeu/react-carousel/lib/style.css';
 import PageTitle from '../components/PageTitle';
+import { PagesClassNames } from '../constants/ClassNames';
 
 const RecentlyPlayed: React.FC = () => {
   return (
     <div>
-      <div className="Home">
+      <div className={PagesClassNames.RecentlyPlayed}>
         <PageTitle PageName="Recently Played" />
 
         {/* <Carousel

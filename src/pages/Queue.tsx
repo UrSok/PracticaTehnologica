@@ -1,10 +1,11 @@
 import React from 'react';
 import PageTitle from '../components/PageTitle';
+import { PagesClassNames } from '../constants/ClassNames';
 
 const Queue: React.FC = () => {
   return (
     <div>
-      <div className="Queue">
+      <div className={PagesClassNames.Queue}>
         <PageTitle PageName="Queue" />
         <div className="Card">
           <div>

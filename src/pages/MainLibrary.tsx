@@ -2,11 +2,12 @@ import React from 'react';
 import * as BsIcons from 'react-icons/bs';
 import PageTitle from '../components/PageTitle';
 import Table from '../components/Table';
+import { PagesClassNames } from '../constants/ClassNames';
 import MusicManager from '../managers/MusicManager';
 
 const MainLibrary: React.FC = () => {
   return (
-    <div>
+    <div className={PagesClassNames.MainLibrary}>
       <div className="">
         <PageTitle PageName="Main Library" />
       </div>

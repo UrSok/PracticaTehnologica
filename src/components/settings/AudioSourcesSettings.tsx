@@ -9,7 +9,7 @@ import Button from '../Button';
 import LibraryManager from '../../managers/LibraryMananger';
 import SettingsSection from './SettingsSection';
 import { Library, LibraryNoPath } from '../../data-access/models/Library';
-import AudioSourcesClassName from '../../constants/ClassNames';
+import { AudioSourcesClassNames } from '../../constants/ClassNames';
 import IconButton from '../IconButton';
 
 interface State {
@@ -75,23 +75,24 @@ class AudioSourcesSettings extends React.Component<{}, State> {
     const { libraries: library } = this.state;
     return (
       <SettingsSection title="Audio files sources">
-        <div className={AudioSourcesClassName.main}>
+        <div className={AudioSourcesClassNames.Main}>
           {library.map((item) => {
             return (
-              <div key={item.id} className={AudioSourcesClassName.item}>
-                <div className={AudioSourcesClassName.pathControls}>
+              <div key={item.id} className={AudioSourcesClassNames.Item}>
+                <div className={AudioSourcesClassNames.PathControls}>
                   <IconButton
+                    className="OpenPathButton"
                     icon={<IoIcons.IoFolderOpenSharp className="icon" />}
                     onClick={() => {
                       this.handleOnPathClick(item.path);
                     }}
                   />
-                  <span className={AudioSourcesClassName.path}>
+                  <span className={AudioSourcesClassNames.Path}>
                     {item.path}
                   </span>
                 </div>
                 <Switch
-                  className={AudioSourcesClassName.switch}
+                  className={AudioSourcesClassNames.Switch}
                   id={`${item.id}`}
                   onChange={this.handleChange}
                   checked={item.active}
