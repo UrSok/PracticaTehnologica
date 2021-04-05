@@ -1,6 +1,5 @@
 import React from 'react';
 import { MusicWithMetadata } from '../data-access/models/Music';
-import '../scss/_Table.scss';
 
 interface Props {
   musicList: MusicWithMetadata[];
@@ -8,11 +7,6 @@ interface Props {
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export default class Table extends React.Component<Props, {}> {
-  // eslint-disable-next-line @typescript-eslint/no-useless-constructor
-  constructor(props: Props) {
-    super(props);
-  }
-
   renderTableData() {
     const { musicList } = this.props;
     return musicList.map((song) => {
