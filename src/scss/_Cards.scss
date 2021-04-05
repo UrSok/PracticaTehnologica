@@ -5,13 +5,12 @@
   // display:block;
   float: left;
   flex-direction: row !important;
-}
-
-img {
-  width: 200px;
-  height: 200px;
-  border-radius: 10px;
-  margin-bottom: 10px;
+  img {
+    width: 200px;
+    height: 200px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+  }
 }
 figure {
   margin-inline-start: 1em;
