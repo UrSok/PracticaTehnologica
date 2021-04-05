@@ -1,23 +1,23 @@
 import path from 'path';
 import { Library, LibraryNoPath } from '../data-access/models/Library';
 import LibraryRepository from '../data-access/repositories/LibraryRepository';
-import BaseManager from './BaseMananger';
 
-export default class LibraryManager extends BaseManager {
+export default class LibraryManager {
+  private repository = LibraryRepository.instance;
+
   static instance: LibraryManager = new LibraryManager();
 
-  private constructor() {
-    super(LibraryRepository.instance);
-  }
-
-  public addPath(localPath: string) {
+  public async addPath(localPath: string): Promise<boolean> {
     const absolutePath = path.resolve(localPath);
-    this.repository.addIfDoesntExists(absolutePath);
-    console.log('test');
+    const result = await this.repository.addIfDoesntExists(absolutePath);
+    return result;
   }
 
-  public activateDeactivateLibrary(library: LibraryNoPath) {
-    this.repository.activateDeactivateLibrary(library);
+  public async activateDeactivateLibrary(
+    library: LibraryNoPath
+  ): Promise<boolean> {
+    const result = await this.repository.activateDeactivateLibrary(library);
+    return result;
   }
 
   public async getAll(): Promise<Library[]> {

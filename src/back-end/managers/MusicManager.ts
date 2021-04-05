@@ -13,9 +13,10 @@ import {
 } from '../data-access/models/Music';
 import MusicRepository from '../data-access/repositories/MusicRepository';
 import LogLocation from '../constants/LogLocation';
-import BaseManager from './BaseMananger';
 
-export default class MusicManager extends BaseManager {
+export default class MusicManager {
+  private repository = MusicRepository.instance;
+
   queue = new Array<MusicWithMetadata>();
 
   currentlyPlayingPosition = -1;
@@ -23,10 +24,6 @@ export default class MusicManager extends BaseManager {
   get currentlyPlayingMusic(): MusicWithMetadata {
     if (this.queue.length === 0) return NullMusicWithMetadata;
     return this.queue[this.currentlyPlayingPosition];
-  }
-
-  private constructor() {
-    super(MusicRepository.instance);
   }
 
   // Only mp3, wav, ogg for now.
