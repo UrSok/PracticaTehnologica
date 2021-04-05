@@ -5,13 +5,24 @@
 @import './scss/MusicPlayerBar';
 @import './scss/Slider';
 @import './scss/Table';
+@import './scss/Cards';
 @import './scss/MainLibrary';
+@import './scss/Settings';
+
+* {
+  margin: 0;
+  padding: 0;
+}
 
 body,
 html,
 #root,
 .App {
   height: 100%;
+}
+
+input {
+  caret-color: $main-fg-color;
 }
 
 body {
@@ -46,8 +57,8 @@ body {
     border-radius: 15px;
     .Content {
       padding: 20px;
-      padding-left: 30px;
-      padding-right: 30px;
+      padding-left: 50px;
+      padding-right: 50px;
     }
   }
 }
