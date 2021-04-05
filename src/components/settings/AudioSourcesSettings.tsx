@@ -31,7 +31,11 @@ class AudioSourcesSettings extends React.Component<{}, State> {
   }
 
   componentDidMount() {
-    this.updateLibraryState();
+    this.libraryManager.getAll().then((result) => {
+      this.setState({
+        libraries: result,
+      });
+    });
   }
 
   handleOnAddSource = async () => {
@@ -39,40 +43,41 @@ class AudioSourcesSettings extends React.Component<{}, State> {
       properties: ['openDirectory'],
     });
     if (result) {
-      await LibraryManager.instance.addPath(result[0]);
-      this.updateLibraryState();
+      const newPath = await this.libraryManager.addPath(result[0]);
+      if (newPath.length > 0) {
+        const library = await this.libraryManager.getByPath(newPath);
+        const { libraries } = this.state;
+        libraries.push(library);
+        this.setState({
+          libraries,
+        });
+      }
     }
   };
 
-  handleChange = (checked: any, _: any, stringId: any) => {
-    const { libraries } = this.state;
+  handleChange = async (checked: boolean, _: any, stringId: any) => {
+    const numericId = stringId as number;
     const libraryToChange: LibraryNoPath = {
-      id: stringId as number,
+      id: numericId,
       active: checked,
     };
-    LibraryManager.instance.activateDeactivateLibrary(libraryToChange);
-    this.updateLibraryState();
-    /* const index = libraries.findIndex((x) => x.id === libraryToChange.id);
-        libraries[index].active = checked;
-        this.setState({
+    const result = await this.libraryManager.activateDeactivateLibrary(
+      libraryToChange
+    );
+    if (result) {
+      const { libraries } = this.state;
+      // eslint-disable-next-line eqeqeq
+      const index = libraries.findIndex((x) => x.id == libraryToChange.id);
+      libraries[index].active = checked;
+      this.setState({
         libraries,
-      }); */
+      });
+    }
   };
 
   handleOnPathClick = (path: string) => {
     shell.openPath(path);
   };
-
-  updateLibraryState() {
-    this.libraryManager.getAll().then((result) => {
-      this.setState(
-        {
-          libraries: result,
-        },
-        () => console.log(this.state)
-      );
-    });
-  }
 
   render() {
     const { libraries: library } = this.state;

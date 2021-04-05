@@ -14,35 +14,34 @@ export default class LibraryRepository extends BaseRepository {
   }
 
   public async addIfDoesntExists(path: string): Promise<boolean> {
-    const { db } = this.appDb;
-    let result = false;
-    const fileExists = await this.pathExists(path);
-    if (!fileExists) {
-      db.run(SQL`INSERT INTO Library(path) VALUES(${path})`)
-        .catch((reason) => {
-          log.error(`${LogLocation.LibraryRepository} ${reason}`);
-        })
-        .finally(() => {
-          result = true;
-        });
+    try {
+      const { db } = this.appDb;
+      const fileExists = await this.pathExists(path);
+      if (!fileExists) {
+        await db.run(SQL`INSERT INTO Library(path) VALUES(${path})`);
+        return true;
+      }
+      return false;
+    } catch (error) {
+      log.error(`${LogLocation.LibraryRepository} ${error}`);
+      return false;
     }
-    return result;
   }
 
-  public async activateDeactivateLibrary(library: LibraryNoPath) {
-    const { db } = this.appDb;
-    let result = false;
-    db.run(
-      SQL`UPDATE Library SET active = ${library.active}
-      WHERE id = ${library.id}`
-    )
-      .catch((reason) => {
-        log.error(`${LogLocation.LibraryRepository} ${reason}`);
-      })
-      .finally(() => {
-        result = true;
-      });
-    return result;
+  public async activateDeactivateLibrary(
+    library: LibraryNoPath
+  ): Promise<boolean> {
+    try {
+      const { db } = this.appDb;
+      await db.run(
+        SQL`UPDATE Library SET active = ${library.active}
+          WHERE id = ${library.id}`
+      );
+      return true;
+    } catch (error) {
+      log.error(`${LogLocation.LibraryRepository} ${error}`);
+      return false;
+    }
   }
 
   public async getAll(): Promise<Library[]> {

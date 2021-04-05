@@ -7,10 +7,11 @@ export default class LibraryManager {
 
   static instance: LibraryManager = new LibraryManager();
 
-  public async addPath(localPath: string): Promise<boolean> {
+  public async addPath(localPath: string): Promise<string> {
     const absolutePath = path.resolve(localPath);
     const result = await this.repository.addIfDoesntExists(absolutePath);
-    return result;
+    if (result) return absolutePath;
+    return '';
   }
 
   public async activateDeactivateLibrary(
@@ -23,5 +24,15 @@ export default class LibraryManager {
   public async getAll(): Promise<Library[]> {
     const libraries = await this.repository.getAll();
     return libraries;
+  }
+
+  public async getById(id: number): Promise<Library> {
+    const library = await this.repository.getById(id);
+    return library;
+  }
+
+  public async getByPath(localPath: string): Promise<Library> {
+    const library = await this.repository.getByPath(localPath);
+    return library;
   }
 }
