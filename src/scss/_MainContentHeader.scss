@@ -1,0 +1,16 @@
+.HeaderBar {
+  .IconButton {
+    color: $main-fg-color;
+    margin-right: 10px;
+    .Icon {
+      width: 1.3em;
+      height: 1.3em;
+    }
+    &:hover {
+      color: $secondary-fg-color;
+    }
+    &:disabled {
+      color: $slider-bg-color;
+    }
+  }
+}

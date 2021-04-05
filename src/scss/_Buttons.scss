@@ -6,7 +6,7 @@
   vertical-align: middle;
   padding: 0;
   border-radius: 50%;
-  .icon {
+  .Icon {
     width: 1.2em;
     height: 1.2em;
   }
@@ -16,43 +16,6 @@
   &:hover {
     color: $main-fg-color;
     cursor: default;
-  }
-}
-
-.PlayPauseButton {
-  color: $main-fg-color;
-  .icon {
-    padding-top: 2px;
-    width: 3em;
-    height: 3em;
-  }
-  &:hover {
-    .icon {
-      transform: scale(1.0625);
-    }
-  }
-}
-
-.VolumeButton {
-  float: right;
-  padding-top: 15px;
-  padding-right: 20px;
-}
-
-.HeaderBar {
-  .IconButton {
-    color: $main-fg-color;
-    margin-right: 10px;
-    .icon {
-      width: 1.3em;
-      height: 1.3em;
-    }
-    &:hover {
-      color: $secondary-fg-color;
-    }
-    &:disabled {
-      color: $slider-bg-color;
-    }
   }
 }
 
@@ -70,21 +33,5 @@
   }
   &:hover {
     background-color: $main-fg-color;
-  }
-}
-
-.AudioSource {
-  .Item {
-    .PathInfo {
-      .IconButton {
-        .icon {
-          width: 1em;
-          height: 1em;
-        }
-      }
-    }
-  }
-  .AddSourceButton {
-    margin-top: 10px !important;
   }
 }

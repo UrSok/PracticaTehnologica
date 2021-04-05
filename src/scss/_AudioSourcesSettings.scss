@@ -14,6 +14,15 @@
       .Path {
         margin-left: 5px;
       }
+      .OpenPathButton {
+        .Icon {
+          width: 1em;
+          height: 1em;
+        }
+      }
     }
+  }
+  .AddSourceButton {
+    margin-top: 10px !important;
   }
 }

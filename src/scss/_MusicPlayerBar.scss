@@ -17,6 +17,19 @@
       margin: 0 7px;
     }
     .LeftControls {
+      .PlayPauseButton {
+        color: $main-fg-color;
+        .Icon {
+          padding-top: 2px;
+          width: 3em;
+          height: 3em;
+        }
+        &:hover {
+          .Icon {
+            transform: scale(1.0625);
+          }
+        }
+      }
     }
     .MusicInfo {
       // Fix the positioning later

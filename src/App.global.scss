@@ -1,11 +1,19 @@
-@import '~roboto-fontface/css/roboto/roboto-fontface.css';
 @import './scss/Variables';
+
+/* Dependencies */
+@import '~roboto-fontface/css/roboto/roboto-fontface.css';
+@import '~rc-slider/assets/index.css';
+
+/* Components */
 @import './scss/Sidebar';
 @import './scss/Buttons';
 @import './scss/MusicPlayerBar';
 @import './scss/Slider';
 @import './scss/Table';
 @import './scss/Cards';
+@import './scss/MainContentHeader';
+
+/* Pages */
 @import './scss/MainLibrary';
 @import './scss/Settings';
 
