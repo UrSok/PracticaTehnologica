@@ -3,7 +3,7 @@ import log from 'electron-log';
 import SQL from 'sql-template-strings';
 import LogLocation from '../../constants/LogLocation';
 import AppDb from '../Database';
-import { MusicNoId, Music, SrcType } from '../models/Music';
+import { MusicNoId, Music } from '../models/Music';
 import { NullMusic } from '../null-models/Music';
 
 export default class MusicRepository {
@@ -16,7 +16,7 @@ export default class MusicRepository {
       SQL`INSERT INTO Music(src, src_type) VALUES(${music.src}, ${music.src_type})`
     )
       .catch((reason) => {
-        log.info(`${LogLocation.MusicRepository} ${reason}`);
+        log.error(`${LogLocation.MusicRepository} ${reason}`);
       })
       .finally(() => {
         result = true;
@@ -45,6 +45,7 @@ export default class MusicRepository {
       }
       return result;
     } catch (error) {
+      log.error(`${LogLocation.MusicRepository} ${error}`);
       return NullMusic;
     }
   }
@@ -60,6 +61,7 @@ export default class MusicRepository {
       }
       return result as Music;
     } catch (error) {
+      log.error(`${LogLocation.MusicRepository} ${error}`);
       return NullMusic;
     }
   }
@@ -73,6 +75,7 @@ export default class MusicRepository {
       if (result === undefined) return false;
       return true;
     } catch (error) {
+      log.error(`${LogLocation.MusicRepository} ${error}`);
       return false;
     }
   }
