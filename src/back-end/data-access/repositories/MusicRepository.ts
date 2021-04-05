@@ -2,11 +2,16 @@
 import log from 'electron-log';
 import SQL from 'sql-template-strings';
 import LogLocation from '../../constants/LogLocation';
-import AppDb from '../Database';
 import { MusicNoId, Music, NullMusic } from '../models/Music';
+import BaseRepository from './BaseRepository';
 
-export default class MusicRepository {
-  appDb = AppDb.instance;
+export default class MusicRepository extends BaseRepository {
+  static instance = new MusicRepository();
+
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  private constructor() {
+    super();
+  }
 
   public add(music: MusicNoId): boolean {
     const { db } = this.appDb;

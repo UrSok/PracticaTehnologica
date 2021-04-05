@@ -2,11 +2,16 @@
 import log from 'electron-log';
 import SQL from 'sql-template-strings';
 import LogLocation from '../../constants/LogLocation';
-import AppDb from '../Database';
 import { Library, LibraryNoPath, NullLibrary } from '../models/Library';
+import BaseRepository from './BaseRepository';
 
-export default class LibraryRepository {
-  appDb = AppDb.instance;
+export default class LibraryRepository extends BaseRepository {
+  static instance = new LibraryRepository();
+
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  private constructor() {
+    super();
+  }
 
   public async addIfDoesntExists(path: string): Promise<boolean> {
     const { db } = this.appDb;

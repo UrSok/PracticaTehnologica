@@ -1,14 +1,13 @@
 import path from 'path';
 import { Library, LibraryNoPath } from '../data-access/models/Library';
 import LibraryRepository from '../data-access/repositories/LibraryRepository';
+import BaseManager from './BaseMananger';
 
-export default class LibraryManager {
-  private repository: LibraryRepository;
-
+export default class LibraryManager extends BaseManager {
   static instance: LibraryManager = new LibraryManager();
 
   private constructor() {
-    this.repository = new LibraryRepository();
+    super(LibraryRepository.instance);
   }
 
   public addPath(localPath: string) {

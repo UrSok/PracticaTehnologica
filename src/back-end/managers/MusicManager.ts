@@ -13,17 +13,20 @@ import {
 } from '../data-access/models/Music';
 import MusicRepository from '../data-access/repositories/MusicRepository';
 import LogLocation from '../constants/LogLocation';
+import BaseManager from './BaseMananger';
 
-export default class MusicManager {
-  musicRepository = new MusicRepository();
+export default class MusicManager extends BaseManager {
+  queue = new Array<MusicWithMetadata>();
 
-  static queue = new Array<MusicWithMetadata>();
+  currentlyPlayingPosition = -1;
 
-  static currentlyPlayingPosition = -1;
+  get currentlyPlayingMusic(): MusicWithMetadata {
+    if (this.queue.length === 0) return NullMusicWithMetadata;
+    return this.queue[this.currentlyPlayingPosition];
+  }
 
-  static get currentlyPlayingMusic(): MusicWithMetadata {
-    if (MusicManager.queue.length === 0) return NullMusicWithMetadata;
-    return MusicManager.queue[MusicManager.currentlyPlayingPosition];
+  private constructor() {
+    super(MusicRepository.instance);
   }
 
   // Only mp3, wav, ogg for now.
@@ -32,22 +35,22 @@ export default class MusicManager {
     scanRecursively(localPath, (fpath) => {
       if (fpath.match(regExp)) {
         const absolutePath = path.resolve(fpath);
-        this.musicRepository
+        this.repository
           .srcExists(absolutePath)
-          .then((result) => {
+          .then((result: any) => {
             log.info(
               `${LogLocation.MusicManager} ${
                 result ? 'Found an old file' : 'Found a new file'
               }: ${absolutePath}`
             );
             if (!result) {
-              this.musicRepository.add({
+              this.repository.add({
                 src: absolutePath,
                 src_type: SrcType.Local,
               });
             }
           })
-          .catch((reason) => {
+          .catch((reason: any) => {
             log.error(`${LogLocation.MusicManager} ${reason}`);
           });
       }
@@ -93,20 +96,20 @@ export default class MusicManager {
   }
 
   public async queueAll() {
-    const musicList = await this.musicRepository.getAll();
-    MusicManager.queue = await this.getMusicArrayWithMetadata(musicList);
-    MusicManager.currentlyPlayingPosition = 0;
+    const musicList = await this.repository.getAll();
+    this.queue = await this.getMusicArrayWithMetadata(musicList);
+    this.currentlyPlayingPosition = 0;
   }
 
   public nextSong() {
-    MusicManager.currentlyPlayingPosition++;
-    if (MusicManager.queue.length === MusicManager.currentlyPlayingPosition)
-      MusicManager.currentlyPlayingPosition = 0;
+    this.currentlyPlayingPosition++;
+    if (this.queue.length === this.currentlyPlayingPosition)
+      this.currentlyPlayingPosition = 0;
   }
 
   public prevSong() {
-    MusicManager.currentlyPlayingPosition--;
-    if (MusicManager.currentlyPlayingPosition === -1)
-      MusicManager.currentlyPlayingPosition = MusicManager.queue.length - 1;
+    this.currentlyPlayingPosition--;
+    if (this.currentlyPlayingPosition === -1)
+      this.currentlyPlayingPosition = this.queue.length - 1;
   }
 }
