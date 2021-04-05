@@ -1,20 +1,20 @@
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable promise/always-return */
 /* eslint-disable promise/catch-or-return */
-import React, { useContext } from 'react';
+import React from 'react';
 import ReactPlayer from 'react-player';
 import * as BsIcons from 'react-icons/bs';
 import * as MdIcons from 'react-icons/md';
 import * as BiIcons from 'react-icons/bi';
 import Slider, { createSliderWithTooltip } from 'rc-slider';
-import { Link, useHistory, useLocation, withRouter } from 'react-router-dom';
-import 'rc-slider/assets/index.css';
 import IconButton from './IconButton';
 import MusicManager from '../managers/MusicManager';
-import { NullMusicWithMetadata } from '../data-access/null-models/Music';
-import { MusicWithMetadata } from '../data-access/models/Music';
+import {
+  MusicWithMetadata,
+  NullMusicWithMetadata,
+} from '../data-access/models/Music';
 import noAlbumArt from '../../assets/no-album-art.png';
-import { PagesData, PathData, QueuePage } from '../constants/RoutesInfo';
+import { PathData } from '../constants/RoutesInfo';
 import Navigation from '../utils/Navigation';
 import { ButtonsClassNames } from '../constants/ClassNames';
 

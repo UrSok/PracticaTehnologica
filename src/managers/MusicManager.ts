@@ -5,8 +5,12 @@ import { scanRecursively } from '@bartozzz/scan-dir';
 import path from 'path';
 import log from 'electron-log';
 import * as musicMedatada from 'music-metadata';
-import { Music, MusicWithMetadata, SrcType } from '../data-access/models/Music';
-import { NullMusicWithMetadata } from '../data-access/null-models/Music';
+import {
+  Music,
+  MusicWithMetadata,
+  NullMusicWithMetadata,
+  SrcType,
+} from '../data-access/models/Music';
 import MusicRepository from '../data-access/repositories/MusicRepository';
 import LogLocation from '../constants/LogLocation';
 

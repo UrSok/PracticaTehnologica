@@ -3,8 +3,7 @@ import log from 'electron-log';
 import SQL from 'sql-template-strings';
 import LogLocation from '../../constants/LogLocation';
 import AppDb from '../Database';
-import { MusicNoId, Music } from '../models/Music';
-import { NullMusic } from '../null-models/Music';
+import { MusicNoId, Music, NullMusic } from '../models/Music';
 
 export default class MusicRepository {
   appDb = AppDb.instance;
