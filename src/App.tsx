@@ -13,6 +13,8 @@ import MainLibrary from './pages/MainLibrary';
 import Queue from './pages/Queue';
 import Navigation from './utils/Navigation';
 import IconButton from './components/IconButton';
+import Settings from './pages/Settings';
+import LibraryManager from './managers/LibraryMananger';
 
 export default function App() {
   const location = useLocation();
@@ -22,7 +24,7 @@ export default function App() {
     Navigation.replace(PathData.Home);
   }
   useEffect(() => {
-    new MusicManager().addMusicFromPath('music');
+    LibraryManager.instance.addPath('music');
   }, []);
   // console.log(history);
   return (
@@ -64,6 +66,7 @@ export default function App() {
                 component={RecentlyPlayed}
               />
               <Route path={PathData.MainLibrary} component={MainLibrary} />
+              <Route path={PathData.Settings} component={Settings} />
               <Route path={PathData.Queue} component={Queue} />
             </Switch>
           </div>

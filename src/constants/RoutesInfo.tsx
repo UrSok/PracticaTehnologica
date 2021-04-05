@@ -17,6 +17,7 @@ export enum PathData {
   Albums = '/albums',
   Artists = '/artists',
   Queue = '/queue',
+  Settings = '/settings',
 }
 
 export const PagesData: PageData[] = [
@@ -54,6 +55,13 @@ export const PagesData: PageData[] = [
     path: PathData.Artists,
     icon: <BsIcons.BsPerson />,
     iconActive: <BsIcons.BsPersonFill />,
+  },
+  {
+    key: 'settings',
+    title: 'Settings',
+    path: PathData.Settings,
+    icon: <RiIcons.RiSettings3Line />,
+    iconActive: <RiIcons.RiSettings3Fill />,
   },
 ];
 
