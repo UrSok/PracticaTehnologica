@@ -18,7 +18,7 @@ const MainLibrary: React.FC = () => {
           <input className="FilterInput" type="text" placeholder="Filter" />
         </div>
       </div>
-      <Table musicList={MusicManager.queue} />
+      <Table musicList={MusicManager.instance.queue} />
     </div>
   );
 };
