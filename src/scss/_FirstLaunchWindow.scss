@@ -1,0 +1,34 @@
+.FirstLaunchWindow {
+  position: absolute;
+  z-index: 2000;
+  width: 100%;
+  height: 100%;
+  background-color: $secondary-bg-color;
+  display: flex;
+  text-align: center;
+  .MainContent {
+    margin: 5px !important;
+    .rc-scrollbars-container {
+      height: 100% !important;
+      .rc-scrollbars-view {
+        .Content {
+          padding: 20px 80px;
+          .FirstSection {
+            margin-top: 20px;
+            .Item {
+            }
+            .AddSourceButton {
+              margin-top: 10px;
+            }
+          }
+        }
+      }
+    }
+    .ConfirmButton {
+      font-size: 20px;
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+    }
+  }
+}

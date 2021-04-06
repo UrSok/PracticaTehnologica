@@ -37,4 +37,7 @@ export enum PagesClassNames {
 
 export enum FirstLaunchWindowClassNames {
   Main = 'FirstLaunchWindow',
+  Content = 'Content',
+  FirstSection = 'FirstSection',
+  ConfirmButton = 'ConfirmButton',
 }
