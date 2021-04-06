@@ -13,6 +13,7 @@ import {
 } from '../data-access/models/Music';
 import MusicRepository from '../data-access/repositories/MusicRepository';
 import LogLocation from '../constants/LogLocation';
+import LibraryRepository from '../data-access/repositories/LibraryRepository';
 
 export default class MusicManager {
   private repository = MusicRepository.instance;
@@ -21,20 +22,25 @@ export default class MusicManager {
 
   currentlyPlayingPosition = -1;
 
+  static instance = new MusicManager();
+
   get currentlyPlayingMusic(): MusicWithMetadata {
     if (this.queue.length === 0) return NullMusicWithMetadata;
     return this.queue[this.currentlyPlayingPosition];
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  private constructor() {}
+
   // Only mp3, wav, ogg for now.
-  public addMusicFromPath(localPath: string) {
+  public scanPath(localPath: string) { // it reads other files as well..
     const regExp = new RegExp('^.+[.mp3|.ogg|.wav]$');
     scanRecursively(localPath, (fpath) => {
       if (fpath.match(regExp)) {
         const absolutePath = path.resolve(fpath);
         this.repository
           .srcExists(absolutePath)
-          .then((result: any) => {
+          .then((result) => {
             log.info(
               `${LogLocation.MusicManager} ${
                 result ? 'Found an old file' : 'Found a new file'
@@ -47,11 +53,25 @@ export default class MusicManager {
               });
             }
           })
-          .catch((reason: any) => {
+          .catch((reason) => {
             log.error(`${LogLocation.MusicManager} ${reason}`);
           });
       }
     });
+  }
+
+  public async scanAllPaths(): Promise<boolean> {
+    try {
+      const libraryRepository = LibraryRepository.instance;
+      const libraries = await libraryRepository.getAll();
+      libraries.forEach((item) => {
+        if (item.active) this.scanPath(item.path);
+      });
+      return true;
+    } catch (error) {
+      log.error(`${LogLocation.MusicManager} ${error}`);
+      return false;
+    }
   }
 
   private getFileNameWithoutExtension(src: string) {
