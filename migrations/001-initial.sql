@@ -8,8 +8,6 @@ CREATE TABLE Library (
 CREATE TABLE Music (
     id       INTEGER PRIMARY KEY AUTOINCREMENT,
     src      VARCHAR NOT NULL,
-    src_type INT     NOT NULL
-                     DEFAULT (0),
     added     DATETIME DEFAULT(CURRENT_TIMESTAMP)
                      NOT NULL
 );
