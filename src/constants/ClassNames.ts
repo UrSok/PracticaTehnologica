@@ -6,8 +6,8 @@ export enum AudioSourcesClassNames {
   Switch = 'Switch',
 }
 
-export enum SettingsSectionClassNames {
-  Main = 'SettingsSection',
+export enum SectionClassNames {
+  Main = 'Section',
   Title = 'Title',
   Options = 'Options',
 }
@@ -31,4 +31,8 @@ export enum PagesClassNames {
   Home = 'Home',
   MainLibrary = 'MainLibrary',
   Queue = 'Queue',
+}
+
+export enum FirstLaunchWindowClassNames {
+  Main = 'FirstLaunchWindow',
 }
