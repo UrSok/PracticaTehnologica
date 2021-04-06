@@ -4,6 +4,8 @@ export enum AudioSourcesClassNames {
   PathControls = 'PathInfo',
   Path = 'Path',
   Switch = 'Switch',
+  OpenPathButton = 'OpenPathButton',
+  AddSourceButton = 'AddSourceButton',
 }
 
 export enum SectionClassNames {

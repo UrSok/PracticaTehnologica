@@ -7,13 +7,17 @@ import Switch from 'react-switch';
 import * as IoIcons from 'react-icons/io5';
 import Button from '../Button';
 import LibraryManager from '../../back-end/managers/LibraryMananger';
-import SettingsSection from './SettingsSection';
+import Section from '../Section';
 import {
   Library,
   LibraryNoPath,
 } from '../../back-end/data-access/models/Library';
-import { AudioSourcesClassNames } from '../../constants/ClassNames';
+import {
+  AudioSourcesClassNames,
+  ButtonsClassNames,
+} from '../../constants/ClassNames';
 import IconButton from '../IconButton';
+import MusicManager from '../../back-end/managers/MusicManager';
 
 interface State {
   libraries: Library[];
@@ -51,6 +55,7 @@ class AudioSourcesSettings extends React.Component<{}, State> {
         this.setState({
           libraries,
         });
+        MusicManager.instance.scanPath(library.path); // make async later
       }
     }
   };
@@ -72,6 +77,9 @@ class AudioSourcesSettings extends React.Component<{}, State> {
       this.setState({
         libraries,
       });
+      if (checked) {
+        MusicManager.instance.scanPath(libraries[index].path);
+      }
     }
   };
 
@@ -82,15 +90,19 @@ class AudioSourcesSettings extends React.Component<{}, State> {
   render() {
     const { libraries: library } = this.state;
     return (
-      <SettingsSection title="Audio files sources">
+      <Section title="Audio files sources">
         <div className={AudioSourcesClassNames.Main}>
           {library.map((item) => {
             return (
               <div key={item.id} className={AudioSourcesClassNames.Item}>
                 <div className={AudioSourcesClassNames.PathControls}>
                   <IconButton
-                    className="OpenPathButton"
-                    icon={<IoIcons.IoFolderOpenSharp className="icon" />}
+                    className={AudioSourcesClassNames.OpenPathButton}
+                    icon={
+                      <IoIcons.IoFolderOpenSharp
+                        className={ButtonsClassNames.Icon}
+                      />
+                    }
                     onClick={() => {
                       this.handleOnPathClick(item.path);
                     }}
@@ -120,12 +132,12 @@ class AudioSourcesSettings extends React.Component<{}, State> {
             );
           })}
           <Button
-            className="AddSourceButton"
+            className={AudioSourcesClassNames.AddSourceButton}
             text="Add Source"
             onClick={this.handleOnAddSource}
           />
         </div>
-      </SettingsSection>
+      </Section>
     );
   }
 }
