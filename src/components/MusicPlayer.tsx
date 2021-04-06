@@ -18,6 +18,9 @@ import { PathData } from '../constants/RoutesInfo';
 import Navigation from '../utils/Navigation';
 import { ButtonsClassNames } from '../constants/ClassNames';
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface Props {}
+
 interface State {
   playing: boolean;
   src: string;
@@ -34,14 +37,14 @@ interface State {
 
 const SliderWithTooltip = createSliderWithTooltip(Slider);
 // eslint-disable-next-line @typescript-eslint/ban-types
-export default class MusicPlayer extends React.Component<{}, State> {
+export default class MusicPlayer extends React.PureComponent<Props, State> {
   musicManager = MusicManager.instance;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   player: any;
 
-  constructor() {
-    super({});
+  constructor(props: Props) {
+    super(props);
 
     this.state = {
       playing: false,

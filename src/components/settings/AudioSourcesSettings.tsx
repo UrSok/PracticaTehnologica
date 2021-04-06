@@ -18,15 +18,18 @@ import {
 } from '../../constants/ClassNames';
 import IconButton from '../IconButton';
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface Props {}
+
 interface State {
   libraries: Library[];
 }
 
-class AudioSourcesSettings extends React.Component<{}, State> {
+class AudioSourcesSettings extends React.Component<Props, State> {
   libraryManager: LibraryManager;
 
-  constructor() {
-    super({});
+  constructor(props: Props) {
+    super(props);
     this.libraryManager = LibraryManager.instance;
     this.state = {
       libraries: [],
@@ -87,13 +90,13 @@ class AudioSourcesSettings extends React.Component<{}, State> {
   };
 
   render() {
-    const { libraries: library } = this.state;
+    const { libraries } = this.state;
     return (
       <Section title="Audio files sources">
         <div className={AudioSourcesClassNames.Main}>
-          {library.map((item) => {
+          {libraries.map((library) => {
             return (
-              <div key={item.id} className={AudioSourcesClassNames.Item}>
+              <div key={library.id} className={AudioSourcesClassNames.Item}>
                 <div className={AudioSourcesClassNames.PathControls}>
                   <IconButton
                     className={AudioSourcesClassNames.OpenPathButton}
@@ -103,18 +106,18 @@ class AudioSourcesSettings extends React.Component<{}, State> {
                       />
                     }
                     onClick={() => {
-                      this.handleOnPathClick(item.path);
+                      this.handleOnPathClick(library.path);
                     }}
                   />
                   <span className={AudioSourcesClassNames.Path}>
-                    {item.path}
+                    {library.path}
                   </span>
                 </div>
                 <Switch
                   className={AudioSourcesClassNames.Switch}
-                  id={`${item.id}`}
+                  id={`${library.id}`}
                   onChange={this.handleChange}
-                  checked={item.active}
+                  checked={library.active as boolean}
                   onColor="#966530"
                   onHandleColor="#ffb86c"
                   // offColor="#20201F"
