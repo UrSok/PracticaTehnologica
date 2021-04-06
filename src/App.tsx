@@ -53,7 +53,7 @@ class App extends React.Component<Props, State> {
     }
     const { firstLaunch } = this.state;
     if (!firstLaunch) {
-      MusicManager.instance.scanAllPaths();
+      LibraryManager.instance.scanAllPaths();
     }
   };
 

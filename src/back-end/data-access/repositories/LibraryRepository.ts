@@ -13,7 +13,7 @@ export default class LibraryRepository extends BaseRepository {
     super();
   }
 
-  public async addIfDoesntExists(path: string): Promise<boolean> {
+  public async addIfDoesntExist(path: string): Promise<boolean> {
     try {
       const { db } = this.appDb;
       const fileExists = await this.pathExists(path);

@@ -17,7 +17,6 @@ import {
   ButtonsClassNames,
 } from '../../constants/ClassNames';
 import IconButton from '../IconButton';
-import MusicManager from '../../back-end/managers/MusicManager';
 
 interface State {
   libraries: Library[];
@@ -55,7 +54,7 @@ class AudioSourcesSettings extends React.Component<{}, State> {
         this.setState({
           libraries,
         });
-        MusicManager.instance.scanPath(library.path); // make async later
+        LibraryManager.instance.scanPath(library.path); // make async later
       }
     }
   };
@@ -78,7 +77,7 @@ class AudioSourcesSettings extends React.Component<{}, State> {
         libraries,
       });
       if (checked) {
-        MusicManager.instance.scanPath(libraries[index].path);
+        LibraryManager.instance.scanPath(libraries[index].path);
       }
     }
   };

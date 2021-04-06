@@ -1,19 +1,13 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable class-methods-use-this */
 /* eslint-disable promise/always-return */
-import { scanRecursively } from '@bartozzz/scan-dir';
-import path from 'path';
-import log from 'electron-log';
 import * as musicMedatada from 'music-metadata';
 import {
   Music,
   MusicWithMetadata,
   NullMusicWithMetadata,
-  SrcType,
 } from '../data-access/models/Music';
 import MusicRepository from '../data-access/repositories/MusicRepository';
-import LogLocation from '../constants/LogLocation';
-import LibraryRepository from '../data-access/repositories/LibraryRepository';
 
 export default class MusicManager {
   private repository = MusicRepository.instance;
@@ -31,48 +25,6 @@ export default class MusicManager {
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   private constructor() {}
-
-  // Only mp3, wav, ogg for now.
-  public scanPath(localPath: string) { // it reads other files as well..
-    const regExp = new RegExp('^.+[.mp3|.ogg|.wav]$');
-    scanRecursively(localPath, (fpath) => {
-      if (fpath.match(regExp)) {
-        const absolutePath = path.resolve(fpath);
-        this.repository
-          .srcExists(absolutePath)
-          .then((result) => {
-            log.info(
-              `${LogLocation.MusicManager} ${
-                result ? 'Found an old file' : 'Found a new file'
-              }: ${absolutePath}`
-            );
-            if (!result) {
-              this.repository.add({
-                src: absolutePath,
-                src_type: SrcType.Local,
-              });
-            }
-          })
-          .catch((reason) => {
-            log.error(`${LogLocation.MusicManager} ${reason}`);
-          });
-      }
-    });
-  }
-
-  public async scanAllPaths(): Promise<boolean> {
-    try {
-      const libraryRepository = LibraryRepository.instance;
-      const libraries = await libraryRepository.getAll();
-      libraries.forEach((item) => {
-        if (item.active) this.scanPath(item.path);
-      });
-      return true;
-    } catch (error) {
-      log.error(`${LogLocation.MusicManager} ${error}`);
-      return false;
-    }
-  }
 
   private getFileNameWithoutExtension(src: string) {
     const fileNameWithExtenston = src.split('\\').reverse()[0];
