@@ -16,9 +16,7 @@ export default class MusicRepository extends BaseRepository {
   public async add(music: MusicNoId): Promise<boolean> {
     try {
       const { db } = this.appDb;
-      db.run(
-        SQL`INSERT INTO Music(src, src_type) VALUES(${music.src}, ${music.src_type})`
-      );
+      db.run(SQL`INSERT INTO Music(src) VALUES(${music.src})`);
       return true;
     } catch (error) {
       log.error(`${LogLocation.MusicRepository} ${error}`);

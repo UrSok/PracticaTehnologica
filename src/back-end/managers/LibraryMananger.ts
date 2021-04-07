@@ -10,7 +10,7 @@ import LogLocation from '../constants/LogLocation';
 import { Library, LibraryNoPath } from '../data-access/models/Library';
 import LibraryRepository from '../data-access/repositories/LibraryRepository';
 import MusicRepository from '../data-access/repositories/MusicRepository';
-import { MusicNoId, SrcType } from '../data-access/models/Music';
+import { MusicNoId } from '../data-access/models/Music';
 
 export default class LibraryManager {
   private repository = LibraryRepository.instance;
@@ -45,7 +45,6 @@ export default class LibraryManager {
           if (!srcExists) {
             const music: MusicNoId = {
               src: file.fullname,
-              src_type: SrcType.Local,
             };
             musicRepository.add(music);
           }
