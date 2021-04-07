@@ -1,20 +1,20 @@
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable promise/always-return */
 /* eslint-disable promise/catch-or-return */
-import React, { useContext } from 'react';
+import React from 'react';
 import ReactPlayer from 'react-player';
 import * as BsIcons from 'react-icons/bs';
 import * as MdIcons from 'react-icons/md';
 import * as BiIcons from 'react-icons/bi';
 import Slider, { createSliderWithTooltip } from 'rc-slider';
-import { Link, useHistory, useLocation, withRouter } from 'react-router-dom';
-import 'rc-slider/assets/index.css';
 import IconButton from './IconButton';
-import MusicManager from '../managers/MusicManager';
-import { NullMusicWithMetadata } from '../data-access/null-models/Music';
-import { MusicWithMetadata } from '../data-access/models/Music';
+import MusicManager from '../back-end/managers/MusicManager';
+import {
+  MusicWithMetadata,
+  NullMusicWithMetadata,
+} from '../back-end/data-access/models/Music';
 import noAlbumArt from '../../assets/no-album-art.png';
-import { PagesData, PathData, QueuePage } from '../constants/RoutesInfo';
+import { PathData } from '../constants/RoutesInfo';
 import Navigation from '../utils/Navigation';
 import { ButtonsClassNames } from '../constants/ClassNames';
 
@@ -35,7 +35,7 @@ interface State {
 const SliderWithTooltip = createSliderWithTooltip(Slider);
 // eslint-disable-next-line @typescript-eslint/ban-types
 export default class MusicPlayer extends React.Component<{}, State> {
-  musicManager = new MusicManager();
+  musicManager = MusicManager.instance;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   player: any;
@@ -103,7 +103,7 @@ export default class MusicPlayer extends React.Component<{}, State> {
   handleEnded = () => {
     // check the if the loop current or loop queue is on.
     this.musicManager.nextSong();
-    const music = MusicManager.currentlyPlayingMusic;
+    const music = this.musicManager.currentlyPlayingMusic;
     this.setState(() => ({
       playing: true,
       src: music.src,
@@ -138,10 +138,10 @@ export default class MusicPlayer extends React.Component<{}, State> {
     const { playing } = this.state;
     if (
       !playing &&
-      MusicManager.currentlyPlayingMusic === NullMusicWithMetadata
+      this.musicManager.currentlyPlayingMusic === NullMusicWithMetadata
     ) {
       this.musicManager.queueAll().then(() => {
-        const music = MusicManager.currentlyPlayingMusic;
+        const music = this.musicManager.currentlyPlayingMusic;
         this.setState(() => ({
           src: music.src,
         }));
@@ -155,7 +155,7 @@ export default class MusicPlayer extends React.Component<{}, State> {
 
   hadleNextSong = () => {
     this.musicManager.nextSong();
-    const music = MusicManager.currentlyPlayingMusic;
+    const music = this.musicManager.currentlyPlayingMusic;
     this.setState({
       playing: true,
       src: music.src,
@@ -165,7 +165,7 @@ export default class MusicPlayer extends React.Component<{}, State> {
 
   hadlePrevSong = () => {
     this.musicManager.prevSong();
-    const music = MusicManager.currentlyPlayingMusic;
+    const music = this.musicManager.currentlyPlayingMusic;
     this.setState(() => ({
       playing: true,
       src: music.src,
@@ -314,7 +314,8 @@ export default class MusicPlayer extends React.Component<{}, State> {
                 onClick={this.handlePlayPause}
               />
             </div>
-            {MusicManager.currentlyPlayingMusic !== NullMusicWithMetadata && (
+            {this.musicManager.currentlyPlayingMusic !==
+              NullMusicWithMetadata && (
               <div className="MusicInfo">
                 <img src={albumArt} alt="album-art" className="AlbumArt" />
                 <div className="TextContainer">

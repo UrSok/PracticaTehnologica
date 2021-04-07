@@ -6,10 +6,16 @@ import React from 'react';
 import Switch from 'react-switch';
 import * as IoIcons from 'react-icons/io5';
 import Button from '../Button';
-import LibraryManager from '../../managers/LibraryMananger';
-import SettingsSection from './SettingsSection';
-import { Library, LibraryNoPath } from '../../data-access/models/Library';
-import { AudioSourcesClassNames } from '../../constants/ClassNames';
+import LibraryManager from '../../back-end/managers/LibraryMananger';
+import Section from '../Section';
+import {
+  Library,
+  LibraryNoPath,
+} from '../../back-end/data-access/models/Library';
+import {
+  AudioSourcesClassNames,
+  ButtonsClassNames,
+} from '../../constants/ClassNames';
 import IconButton from '../IconButton';
 
 interface State {
@@ -28,7 +34,11 @@ class AudioSourcesSettings extends React.Component<{}, State> {
   }
 
   componentDidMount() {
-    this.updateLibraryState();
+    this.libraryManager.getAll().then((result) => {
+      this.setState({
+        libraries: result,
+      });
+    });
   }
 
   handleOnAddSource = async () => {
@@ -36,53 +46,62 @@ class AudioSourcesSettings extends React.Component<{}, State> {
       properties: ['openDirectory'],
     });
     if (result) {
-      await LibraryManager.instance.addPath(result[0]);
-      this.updateLibraryState();
+      const newPath = await this.libraryManager.addPath(result[0]);
+      if (newPath.length > 0) {
+        const library = await this.libraryManager.getByPath(newPath);
+        const { libraries } = this.state;
+        libraries.push(library);
+        this.setState({
+          libraries,
+        });
+        LibraryManager.instance.scanPath(library.path); // make async later
+      }
     }
   };
 
-  handleChange = (checked: any, _: any, stringId: any) => {
-    const { libraries } = this.state;
+  handleChange = async (checked: boolean, _: any, stringId: any) => {
+    const numericId = stringId as number;
     const libraryToChange: LibraryNoPath = {
-      id: stringId as number,
+      id: numericId,
       active: checked,
     };
-    LibraryManager.instance.activateDeactivateLibrary(libraryToChange);
-    this.updateLibraryState();
-    /* const index = libraries.findIndex((x) => x.id === libraryToChange.id);
-        libraries[index].active = checked;
-        this.setState({
+    const result = await this.libraryManager.activateDeactivateLibrary(
+      libraryToChange
+    );
+    if (result) {
+      const { libraries } = this.state;
+      // eslint-disable-next-line eqeqeq
+      const index = libraries.findIndex((x) => x.id == libraryToChange.id);
+      libraries[index].active = checked;
+      this.setState({
         libraries,
-      }); */
+      });
+      if (checked) {
+        LibraryManager.instance.scanPath(libraries[index].path);
+      }
+    }
   };
 
   handleOnPathClick = (path: string) => {
     shell.openPath(path);
   };
 
-  updateLibraryState() {
-    this.libraryManager.getAll().then((result) => {
-      this.setState(
-        {
-          libraries: result,
-        },
-        () => console.log(this.state)
-      );
-    });
-  }
-
   render() {
     const { libraries: library } = this.state;
     return (
-      <SettingsSection title="Audio files sources">
+      <Section title="Audio files sources">
         <div className={AudioSourcesClassNames.Main}>
           {library.map((item) => {
             return (
               <div key={item.id} className={AudioSourcesClassNames.Item}>
                 <div className={AudioSourcesClassNames.PathControls}>
                   <IconButton
-                    className="OpenPathButton"
-                    icon={<IoIcons.IoFolderOpenSharp className="icon" />}
+                    className={AudioSourcesClassNames.OpenPathButton}
+                    icon={
+                      <IoIcons.IoFolderOpenSharp
+                        className={ButtonsClassNames.Icon}
+                      />
+                    }
                     onClick={() => {
                       this.handleOnPathClick(item.path);
                     }}
@@ -112,12 +131,12 @@ class AudioSourcesSettings extends React.Component<{}, State> {
             );
           })}
           <Button
-            className="AddSourceButton"
+            className={AudioSourcesClassNames.AddSourceButton}
             text="Add Source"
             onClick={this.handleOnAddSource}
           />
         </div>
-      </SettingsSection>
+      </Section>
     );
   }
 }

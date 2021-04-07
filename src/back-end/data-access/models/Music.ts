@@ -18,9 +18,25 @@ export interface MusicWithMetadata {
   album?: string;
   albumArt?: string;
 }
-
-// remove this interface maybe
 export interface MusicNoId {
   src: string;
   src_type: SrcType;
 }
+
+export const NullMusic: Music = {
+  id: -1,
+  src: '',
+  src_type: -1,
+};
+
+export const NullMusicWithMetadata: MusicWithMetadata = {
+  id: -1,
+  src: '',
+  src_type: -1,
+  title: '',
+};
+
+export const NullMusicNoId: MusicNoId = {
+  src: '',
+  src_type: -1,
+};

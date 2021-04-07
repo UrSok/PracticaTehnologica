@@ -7,7 +7,7 @@ import IconButton from '../components/IconButton';
 import Button from '../components/Button';
 import MusicPlayer from '../components/MusicPlayer';
 import Table from '../components/Table';
-import MusicManager from '../managers/MusicManager';
+import MusicManager from '../back-end/managers/MusicManager';
 
 const Playlist: React.FC = () => {
   const handlePlayPause = (disabled: boolean) => {
@@ -58,7 +58,7 @@ const Playlist: React.FC = () => {
           <input className="FilterInput" type="text" placeholder="Filter" />
         </div>
       </div>
-      <Table musicList={MusicManager.queue} />
+      <Table musicList={MusicManager.instance.queue} />
     </div>
   );
 };

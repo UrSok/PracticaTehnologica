@@ -16,7 +16,7 @@ import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import fs from 'fs';
 import MenuBuilder from './menu';
-import AppDb from './data-access/Database';
+import AppDb from './back-end/data-access/Database';
 
 export default class AppUpdater {
   constructor() {

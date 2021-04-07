@@ -2,42 +2,46 @@
 import log from 'electron-log';
 import SQL from 'sql-template-strings';
 import LogLocation from '../../constants/LogLocation';
-import AppDb from '../Database';
 import { Library, LibraryNoPath, NullLibrary } from '../models/Library';
+import BaseRepository from './BaseRepository';
 
-export default class LibraryRepository {
-  appDb = AppDb.instance;
+export default class LibraryRepository extends BaseRepository {
+  static instance = new LibraryRepository();
 
-  public async addIfDoesntExists(path: string): Promise<boolean> {
-    const { db } = this.appDb;
-    let result = false;
-    const fileExists = await this.pathExists(path);
-    if (!fileExists) {
-      db.run(SQL`INSERT INTO Library(path) VALUES(${path})`)
-        .catch((reason) => {
-          log.error(`${LogLocation.LibraryRepository} ${reason}`);
-        })
-        .finally(() => {
-          result = true;
-        });
-    }
-    return result;
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  private constructor() {
+    super();
   }
 
-  public async activateDeactivateLibrary(library: LibraryNoPath) {
-    const { db } = this.appDb;
-    let result = false;
-    db.run(
-      SQL`UPDATE Library SET active = ${library.active}
-      WHERE id = ${library.id}`
-    )
-      .catch((reason) => {
-        log.error(`${LogLocation.LibraryRepository} ${reason}`);
-      })
-      .finally(() => {
-        result = true;
-      });
-    return result;
+  public async addIfDoesntExist(path: string): Promise<boolean> {
+    try {
+      const { db } = this.appDb;
+      const fileExists = await this.pathExists(path);
+      if (!fileExists) {
+        await db.run(SQL`INSERT INTO Library(path) VALUES(${path})`);
+        return true;
+      }
+      return false;
+    } catch (error) {
+      log.error(`${LogLocation.LibraryRepository} ${error}`);
+      return false;
+    }
+  }
+
+  public async activateDeactivateLibrary(
+    library: LibraryNoPath
+  ): Promise<boolean> {
+    try {
+      const { db } = this.appDb;
+      await db.run(
+        SQL`UPDATE Library SET active = ${library.active}
+          WHERE id = ${library.id}`
+      );
+      return true;
+    } catch (error) {
+      log.error(`${LogLocation.LibraryRepository} ${error}`);
+      return false;
+    }
   }
 
   public async getAll(): Promise<Library[]> {

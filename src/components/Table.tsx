@@ -1,5 +1,5 @@
 import React from 'react';
-import { MusicWithMetadata } from '../data-access/models/Music';
+import { MusicWithMetadata } from '../back-end/data-access/models/Music';
 
 interface Props {
   musicList: MusicWithMetadata[];

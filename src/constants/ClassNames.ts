@@ -4,10 +4,12 @@ export enum AudioSourcesClassNames {
   PathControls = 'PathInfo',
   Path = 'Path',
   Switch = 'Switch',
+  OpenPathButton = 'OpenPathButton',
+  AddSourceButton = 'AddSourceButton',
 }
 
-export enum SettingsSectionClassNames {
-  Main = 'SettingsSection',
+export enum SectionClassNames {
+  Main = 'Section',
   Title = 'Title',
   Options = 'Options',
 }
@@ -32,4 +34,11 @@ export enum PagesClassNames {
   MainLibrary = 'MainLibrary',
   Queue = 'Queue',
   Playlist = 'Playlist', // to be modified
+}
+
+export enum FirstLaunchWindowClassNames {
+  Main = 'FirstLaunchWindow',
+  Content = 'Content',
+  FirstSection = 'FirstSection',
+  ConfirmButton = 'ConfirmButton',
 }

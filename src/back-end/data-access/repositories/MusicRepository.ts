@@ -2,26 +2,28 @@
 import log from 'electron-log';
 import SQL from 'sql-template-strings';
 import LogLocation from '../../constants/LogLocation';
-import AppDb from '../Database';
-import { MusicNoId, Music } from '../models/Music';
-import { NullMusic } from '../null-models/Music';
+import { MusicNoId, Music, NullMusic } from '../models/Music';
+import BaseRepository from './BaseRepository';
 
-export default class MusicRepository {
-  appDb = AppDb.instance;
+export default class MusicRepository extends BaseRepository {
+  static instance = new MusicRepository();
 
-  public add(music: MusicNoId): boolean {
-    const { db } = this.appDb;
-    let result = false;
-    db.run(
-      SQL`INSERT INTO Music(src, src_type) VALUES(${music.src}, ${music.src_type})`
-    )
-      .catch((reason) => {
-        log.error(`${LogLocation.MusicRepository} ${reason}`);
-      })
-      .finally(() => {
-        result = true;
-      });
-    return result;
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  private constructor() {
+    super();
+  }
+
+  public async add(music: MusicNoId): Promise<boolean> {
+    try {
+      const { db } = this.appDb;
+      db.run(
+        SQL`INSERT INTO Music(src, src_type) VALUES(${music.src}, ${music.src_type})`
+      );
+      return true;
+    } catch (error) {
+      log.error(`${LogLocation.MusicRepository} ${error}`);
+      return false;
+    }
   }
 
   public async getAll(): Promise<Music[]> {
