@@ -31,4 +31,5 @@ export enum PagesClassNames {
   Home = 'Home',
   MainLibrary = 'MainLibrary',
   Queue = 'Queue',
+  Playlist = 'Playlist', // to be modified
 }

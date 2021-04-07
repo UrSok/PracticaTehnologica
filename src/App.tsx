@@ -16,6 +16,7 @@ import IconButton from './components/IconButton';
 import Settings from './pages/Settings';
 import LibraryManager from './managers/LibraryMananger';
 import { AppClassNames, ButtonsClassNames } from './constants/ClassNames';
+import Playlist from './pages/Playlist';
 
 export default function App() {
   const location = useLocation();
@@ -71,6 +72,7 @@ export default function App() {
               <Route path={PathData.MainLibrary} component={MainLibrary} />
               <Route path={PathData.Settings} component={Settings} />
               <Route path={PathData.Queue} component={Queue} />
+              <Route path={PathData.Albums} component={Playlist} />
             </Switch>
           </div>
         </Scrollbars>
