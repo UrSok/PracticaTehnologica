@@ -1,7 +1,7 @@
 CREATE TABLE Queue (
       id      INTEGER PRIMARY KEY AUTOINCREMENT,
       musicId INTEGER REFERENCES Music (id)
-                          NOT NULL,
+                          NOT NULL
     );
 
 CREATE TABLE UserData (
