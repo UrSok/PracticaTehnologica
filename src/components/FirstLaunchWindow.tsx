@@ -2,28 +2,27 @@ import { remote, shell } from 'electron';
 import { Scrollbars } from 'rc-scrollbars';
 import React from 'react';
 import * as IoIcons from 'react-icons/io5';
-import LibraryManager from '../back-end/managers/LibraryMananger';
+import { Observer } from 'mobx-react';
+import RootStore from '../back-end/store/RootStore';
 import {
   AppClassNames,
   AudioSourcesClassNames,
   ButtonsClassNames,
   FirstLaunchWindowClassNames,
 } from '../constants/ClassNames';
+import { StoreContext } from '../utils/StoreContext';
 import Button from './Button';
 import IconButton from './IconButton';
 import Section from './Section';
-
-interface Props {
-  onResult: () => void;
-}
+import { Library } from '../back-end/models';
 
 interface State {
   localPath?: string;
 }
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-export default class FirstLaunchWindow extends React.Component<Props, State> {
-  constructor(props: Props) {
+export default class FirstLaunchWindow extends React.PureComponent<{}, State> {
+  constructor(props: any) {
     super(props);
 
     this.state = {
@@ -46,13 +45,15 @@ export default class FirstLaunchWindow extends React.Component<Props, State> {
     shell.openPath(path);
   };
 
-  handleOnConfirmSettings = async () => {
+  handleOnConfirmSettings = () => {
     const { localPath } = this.state;
-    const { onResult } = this.props;
+    const { libraryStore, userDataStore } = this.context as RootStore;
     if (localPath) {
-      LibraryManager.instance.addPath(localPath);
-      console.log('localpath');
-      onResult();
+      const library = new Library(libraryStore);
+      library.path = localPath;
+      libraryStore.addLibrary(library);
+      userDataStore.userData?.toggleFirstLaunch();
+      library.scanPath();
     }
   };
 
@@ -106,3 +107,5 @@ export default class FirstLaunchWindow extends React.Component<Props, State> {
     );
   }
 }
+
+FirstLaunchWindow.contextType = StoreContext;
