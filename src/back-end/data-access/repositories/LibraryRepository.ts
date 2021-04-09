@@ -2,35 +2,17 @@
 import log from 'electron-log';
 import SQL from 'sql-template-strings';
 import LogLocation from '../../constants/LogLocation';
-import { Library, LibraryNoPath, NullLibrary } from '../models/Library';
+import { Library } from '../../models';
 import BaseRepository from './BaseRepository';
 
-export default class LibraryRepository extends BaseRepository {
-  static instance = new LibraryRepository();
-
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  private constructor() {
-    super();
+export class LibraryRepository extends BaseRepository {
+  public async add(path: string): Promise<number> {
+    const { db } = this.appDb;
+    const result = await db.run(SQL`INSERT INTO Library(path) VALUES(${path})`);
+    return result.lastID ?? 0;
   }
 
-  public async addIfDoesntExist(path: string): Promise<boolean> {
-    try {
-      const { db } = this.appDb;
-      const fileExists = await this.pathExists(path);
-      if (!fileExists) {
-        await db.run(SQL`INSERT INTO Library(path) VALUES(${path})`);
-        return true;
-      }
-      return false;
-    } catch (error) {
-      log.error(`${LogLocation.LibraryRepository} ${error}`);
-      return false;
-    }
-  }
-
-  public async activateDeactivateLibrary(
-    library: LibraryNoPath
-  ): Promise<boolean> {
+  public async toggleActive(library: Library): Promise<boolean> {
     try {
       const { db } = this.appDb;
       await db.run(
@@ -54,50 +36,7 @@ export default class LibraryRepository extends BaseRepository {
       return new Array<Library>();
     }
   }
-
-  public async getById(id: number): Promise<Library> {
-    try {
-      const { db } = this.appDb;
-      const result = await db.get<Library>(
-        SQL`SELECT * FROM Library WHERE id = ${id}`
-      );
-      if (result === undefined) {
-        return NullLibrary;
-      }
-      return result;
-    } catch (error) {
-      log.error(`${LogLocation.LibraryRepository} ${error}`);
-      return NullLibrary;
-    }
-  }
-
-  public async getByPath(path: string): Promise<Library> {
-    try {
-      const { db } = this.appDb;
-      const result = await db.get<Library>(
-        SQL`SELECT * FROM Library WHERE path = ${path}`
-      );
-      if (result === undefined) {
-        return NullLibrary;
-      }
-      return result as Library;
-    } catch (error) {
-      log.error(`${LogLocation.LibraryRepository} ${error}`);
-      return NullLibrary;
-    }
-  }
-
-  public async pathExists(path: string): Promise<boolean> {
-    try {
-      const { db } = this.appDb;
-      const result = await db.get<Library>(
-        SQL`SELECT * FROM Library WHERE path LIKE ${path}`
-      );
-      if (result === undefined) return false;
-      return true;
-    } catch (error) {
-      log.error(`${LogLocation.LibraryRepository} ${error}`);
-      return false;
-    }
-  }
 }
+
+const libraryRepository = new LibraryRepository();
+export default libraryRepository;
