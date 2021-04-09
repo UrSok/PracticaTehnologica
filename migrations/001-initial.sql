@@ -8,13 +8,13 @@ CREATE TABLE Library (
 CREATE TABLE Music (
     id       INTEGER PRIMARY KEY AUTOINCREMENT,
     src      VARCHAR NOT NULL,
-    added     DATETIME DEFAULT(CURRENT_TIMESTAMP)
+    added     DATETIME DEFAULT(datetime('now','localtime'))
                      NOT NULL
 );
 CREATE TABLE Playlist (
       id      INTEGER PRIMARY KEY AUTOINCREMENT,
       name    VARCHAR NOT NULL,
-      created DATETIME DEFAULT(CURRENT_TIMESTAMP)
+      created DATETIME DEFAULT(datetime('now','localtime'))
                       NOT NULL
     );
 CREATE TABLE PlaylistMusic (
@@ -23,6 +23,6 @@ CREATE TABLE PlaylistMusic (
                           NOT NULL,
       music_id    INTEGER REFERENCES Music (id)
                           NOT NULL,
-      added       DATETIME DEFAULT(CURRENT_TIMESTAMP)
+      added       DATETIME DEFAULT(datetime('now','localtime'))
                           NOT NULL
     );
