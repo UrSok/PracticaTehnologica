@@ -2,7 +2,6 @@ import { remote, shell } from 'electron';
 import { Scrollbars } from 'rc-scrollbars';
 import React from 'react';
 import * as IoIcons from 'react-icons/io5';
-import { Observer } from 'mobx-react';
 import RootStore from '../back-end/store/RootStore';
 import {
   AppClassNames,
@@ -22,6 +21,7 @@ interface State {
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export default class FirstLaunchWindow extends React.PureComponent<{}, State> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   constructor(props: any) {
     super(props);
 

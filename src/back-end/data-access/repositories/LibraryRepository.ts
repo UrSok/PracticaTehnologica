@@ -1,4 +1,3 @@
-/* eslint-disable promise/catch-or-return */
 import log from 'electron-log';
 import SQL from 'sql-template-strings';
 import LogLocation from '../../constants/LogLocation';
