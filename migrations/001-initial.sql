@@ -1,6 +1,6 @@
 CREATE TABLE Library (
       id     INTEGER PRIMARY KEY AUTOINCREMENT,
-      path   VARCHAR NOT NULL,
+      path   VARCHAR NOT NULL UNIQUE,
       active BOOLEAN DEFAULT (1)
                      NOT NULL
     );
