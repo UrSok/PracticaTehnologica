@@ -53,7 +53,7 @@ export default class MusicStore {
   }
 
   private async addMusic(music: Music) {
-    const resultId = await this.repository.add(music.src);
+    const resultId = await this.repository.add(music);
     if (resultId !== 0) {
       music.id = resultId;
       music.added = new Date(Date.now());

@@ -1,13 +1,13 @@
-/* eslint-disable promise/catch-or-return */
 import SQL from 'sql-template-strings';
 import { Music } from '../../models';
 import BaseRepository from './BaseRepository';
 
 export class MusicRepository extends BaseRepository {
-  public async add(src: string): Promise<number> {
-    // send date to db as well.
+  public async add(music: Music): Promise<number> {
     const { db } = this.appDb;
-    const result = await db.run(SQL`INSERT INTO Music(src) VALUES(${src})`);
+    const result = await db.run(
+      SQL`INSERT INTO Music(src, added) VALUES(${music.src}, ${music.added})`
+    );
     return result.lastID ?? 0;
   }
 
