@@ -1,11 +1,13 @@
+import { Observer } from 'mobx-react-lite';
 import React from 'react';
 import * as BsIcons from 'react-icons/bs';
 import PageTitle from '../components/PageTitle';
 import Table from '../components/Table';
 import { PagesClassNames } from '../constants/ClassNames';
-import MusicManager from '../back-end/managers/MusicManager';
+import { useRootStore } from '../utils/StoreContext';
 
 const MainLibrary: React.FC = () => {
+  const { musicStore } = useRootStore();
   return (
     <div className={PagesClassNames.MainLibrary}>
       <div className="">
@@ -18,7 +20,7 @@ const MainLibrary: React.FC = () => {
           <input className="FilterInput" type="text" placeholder="Filter" />
         </div>
       </div>
-      <Table musicList={MusicManager.instance.queue} />
+      <Table musicList={musicStore?.musicList} />
     </div>
   );
 };

@@ -3,6 +3,7 @@ import { ProSidebar, Menu, MenuItem } from 'react-pro-sidebar';
 import { Switch, Route, withRouter } from 'react-router-dom';
 import { Scrollbars } from 'rc-scrollbars';
 import * as Ioios from 'react-icons/io';
+import { Observer } from 'mobx-react-lite';
 import { PathData, PagesData } from './constants/RoutesInfo';
 import './App.global.scss';
 import Home from './pages/Home';
@@ -13,63 +14,51 @@ import Queue from './pages/Queue';
 import Navigation from './utils/Navigation';
 import IconButton from './components/IconButton';
 import Settings from './pages/Settings';
-import LibraryManager from './back-end/managers/LibraryMananger';
 import { AppClassNames, ButtonsClassNames } from './constants/ClassNames';
-import MusicManager from './back-end/managers/MusicManager';
 import FirstLaunchWindow from './components/FirstLaunchWindow';
+import { StoreContext } from './utils/StoreContext';
+import RootStore from './back-end/store/RootStore';
 
 interface Props {
   history: any;
   location: any;
   match: any;
 }
-interface State {
-  firstLaunch: boolean;
-}
-class App extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
 
-    this.state = {
-      firstLaunch: false,
-    };
+// eslint-disable-next-line @typescript-eslint/ban-types
+class App extends React.Component<Props, {}> {
+  async componentDidMount() {
+    this.launch();
   }
 
-  componentDidMount() {
-    this.isFirstLaunch();
-  }
-
-  isFirstLaunch = async () => {
-    // change later to use db settings for that
-    const libraries = await LibraryManager.instance.getAll();
-    if (libraries.length === 0) {
-      this.setState({
-        firstLaunch: true,
-      });
-    } else {
-      this.setState({
-        firstLaunch: false,
-      });
-    }
-    const { firstLaunch } = this.state;
-    if (!firstLaunch) {
-      LibraryManager.instance.scanAllPaths();
-    }
+  launch = async () => {
+    const { libraryStore } = this.context as RootStore;
+    await libraryStore.loadLibaries();
+    libraryStore.scanPaths();
+    /* const { libraryStore, userDataStore } = this.context as RootStore;
+    console.log(userDataStore.userData?.firstLaunch);
+    if (!userDataStore.userData?.firstLaunch) {
+    } */
   };
 
   render() {
+    const { userDataStore } = this.context as RootStore;
     const { history } = this.props;
-    const { firstLaunch } = this.state;
     if (!Navigation.history) {
       Navigation.init(history);
       Navigation.replace(PathData.Home);
     }
-    // console.log(history);
     return (
       <div className={AppClassNames.Main}>
-        {firstLaunch ? (
-          <FirstLaunchWindow onResult={this.isFirstLaunch} />
-        ) : null}
+        <Observer>
+          {() => (
+            <div>
+              {userDataStore.userData?.firstLaunch ? (
+                <FirstLaunchWindow />
+              ) : null}
+            </div>
+          )}
+        </Observer>
         <ProSidebar>
           <Menu iconShape="round">
             {PagesData.map((item) => {
@@ -120,5 +109,7 @@ class App extends React.Component<Props, State> {
     );
   }
 }
+
+App.contextType = StoreContext;
 
 export default withRouter(App);
