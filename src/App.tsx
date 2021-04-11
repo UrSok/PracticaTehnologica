@@ -1,10 +1,18 @@
 import React from 'react';
-import { ProSidebar, Menu, MenuItem } from 'react-pro-sidebar';
+import {
+  ProSidebar,
+  Menu,
+  MenuItem,
+  SidebarHeader,
+  SidebarContent,
+  SidebarFooter,
+} from 'react-pro-sidebar';
 import { Switch, Route, withRouter } from 'react-router-dom';
 import { Scrollbars } from 'rc-scrollbars';
 import * as Ioios from 'react-icons/io';
+import { RiTestTubeFill } from 'react-icons/ri';
 import { Observer } from 'mobx-react-lite';
-import { PathData, PagesData } from './constants/RoutesInfo';
+import { PathData, PagesData, SettingsPage } from './constants/RoutesInfo';
 import './App.global.scss';
 import Home from './pages/Home';
 import MusicPlayer from './components/MusicPlayer';
@@ -60,19 +68,67 @@ class App extends React.Component<Props, {}> {
           )}
         </Observer>
         <ProSidebar>
-          <Menu iconShape="round">
-            {PagesData.map((item) => {
-              const isActive = Navigation.currentLocationIs(item.path);
-              return (
-                <MenuItem
-                  key={item.key}
-                  active={isActive}
-                  icon={isActive ? item.iconActive : item.icon}
-                  onClick={() => Navigation.push(item.path)}
-                />
-              );
-            })}
-          </Menu>
+          <SidebarHeader>
+            <Menu iconShape="round">
+              {PagesData.map((item) => {
+                const isActive = Navigation.currentLocationIs(item.path);
+                return (
+                  <MenuItem
+                    key={item.key}
+                    active={isActive}
+                    icon={isActive ? item.iconActive : item.icon}
+                    onClick={() => Navigation.push(item.path)}
+                  />
+                );
+              })}
+            </Menu>
+          </SidebarHeader>
+          <SidebarContent>
+            <Scrollbars autoHide>
+              <Menu iconShape="round">
+                {/* TEST DATA */}
+                <MenuItem active={false} icon={<RiTestTubeFill />} />
+                <MenuItem active={false} icon={<RiTestTubeFill />} />
+                <MenuItem active={false} icon={<RiTestTubeFill />} />
+                <MenuItem active={false} icon={<RiTestTubeFill />} />
+                <MenuItem active={false} icon={<RiTestTubeFill />} />
+                <MenuItem active={false} icon={<RiTestTubeFill />} />
+                <MenuItem active={false} icon={<RiTestTubeFill />} />
+                <MenuItem active={false} icon={<RiTestTubeFill />} />
+                <MenuItem active={false} icon={<RiTestTubeFill />} />
+                <MenuItem active={false} icon={<RiTestTubeFill />} />
+                <MenuItem active={false} icon={<RiTestTubeFill />} />
+                <MenuItem active={false} icon={<RiTestTubeFill />} />
+                <MenuItem active={false} icon={<RiTestTubeFill />} />
+                <MenuItem active={false} icon={<RiTestTubeFill />} />
+                <MenuItem active={false} icon={<RiTestTubeFill />} />
+                <MenuItem active={false} icon={<RiTestTubeFill />} />
+                <MenuItem active={false} icon={<RiTestTubeFill />} />
+                <MenuItem active={false} icon={<RiTestTubeFill />} />
+                <MenuItem active={false} icon={<RiTestTubeFill />} />
+                <MenuItem active={false} icon={<RiTestTubeFill />} />
+                <MenuItem active={false} icon={<RiTestTubeFill />} />
+                <MenuItem active={false} icon={<RiTestTubeFill />} />
+                <MenuItem active={false} icon={<RiTestTubeFill />} />
+                <MenuItem active={false} icon={<RiTestTubeFill />} />
+                {/* TEST DATA END */}
+              </Menu>
+            </Scrollbars>
+          </SidebarContent>
+          <SidebarFooter>
+            <Menu iconShape="round">
+              <MenuItem
+                key={SettingsPage.key}
+                active={Navigation.currentLocationIs(SettingsPage.path)}
+                icon={
+                  Navigation.currentLocationIs(SettingsPage.path)
+                    ? SettingsPage.iconActive
+                    : SettingsPage.icon
+                }
+                onClick={() => Navigation.push(SettingsPage.path)}
+              />
+            </Menu>
+          </SidebarFooter>
         </ProSidebar>
         <div className={AppClassNames.MainContent}>
           <div className={AppClassNames.HeaderBar}>
