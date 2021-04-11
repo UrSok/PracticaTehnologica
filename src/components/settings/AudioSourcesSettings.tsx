@@ -81,7 +81,7 @@ class AudioSourcesSettings extends React.PureComponent {
                         className={AudioSourcesClassNames.Switch}
                         id={`${library.id}`}
                         onChange={this.handleChange}
-                        checked={library.active}
+                        checked={library.active as boolean}
                         onColor="#966530"
                         onHandleColor="#ffb86c"
                         // offColor="#20201F"
