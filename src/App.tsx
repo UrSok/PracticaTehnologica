@@ -12,7 +12,12 @@ import { Scrollbars } from 'rc-scrollbars';
 import * as Ioios from 'react-icons/io';
 import { RiTestTubeFill } from 'react-icons/ri';
 import { Observer } from 'mobx-react-lite';
-import { PathData, PagesData, SettingsPage } from './constants/RoutesInfo';
+import {
+  PathData,
+  PagesData,
+  SettingsPage,
+  PlaylistPage,
+} from './constants/RoutesInfo';
 import './App.global.scss';
 import Home from './pages/Home';
 import MusicPlayer from './components/MusicPlayer';
@@ -88,6 +93,16 @@ class App extends React.Component<Props, {}> {
             <Scrollbars autoHide>
               <Menu iconShape="round">
                 {/* TEST DATA */}
+                <MenuItem
+                  key={PlaylistPage.key}
+                  active={Navigation.currentLocationIs(PlaylistPage.path)}
+                  icon={
+                    Navigation.currentLocationIs(PlaylistPage.path)
+                      ? PlaylistPage.iconActive
+                      : PlaylistPage.icon
+                  }
+                  onClick={() => Navigation.push(PlaylistPage.path)}
+                />
                 <MenuItem active={false} icon={<RiTestTubeFill />} />
                 <MenuItem active={false} icon={<RiTestTubeFill />} />
                 <MenuItem active={false} icon={<RiTestTubeFill />} />
@@ -157,7 +172,7 @@ class App extends React.Component<Props, {}> {
                 <Route path={PathData.MainLibrary} component={MainLibrary} />
                 <Route path={PathData.Settings} component={Settings} />
                 <Route path={PathData.Queue} component={Queue} />
-                <Route path={PathData.Albums} component={Playlist} />
+                <Route path={PathData.Playlist} component={Playlist} />
               </Switch>
             </div>
           </Scrollbars>
