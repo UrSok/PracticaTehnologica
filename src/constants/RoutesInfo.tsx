@@ -11,7 +11,7 @@ interface PageData {
 }
 
 export enum PathData {
-  Home = '/',
+  // Home = '/',
   RecentlyPlayed = '/recently',
   MainLibrary = '/mainlibrary',
   Playlist = '/playlist',
@@ -21,7 +21,7 @@ export enum PathData {
 }
 
 export enum PageTitle {
-  Home = 'Home',
+  // Home = 'Home',
   RecentlyPlayed = 'Recently Played',
   MainLibrary = 'Library',
   Playlist = 'Playlist',
@@ -31,13 +31,13 @@ export enum PageTitle {
 }
 
 export const PagesData: PageData[] = [
-  {
-    key: 'home',
-    title: PageTitle.Home,
-    path: PathData.Home,
-    icon: <BsIcons.BsHouse />,
-    iconActive: <BsIcons.BsHouseFill />,
-  },
+  // {
+  //   key: 'home',
+  //   title: PageTitle.Home,
+  //   path: PathData.Home,
+  //   icon: <BsIcons.BsHouse />,
+  //   iconActive: <BsIcons.BsHouseFill />,
+  // },
   {
     key: 'recentlyPlayed',
     title: PageTitle.RecentlyPlayed,

@@ -60,7 +60,7 @@ class App extends React.Component<Props, {}> {
     const { history } = this.props;
     if (!Navigation.history) {
       Navigation.init(history);
-      Navigation.replace(PathData.Home);
+      Navigation.replace(PathData.RecentlyPlayed);
     }
     return (
       <div className={AppClassNames.Main}>
@@ -164,7 +164,12 @@ class App extends React.Component<Props, {}> {
           <Scrollbars autoHide>
             <div className={AppClassNames.Content}>
               <Switch>
-                <Route path={PathData.Home} exact component={Home} />
+                {/* // testing the FirstLaunchWindow page
+                <Route
+                  path={PathData.Home}
+                  exact
+                  component={FirstLaunchWindow}
+                /> */}
                 <Route
                   path={PathData.RecentlyPlayed}
                   component={RecentlyPlayed}

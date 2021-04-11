@@ -12,10 +12,29 @@
       height: 100% !important;
       .rc-scrollbars-view {
         .Content {
-          padding: 20px 80px;
+          padding: 80px;
+          .Headers {
+            margin: 20px;
+          }
+          .H1 {
+            font-size: 50px;
+            color: $main-fg-color;
+          }
+          .Line {
+            width: 50%;
+            margin: auto;
+            color: $main-fg-color;
+            background-color: $main-fg-color;
+          }
           .FirstSection {
             margin-top: 20px;
+            .Title {
+              color: $secondary-bg-color;
+            }
             .Item {
+              .Path {
+                margin-left: 5px;
+              }
             }
             .AddSourceButton {
               margin-top: 10px;
@@ -26,6 +45,7 @@
     }
     .ConfirmButton {
       font-size: 20px;
+      font-weight: bold;
       position: absolute;
       bottom: 20px;
       right: 20px;
