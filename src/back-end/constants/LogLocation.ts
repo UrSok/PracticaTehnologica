@@ -3,6 +3,8 @@ enum LogLocation {
   MusicRepository = '[MusicRepository]',
   LibraryRepository = '[LibraryRepository]',
   UserDataRepository = '[UserDataRepository]',
+  QueueEntryRepository = '[QueueEntryRepository]',
+  PlayerRepository = '[PlayerRepository]',
 }
 
 export default LogLocation;

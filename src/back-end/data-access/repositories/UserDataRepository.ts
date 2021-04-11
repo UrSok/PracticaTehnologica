@@ -5,7 +5,7 @@ import { NullUserData, UserData } from '../../models';
 import BaseRepository from './BaseRepository';
 
 export class UserDataRepository extends BaseRepository {
-  public async update(userData: UserData): Promise<number> {
+  async update(userData: UserData): Promise<number> {
     const { db } = this.appDb;
     const result = await db.run(SQL`UPDATE UserData SET
       scanOnStart = ${userData.scanOnStart},
@@ -13,7 +13,7 @@ export class UserDataRepository extends BaseRepository {
     return result.changes ?? 0;
   }
 
-  public async get(): Promise<UserData> {
+  async get(): Promise<UserData> {
     try {
       const { db } = this.appDb;
       const result = await db.get<UserData>(`SELECT * FROM UserData`);

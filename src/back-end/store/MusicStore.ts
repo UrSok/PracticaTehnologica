@@ -1,7 +1,8 @@
+/* eslint-disable eqeqeq */
 import { makeAutoObservable, runInAction } from 'mobx';
 import ActionState from '../constants/ActionState';
 import musicRepository from '../data-access/repositories/MusicRepository';
-import { Music } from '../models';
+import { Music, NullMusic } from '../models';
 // eslint-disable-next-line import/no-cycle
 import RootStore from './RootStore';
 
@@ -66,5 +67,11 @@ export default class MusicStore {
 
   private musicExists(music: Music) {
     return this.musicList.some((x) => x.src === music.src);
+  }
+
+  getById(id: number): Music {
+    const music = this.musicList.find((x) => x.id == id);
+    if (music) return music;
+    return NullMusic;
   }
 }

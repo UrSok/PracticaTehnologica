@@ -1,6 +1,7 @@
 import { makeAutoObservable, runInAction } from 'mobx';
 import * as musicMedatada from 'music-metadata';
 import MusicStore from '../store/MusicStore';
+import getTimeString from '../utils/utils';
 
 export default class Music {
   id = -1;
@@ -26,17 +27,6 @@ export default class Music {
     this.store = store;
   }
 
-  get durationString(): string {
-    const hours = Math.trunc(this.durationSeconds / 3600);
-    const minutes = Math.trunc((this.durationSeconds % 3600) / 60);
-    const seconds = Math.trunc((this.durationSeconds % 3600) % 60);
-    return `
-      ${hours > 1 ? `0${hours}:` : ''}${minutes}:${
-      seconds < 10 ? `0${seconds}` : seconds
-    }
-    `;
-  }
-
   get addedString(): string {
     const { added } = this;
     if (added !== undefined) {
@@ -56,6 +46,10 @@ export default class Music {
       return added.toLocaleDateString();
     }
     return '';
+  }
+
+  get durationString(): string {
+    return getTimeString(this.durationSeconds);
   }
 
   updateFromDb(music: Music) {

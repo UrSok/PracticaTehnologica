@@ -47,6 +47,7 @@ export default class Library {
           const music = new Music(this.store?.rootStore.musicStore);
           runInAction(() => {
             music.src = file.fullname;
+            music.added = new Date(Date.now());
             this.store?.rootStore.musicStore.addMusicIfDoesntExist(music);
           });
         }
