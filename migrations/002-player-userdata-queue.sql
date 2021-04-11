@@ -14,7 +14,8 @@ CREATE TABLE Player (
     played              DECIMAL (8, 7) NOT NULL
                                        CHECK (played BETWEEN 0 AND 1),
     volume              DECIMAL (3, 2) NOT NULL
-                                       CHECK (volume BETWEEN 0 AND 1)
+                                       CHECK (volume BETWEEN 0 AND 1),
+    muted               BOOLEAN        NOT NULL
 );
 
 CREATE TABLE UserData (
@@ -22,5 +23,5 @@ CREATE TABLE UserData (
     firstLaunch BOOLEAN NOT NULL
 );
 
-INSERT INTO Player(shuffle, repeat, played, volume) VALUES(false, false, 0, 1);
+INSERT INTO Player(shuffle, repeat, played, volume, muted) VALUES(false, false, 0, 1, false);
 INSERT INTO UserData(firstLaunch, scanOnStart) VALUES(true, true);
