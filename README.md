@@ -31,7 +31,7 @@ yarn package
 - [React Player](https://github.com/cookpete/react-player)
 - [Node Sqlite](https://github.com/kriasoft/node-sqlite)
 - [SQL Template Strings](https://github.com/felixfbecker/node-sql-template-strings)
-- [Scan Dir](https://github.com/Bartozzz/scan-dir)
+- [Scan Dir Async](https://github.com/m0rtadelo/recursive-readdir-async)
 - [Music Metadata](https://github.com/Borewit/music-metadata)
 - [Sqlite3](https://github.com/mapbox/node-sqlite3)
 - [Sqlite Client](https://github.com/kriasoft/node-sqlite)
@@ -39,6 +39,7 @@ yarn package
 - [Rc Slider](https://github.com/react-component/slider)
 - [Roboto Fontface](https://www.npmjs.com/package/roboto-fontface)
 - [React Switch](https://github.com/markusenglund/react-switch)
+- [Custom Electron Titlebar](https://github.com/AlexTorresSk/custom-electron-titlebar)
 
 ## Miscellaneous
 
