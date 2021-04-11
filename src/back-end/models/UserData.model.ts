@@ -1,28 +1,7 @@
 import { makeAutoObservable } from 'mobx';
 import UserDataStore from '../store/UserDataStore';
 
-export enum Repeat {
-  None = 0,
-  All = 1,
-  Once = 2,
-}
-
-export enum PlayingFromType {
-  MainLibrary = 0,
-  Playlist = 1,
-}
-
 export default class UserData {
-  /* shuffle?: boolean;
-
-  repeat?: Repeat;
-
-  playingMusicId?: number;
-
-  playingFromType?: PlayingFromType;
-
-  playingFromId?: number; */
-
   scanOnStart?: boolean;
 
   firstLaunch = false;
@@ -38,11 +17,6 @@ export default class UserData {
     this.scanOnStart = userData.scanOnStart;
     this.firstLaunch = userData.firstLaunch;
   }
-
-  /* toggleShuffle() {
-    this.shuffle = !this.shuffle;
-    this.store?.updateDb(this);
-  } */
 
   toggleScanOnStart() {
     this.scanOnStart = !this.scanOnStart;
