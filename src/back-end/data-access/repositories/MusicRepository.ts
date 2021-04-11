@@ -3,7 +3,7 @@ import { Music } from '../../models';
 import BaseRepository from './BaseRepository';
 
 export class MusicRepository extends BaseRepository {
-  public async add(music: Music): Promise<number> {
+  async add(music: Music): Promise<number> {
     const { db } = this.appDb;
     const result = await db.run(
       SQL`INSERT INTO Music(src, added) VALUES(${music.src}, ${music.added})`
@@ -11,7 +11,7 @@ export class MusicRepository extends BaseRepository {
     return result.lastID ?? 0;
   }
 
-  public async getAll(): Promise<Music[]> {
+  async getAll(): Promise<Music[]> {
     try {
       const { db } = this.appDb;
       const result = await db.all<Music[]>(`SELECT * FROM Music`);

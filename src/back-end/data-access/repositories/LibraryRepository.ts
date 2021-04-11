@@ -5,13 +5,13 @@ import { Library } from '../../models';
 import BaseRepository from './BaseRepository';
 
 export class LibraryRepository extends BaseRepository {
-  public async add(path: string): Promise<number> {
+  async add(path: string): Promise<number> {
     const { db } = this.appDb;
     const result = await db.run(SQL`INSERT INTO Library(path) VALUES(${path})`);
     return result.lastID ?? 0;
   }
 
-  public async toggleActive(library: Library): Promise<boolean> {
+  async toggleActive(library: Library): Promise<boolean> {
     try {
       const { db } = this.appDb;
       await db.run(
@@ -25,7 +25,7 @@ export class LibraryRepository extends BaseRepository {
     }
   }
 
-  public async getAll(): Promise<Library[]> {
+  async getAll(): Promise<Library[]> {
     try {
       const { db } = this.appDb;
       const result = await db.all<Library[]>(`SELECT * FROM Library`);
