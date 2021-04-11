@@ -15,7 +15,7 @@ export enum PathData {
   RecentlyPlayed = '/recently',
   MainLibrary = '/mainlibrary',
   Albums = '/albums',
-  Artists = '/artists',
+  // Artists = '/artists',
   Queue = '/queue',
   Settings = '/settings',
 }
@@ -24,8 +24,8 @@ export enum PageTitle {
   Home = 'Home',
   RecentlyPlayed = 'Recently Played',
   MainLibrary = 'Library',
-  Albums = 'Albums',
-  Artists = 'Artists',
+  // Albums = 'Albums',
+  // Artists = 'Artists',
   Queue = 'Queue',
   Settings = 'Settings',
 }
@@ -52,7 +52,7 @@ export const PagesData: PageData[] = [
     icon: <BsIcons.BsCollectionPlay />,
     iconActive: <BsIcons.BsCollectionPlayFill />,
   },
-  {
+  /* {
     key: 'albums',
     title: PageTitle.Albums,
     path: PathData.Albums,
@@ -65,18 +65,19 @@ export const PagesData: PageData[] = [
     path: PathData.Artists,
     icon: <BsIcons.BsPerson />,
     iconActive: <BsIcons.BsPersonFill />,
-  },
-  {
-    key: 'settings',
-    title: PageTitle.Settings,
-    path: PathData.Settings,
-    icon: <RiIcons.RiSettings3Line />,
-    iconActive: <RiIcons.RiSettings3Fill />,
-  },
+  }, */
 ];
 
 export const QueuePage: PageData = {
   key: 'queue',
   title: PageTitle.Queue,
   path: PathData.Queue,
+};
+
+export const SettingsPage: PageData = {
+  key: 'settings',
+  title: PageTitle.Settings,
+  path: PathData.Settings,
+  icon: <RiIcons.RiSettings3Line />,
+  iconActive: <RiIcons.RiSettings3Fill />,
 };

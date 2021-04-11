@@ -1,9 +1,18 @@
 import React from 'react';
-import { ProSidebar, Menu, MenuItem } from 'react-pro-sidebar';
+import {
+  ProSidebar,
+  Menu,
+  MenuItem,
+  SidebarHeader,
+  SidebarContent,
+  SidebarFooter,
+} from 'react-pro-sidebar';
 import { Switch, Route, withRouter } from 'react-router-dom';
 import { Scrollbars } from 'rc-scrollbars';
 import * as Ioios from 'react-icons/io';
-import { PathData, PagesData } from './constants/RoutesInfo';
+import { RiTestTubeFill } from 'react-icons/ri';
+import { Observer } from 'mobx-react-lite';
+import { PathData, PagesData, SettingsPage } from './constants/RoutesInfo';
 import './App.global.scss';
 import Home from './pages/Home';
 import MusicPlayer from './components/MusicPlayer';
@@ -13,78 +22,114 @@ import Queue from './pages/Queue';
 import Navigation from './utils/Navigation';
 import IconButton from './components/IconButton';
 import Settings from './pages/Settings';
-import LibraryManager from './back-end/managers/LibraryMananger';
 import { AppClassNames, ButtonsClassNames } from './constants/ClassNames';
 import Playlist from './pages/Playlist';
-import MusicManager from './back-end/managers/MusicManager';
 import FirstLaunchWindow from './components/FirstLaunchWindow';
+import { StoreContext } from './utils/StoreContext';
+import RootStore from './back-end/store/RootStore';
 
 interface Props {
   history: any;
   location: any;
   match: any;
 }
-interface State {
-  firstLaunch: boolean;
-}
-class App extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
 
-    this.state = {
-      firstLaunch: false,
-    };
+// eslint-disable-next-line @typescript-eslint/ban-types
+class App extends React.Component<Props, {}> {
+  async componentDidMount() {
+    this.launch();
   }
 
-  componentDidMount() {
-    this.isFirstLaunch();
-  }
-
-  isFirstLaunch = async () => {
-    // change later to use db settings for that
-    const libraries = await LibraryManager.instance.getAll();
-    if (libraries.length === 0) {
-      this.setState({
-        firstLaunch: true,
-      });
-    } else {
-      this.setState({
-        firstLaunch: false,
-      });
-    }
-    const { firstLaunch } = this.state;
-    if (!firstLaunch) {
-      LibraryManager.instance.scanAllPaths();
-    }
+  launch = async () => {
+    const { libraryStore } = this.context as RootStore;
+    await libraryStore.loadLibaries();
+    libraryStore.scanPaths();
+    /* const { libraryStore, userDataStore } = this.context as RootStore;
+    console.log(userDataStore.userData?.firstLaunch);
+    if (!userDataStore.userData?.firstLaunch) {
+    } */
   };
 
   render() {
+    const { userDataStore } = this.context as RootStore;
     const { history } = this.props;
-    const { firstLaunch } = this.state;
     if (!Navigation.history) {
       Navigation.init(history);
       Navigation.replace(PathData.Home);
     }
-    // console.log(history);
     return (
       <div className={AppClassNames.Main}>
-        {firstLaunch ? (
-          <FirstLaunchWindow onResult={this.isFirstLaunch} />
-        ) : null}
+        <Observer>
+          {() => (
+            <div>
+              {userDataStore.userData?.firstLaunch ? (
+                <FirstLaunchWindow />
+              ) : null}
+            </div>
+          )}
+        </Observer>
         <ProSidebar>
-          <Menu iconShape="round">
-            {PagesData.map((item) => {
-              const isActive = Navigation.currentLocationIs(item.path);
-              return (
-                <MenuItem
-                  key={item.key}
-                  active={isActive}
-                  icon={isActive ? item.iconActive : item.icon}
-                  onClick={() => Navigation.push(item.path)}
-                />
-              );
-            })}
-          </Menu>
+          <SidebarHeader>
+            <Menu iconShape="round">
+              {PagesData.map((item) => {
+                const isActive = Navigation.currentLocationIs(item.path);
+                return (
+                  <MenuItem
+                    key={item.key}
+                    active={isActive}
+                    icon={isActive ? item.iconActive : item.icon}
+                    onClick={() => Navigation.push(item.path)}
+                  />
+                );
+              })}
+            </Menu>
+          </SidebarHeader>
+          <SidebarContent>
+            <Scrollbars autoHide>
+              <Menu iconShape="round">
+                {/* TEST DATA */}
+                <MenuItem active={false} icon={<RiTestTubeFill />} />
+                <MenuItem active={false} icon={<RiTestTubeFill />} />
+                <MenuItem active={false} icon={<RiTestTubeFill />} />
+                <MenuItem active={false} icon={<RiTestTubeFill />} />
+                <MenuItem active={false} icon={<RiTestTubeFill />} />
+                <MenuItem active={false} icon={<RiTestTubeFill />} />
+                <MenuItem active={false} icon={<RiTestTubeFill />} />
+                <MenuItem active={false} icon={<RiTestTubeFill />} />
+                <MenuItem active={false} icon={<RiTestTubeFill />} />
+                <MenuItem active={false} icon={<RiTestTubeFill />} />
+                <MenuItem active={false} icon={<RiTestTubeFill />} />
+                <MenuItem active={false} icon={<RiTestTubeFill />} />
+                <MenuItem active={false} icon={<RiTestTubeFill />} />
+                <MenuItem active={false} icon={<RiTestTubeFill />} />
+                <MenuItem active={false} icon={<RiTestTubeFill />} />
+                <MenuItem active={false} icon={<RiTestTubeFill />} />
+                <MenuItem active={false} icon={<RiTestTubeFill />} />
+                <MenuItem active={false} icon={<RiTestTubeFill />} />
+                <MenuItem active={false} icon={<RiTestTubeFill />} />
+                <MenuItem active={false} icon={<RiTestTubeFill />} />
+                <MenuItem active={false} icon={<RiTestTubeFill />} />
+                <MenuItem active={false} icon={<RiTestTubeFill />} />
+                <MenuItem active={false} icon={<RiTestTubeFill />} />
+                <MenuItem active={false} icon={<RiTestTubeFill />} />
+                {/* TEST DATA END */}
+              </Menu>
+            </Scrollbars>
+          </SidebarContent>
+          <SidebarFooter>
+            <Menu iconShape="round">
+              <MenuItem
+                key={SettingsPage.key}
+                active={Navigation.currentLocationIs(SettingsPage.path)}
+                icon={
+                  Navigation.currentLocationIs(SettingsPage.path)
+                    ? SettingsPage.iconActive
+                    : SettingsPage.icon
+                }
+                onClick={() => Navigation.push(SettingsPage.path)}
+              />
+            </Menu>
+          </SidebarFooter>
         </ProSidebar>
         <div className={AppClassNames.MainContent}>
           <div className={AppClassNames.HeaderBar}>
@@ -122,5 +167,7 @@ class App extends React.Component<Props, State> {
     );
   }
 }
+
+App.contextType = StoreContext;
 
 export default withRouter(App);

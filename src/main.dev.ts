@@ -14,7 +14,10 @@ import path from 'path';
 import { app, BrowserWindow, shell } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
-import fs from 'fs';
+import installExtension, {
+  REACT_DEVELOPER_TOOLS,
+  MOBX_DEVTOOLS,
+} from 'electron-devtools-installer';
 import MenuBuilder from './menu';
 import AppDb from './back-end/data-access/Database';
 
@@ -41,16 +44,19 @@ if (
 }
 
 const installExtensions = async () => {
-  const installer = require('electron-devtools-installer');
   const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
-  const extensions = ['REACT_DEVELOPER_TOOLS'];
-
-  return installer
+  const extensions = [REACT_DEVELOPER_TOOLS, MOBX_DEVTOOLS];
+  extensions.forEach(async (extension) => {
+    await installExtension(extension, forceDownload)
+      .then((name) => console.log(`Added Extension:  ${name}`))
+      .catch((err) => console.log('An error occurred: ', err));
+  });
+  /* return installer
     .default(
       extensions.map((name) => installer[name]),
       forceDownload
     )
-    .catch(console.log);
+    .catch(console.log); */
 };
 
 const createWindow = async () => {
@@ -62,18 +68,11 @@ const createWindow = async () => {
   // Database start
   await AppDb.init();
 
-  // Creathe the default library if it doesn't exist
-  fs.mkdir(path.join('music'), (error) => {
-    if (error === null) {
-      log.info('Default music library was created!');
-    }
-  });
-
   if (
     process.env.NODE_ENV === 'development' ||
     process.env.DEBUG_PROD === 'true'
   ) {
-    await installExtensions();
+    // await installExtensions();
   }
 
   const RESOURCES_PATH = app.isPackaged
@@ -90,6 +89,8 @@ const createWindow = async () => {
     height: 728,
     minWidth: 800,
     minHeight: 600,
+    backgroundColor: '#FFF',
+    frame: false,
     icon: getAssetPath('icon.png'),
     webPreferences: {
       nodeIntegration: true,

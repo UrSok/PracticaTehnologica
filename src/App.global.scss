@@ -61,8 +61,8 @@ body {
   .HeaderBar {
     position: absolute;
     z-index: 1;
-    margin-top: 15px;
-    margin-left: 18px;
+    margin-top: 20px;
+    margin-left: 30px;
   }
   .rc-scrollbars-container {
     height: calc(100% - #{$player-height}) !important;
@@ -82,4 +82,26 @@ body {
     cursor: default !important;
     background-color: $main-fg-color !important;
   }
+}
+
+.titlebar {
+  justify-content: flex-end !important;
+  left: auto !important;
+  right: 0 !important;
+  width: calc(100% - 73px) !important;
+  .window-controls-container {
+    background-color: rgba(160, 160, 160, 0.2);
+  }
+  .window-title {
+    display: none;
+  }
+
+  .menubar {
+    display: none;
+  }
+}
+
+.container-after-titlebar {
+  inset: 0 !important;
+  height: 100%;
 }

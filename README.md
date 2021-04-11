@@ -39,6 +39,7 @@ yarn package
 - [Rc Slider](https://github.com/react-component/slider)
 - [Roboto Fontface](https://www.npmjs.com/package/roboto-fontface)
 - [React Switch](https://github.com/markusenglund/react-switch)
+- [Custom Electron Titlebar](https://github.com/AlexTorresSk/custom-electron-titlebar)
 
 ## Miscellaneous
 

@@ -1,24 +1,23 @@
-/* eslint-disable no-underscore-dangle */
 import sqlite3 from 'sqlite3';
 import { Database } from 'sqlite';
 import log from 'electron-log';
 import LogLocation from '../constants/LogLocation';
 
 export default class AppDb {
-  private _db!: Database;
+  private privateDb: Database;
 
   get db(): Database {
-    return this._db;
+    return this.privateDb;
   }
 
   static instance: AppDb = new AppDb();
 
   private constructor() {
-    this._db = new Database<sqlite3.Database, sqlite3.Statement>({
+    this.privateDb = new Database<sqlite3.Database, sqlite3.Statement>({
       filename: 'data.db',
       driver: sqlite3.cached.Database,
     });
-    this._db.open();
+    this.privateDb.open();
   }
 
   static async init() {
