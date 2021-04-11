@@ -11,6 +11,22 @@ $sidebar-color: $sidebar-item-fg-color !default;
   // position: fixed;
   width: initial;
   min-width: initial;
+  .pro-sidebar-inner {
+    .pro-sidebar-header {
+      // background: linear-gradient(0deg,rgba(86,101,144,0) 0%, red 100%);
+      // border-bottom: 0 !important;
+    }
+    .pro-sidebar-content {
+      // box-sizing: border-box;
+      // border: 20px solid;
+      // border-width: 30px;
+      // border-image-slice: 2;
+      // border-image: linear-gradient(0deg,rgba(86,101,144,0) 0%, red 100%);
+    }
+    .pro-sidebar-layout {
+      overflow-y: hidden;
+    }
+  }
   .pro-menu-item {
     &:not(:first-child) {
       margin-top: 5px;
