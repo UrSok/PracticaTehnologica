@@ -73,38 +73,32 @@ class App extends React.Component<Props, {}> {
         </Observer>
         <ProSidebar>
           <SidebarHeader>
+            <div className={AppClassNames.HeaderBar}>
+              <IconButton
+                icon={
+                  <Ioios.IoIosArrowBack className={ButtonsClassNames.Icon} />
+                }
+                onClick={() => Navigation.goBack()}
+                disabled={Navigation.isFirstVisitedLocation()}
+              />
+              <IconButton
+                icon={
+                  <Ioios.IoIosArrowForward className={ButtonsClassNames.Icon} />
+                }
+                onClick={() => Navigation.goForward()}
+                disabled={Navigation.isLastVisitedLocation()}
+              />
+            </div>
             <Menu iconShape="round">
               {PagesData.map((item) => {
                 const isActive = Navigation.currentLocationIs(item.path);
                 return (
-                  <>
-                    <div className={AppClassNames.HeaderBar}>
-                      <IconButton
-                        icon={
-                          <Ioios.IoIosArrowBack
-                            className={ButtonsClassNames.Icon}
-                          />
-                        }
-                        onClick={() => Navigation.goBack()}
-                        disabled={Navigation.isFirstVisitedLocation()}
-                      />
-                      <IconButton
-                        icon={
-                          <Ioios.IoIosArrowForward
-                            className={ButtonsClassNames.Icon}
-                          />
-                        }
-                        onClick={() => Navigation.goForward()}
-                        disabled={Navigation.isLastVisitedLocation()}
-                      />
-                    </div>
-                    <MenuItem
-                      key={item.key}
-                      active={isActive}
-                      icon={isActive ? item.iconActive : item.icon}
-                      onClick={() => Navigation.push(item.path)}
-                    />
-                  </>
+                  <MenuItem
+                    key={item.key}
+                    active={isActive}
+                    icon={isActive ? item.iconActive : item.icon}
+                    onClick={() => Navigation.push(item.path)}
+                  />
                 );
               })}
             </Menu>
