@@ -1,26 +1,22 @@
-import { Observer } from 'mobx-react-lite';
 import React from 'react';
-import * as BsIcons from 'react-icons/bs';
 import PageTitle from '../components/PageTitle';
-import Table from '../components/Table';
 import { PagesClassNames } from '../constants/ClassNames';
 import { useRootStore } from '../utils/StoreContext';
+import { PlayingFromType } from '../back-end/models';
+import RootStore from '../back-end/store/RootStore';
+import MusicList from '../components/MusicList';
 
 const MainLibrary: React.FC = () => {
-  const { musicStore } = useRootStore();
+  const { musicStore } = useRootStore() as RootStore;
   return (
     <div className={PagesClassNames.MainLibrary}>
       <div className="">
         <PageTitle PageName="Main Library" />
       </div>
-
-      <div className="Input">
-        <div className="Filter">
-          <BsIcons.BsSearch className="icon" />
-          <input className="FilterInput" type="text" placeholder="Filter" />
-        </div>
-      </div>
-      <Table musicList={musicStore?.musicList} />
+      <MusicList
+        musicList={musicStore.musicList}
+        playingFromType={PlayingFromType.MainLibrary}
+      />
     </div>
   );
 };

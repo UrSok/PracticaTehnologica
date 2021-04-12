@@ -20,9 +20,9 @@ export default class Music {
 
   durationSeconds = 0;
 
-  store?: MusicStore;
+  store: MusicStore;
 
-  constructor(store: MusicStore | undefined) {
+  constructor(store: MusicStore) {
     makeAutoObservable(this);
     this.store = store;
   }
@@ -86,5 +86,3 @@ export default class Music {
     });
   }
 }
-
-export const NullMusic = new Music(undefined);

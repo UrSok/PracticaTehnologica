@@ -3,35 +3,3 @@
   position: sticky;
   background-color: #44475a; // $main-bg-color
 }
-
-.Filter {
-  border-bottom: 1px solid #ffb86c;
-  position: relative;
-  .Icon {
-    left: 10px;
-    position: absolute;
-    z-index: 0;
-  }
-  .FilterInput {
-    background-color: transparent;
-    border-radius: 0;
-    margin-left: 5px;
-    padding: 0 28px;
-    padding-bottom: 8px;
-    vertical-align: middle;
-    width: 100%;
-    color: $main-fg-color;
-    border: 1px solid #44475a;
-    z-index: 1;
-    &:focus {
-      outline: none;
-    }
-  }
-  &:hover {
-    color: $main-fg-color;
-    cursor: text;
-    .FilterInput::placeholder {
-      color: $main-fg-color;
-    }
-  }
-}

@@ -7,7 +7,8 @@
   border-bottom-right-radius: inherit;
 
   .ControlsAndMusicInfo {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     justify-content: space-between;
     align-items: center;
     height: 100%;
@@ -17,6 +18,7 @@
       margin: 0 7px;
     }
     .LeftControls {
+      white-space: nowrap;
       .PlayPauseButton {
         color: $main-fg-color;
         .Icon {
@@ -58,16 +60,9 @@
       }
     }
     .MusicInfo {
-      // Fix the positioning later
       display: flex;
       white-space: nowrap;
       overflow: hidden;
-      @media (max-width: 785px) {
-        width: 320px;
-      }
-      @media (max-width: 937px) {
-        width: 300px;
-      }
       .AlbumArt {
         width: $album-art-size;
         height: $album-art-size;
@@ -78,23 +73,27 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
+        overflow: hidden;
         .Title {
-          font-size: 14px;
-          font-weight: 500;
+          font-weight: 600;
           font-size: 14px;
           line-height: 20px;
           letter-spacing: 0;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
         .ArtistAlbum {
           font-size: 12px;
           letter-spacing: 0.015em;
           line-height: 18px;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
       }
     }
     .RightControls {
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-end;
       align-items: center;
       .VolumeBarContainer {
         display: flex;

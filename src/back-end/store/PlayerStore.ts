@@ -22,7 +22,7 @@ export default class PlayerStore {
     this.loadPlayer();
   }
 
-  public async loadPlayer() {
+  async loadPlayer() {
     this.actionState = ActionState.Loading;
     try {
       const player = await this.repository.get();
@@ -43,6 +43,4 @@ export default class PlayerStore {
   updateDb(player: Player) {
     this.repository.update(player);
   }
-
-  /* Implement logic to queue all music */
 }

@@ -1,7 +1,7 @@
 import log from 'electron-log';
 import SQL from 'sql-template-strings';
 import LogLocation from '../../constants/LogLocation';
-import { NullUserData, UserData } from '../../models';
+import { UserData } from '../../models';
 import BaseRepository from './BaseRepository';
 
 export class UserDataRepository extends BaseRepository {
@@ -13,7 +13,7 @@ export class UserDataRepository extends BaseRepository {
     return result.changes ?? 0;
   }
 
-  async get(): Promise<UserData> {
+  async get(): Promise<UserData | undefined> {
     try {
       const { db } = this.appDb;
       const result = await db.get<UserData>(`SELECT * FROM UserData`);
@@ -23,7 +23,7 @@ export class UserDataRepository extends BaseRepository {
       throw new Error('Cannot retrieve UserData');
     } catch (reason) {
       log.error(`${LogLocation.UserDataRepository} ${reason}`);
-      return NullUserData;
+      return undefined;
     }
   }
 }

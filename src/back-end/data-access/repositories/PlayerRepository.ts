@@ -1,7 +1,7 @@
 import log from 'electron-log';
 import SQL from 'sql-template-strings';
 import LogLocation from '../../constants/LogLocation';
-import { Player, NullPlayer } from '../../models';
+import { Player } from '../../models';
 import BaseRepository from './BaseRepository';
 
 export class PlayerRepository extends BaseRepository {
@@ -10,7 +10,6 @@ export class PlayerRepository extends BaseRepository {
     const result = await db.run(SQL`UPDATE Player SET
       shuffle = ${player.shuffle},
       repeat = ${player.repeat},
-      playingQueueEntryId = ${player.playingQueueEntryId},
       playingFromType = ${player.playingFromType},
       playingFromId = ${player.playingFromId},
       played = ${player.played},
@@ -19,7 +18,7 @@ export class PlayerRepository extends BaseRepository {
     return result.changes ?? 0;
   }
 
-  async get(): Promise<Player> {
+  async get(): Promise<Player | undefined> {
     try {
       const { db } = this.appDb;
       const result = await db.get<Player>(`SELECT * FROM Player`);
@@ -29,7 +28,7 @@ export class PlayerRepository extends BaseRepository {
       throw new Error('Cannot retrieve Player');
     } catch (reason) {
       log.error(`${LogLocation.PlayerRepository} ${reason}`);
-      return NullPlayer;
+      return undefined;
     }
   }
 }

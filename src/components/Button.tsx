@@ -5,7 +5,7 @@ interface Props {
   text: string;
   className?: string;
   disabled?: boolean;
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 const Button: React.FC<Props> = (props: Props) => {
@@ -26,6 +26,7 @@ const Button: React.FC<Props> = (props: Props) => {
 Button.defaultProps = {
   className: '',
   disabled: false,
+  onClick: () => {},
 };
 
 export default Button;

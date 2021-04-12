@@ -31,11 +31,11 @@ export default class Navigation {
     return this.history.location.pathname === location;
   }
 
-  static isFirstVisitedLocation() {
+  static get isFirstVisitedLocation() {
     return this.currentLocationPosition === 0;
   }
 
-  static isLastVisitedLocation() {
+  static get isLastVisitedLocation() {
     return this.currentLocationPosition === this.history.length - 1;
   }
 

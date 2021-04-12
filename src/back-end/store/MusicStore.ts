@@ -65,13 +65,11 @@ export default class MusicStore {
     }
   }
 
-  private musicExists(music: Music) {
+  private musicExists(music: Music): boolean {
     return this.musicList.some((x) => x.src === music.src);
   }
 
-  getById(id: number): Music {
-    const music = this.musicList.find((x) => x.id == id);
-    if (music) return music;
-    return NullMusic;
+  getById(id: number): Music | undefined {
+    return this.musicList.find((x) => x.id == id);
   }
 }

@@ -5,7 +5,7 @@ interface IconButonProps {
   icon: React.ReactNode;
   className?: string;
   disabled?: boolean;
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 const IconButton: React.FC<IconButonProps> = (props: IconButonProps) => {
@@ -26,6 +26,7 @@ const IconButton: React.FC<IconButonProps> = (props: IconButonProps) => {
 IconButton.defaultProps = {
   className: '',
   disabled: false,
+  onClick: () => {},
 };
 
 export default IconButton;

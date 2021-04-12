@@ -135,14 +135,14 @@ class App extends React.Component<Props, {}> {
             <IconButton
               icon={<Ioios.IoIosArrowBack className={ButtonsClassNames.Icon} />}
               onClick={() => Navigation.goBack()}
-              disabled={Navigation.isFirstVisitedLocation()}
+              disabled={Navigation.isFirstVisitedLocation}
             />
             <IconButton
               icon={
                 <Ioios.IoIosArrowForward className={ButtonsClassNames.Icon} />
               }
               onClick={() => Navigation.goForward()}
-              disabled={Navigation.isLastVisitedLocation()}
+              disabled={Navigation.isLastVisitedLocation}
             />
           </div>
           <Scrollbars autoHide>

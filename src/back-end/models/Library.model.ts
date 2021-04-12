@@ -13,9 +13,9 @@ export default class Library {
 
   active = true;
 
-  store?: LibraryStore;
+  store: LibraryStore;
 
-  constructor(store: LibraryStore | undefined) {
+  constructor(store: LibraryStore) {
     makeAutoObservable(this);
     this.store = store;
   }
@@ -28,11 +28,12 @@ export default class Library {
 
   toggleActive() {
     this.active = !this.active;
-    this.store?.repository.toggleActive(this);
+    this.store.repository.toggleActive(this);
   }
 
   async scanPath() {
     const supportedExtensionsRegex = new RegExp(`^.mp3|.ogg|.wav$`);
+    const { musicStore } = this.store.rootStore;
     await scanAsync.list(
       this.path,
       {
@@ -44,16 +45,14 @@ export default class Library {
           supportedExtensionsRegex.test(file.extension)
         ) {
           log.info(`${index}/${total}`, file.fullname);
-          const music = new Music(this.store?.rootStore.musicStore);
+          const music = new Music(musicStore);
           runInAction(() => {
             music.src = file.fullname;
             music.added = new Date(Date.now());
-            this.store?.rootStore.musicStore.addMusicIfDoesntExist(music);
+            musicStore.addMusicIfDoesntExist(music);
           });
         }
       }
     );
   }
 }
-
-export const NullLibrary = new Library(undefined);

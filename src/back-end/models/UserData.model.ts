@@ -6,9 +6,9 @@ export default class UserData {
 
   firstLaunch = false;
 
-  store?: UserDataStore;
+  store: UserDataStore;
 
-  constructor(store: UserDataStore | undefined) {
+  constructor(store: UserDataStore) {
     makeAutoObservable(this);
     this.store = store;
   }
@@ -20,13 +20,11 @@ export default class UserData {
 
   toggleScanOnStart() {
     this.scanOnStart = !this.scanOnStart;
-    this.store?.updateDb(this);
+    this.store.updateDb(this);
   }
 
   toggleFirstLaunch() {
     this.firstLaunch = !this.firstLaunch;
-    this.store?.updateDb(this);
+    this.store.updateDb(this);
   }
 }
-
-export const NullUserData = new UserData(undefined);

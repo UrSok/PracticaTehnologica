@@ -1,22 +1,12 @@
+/* eslint-disable @typescript-eslint/no-throw-literal */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable eqeqeq */
 /* eslint-disable no-plusplus */
 import { makeAutoObservable } from 'mobx';
-import { Music } from '.';
+import { Music, PlayingFromType, Repeat } from '.';
 import PlayerStore from '../store/PlayerStore';
 import getTimeString from '../utils/utils';
-import { NullMusic } from './Music.model';
-
-export enum Repeat {
-  None = 0,
-  All = 1,
-  Track = 2,
-}
-
-export enum PlayingFromType {
-  MainLibrary = 0,
-  Playlist = 1,
-}
+import { QueueEntryState } from './enums';
 
 export default class Player {
   playing = false;
@@ -25,46 +15,40 @@ export default class Player {
 
   repeat = Repeat.None;
 
-  playingQueueEntryId?: number;
-
-  playingFromType?: PlayingFromType;
-
-  playingFromId?: number;
-
   played = 0;
 
   volume = 1;
 
   muted = false;
 
-  store?: PlayerStore;
+  playingFromType = PlayingFromType.None;
 
-  constructor(store: PlayerStore | undefined) {
+  playingFromId?: number;
+
+  store: PlayerStore;
+
+  constructor(store: PlayerStore) {
     makeAutoObservable(this);
     this.store = store;
   }
 
-  get currentPlayingMusic(): Music {
-    const queueEntry = this.store?.rootStore.queueStore.queue.find(
-      (x) => x.id == this.playingQueueEntryId
-    );
-    let music: Music | undefined;
-    if (queueEntry)
-      music = this.store?.rootStore.musicStore.getById(queueEntry.musicId);
-    if (music) return music;
-    return NullMusic;
+  get currentPlayingMusic(): Music | undefined {
+    const { queueStore, musicStore } = this.store.rootStore;
+    const queueEntry = queueStore.currentQueueEntryOrQueueEntryPriority;
+    if (queueEntry) return musicStore.getById(queueEntry.musicId);
+    return undefined;
   }
 
   get timeString(): string {
-    return getTimeString(
-      this.played * this.currentPlayingMusic.durationSeconds
-    );
+    const music = this.currentPlayingMusic;
+    if (!music) return '';
+    return getTimeString(this.played * music.durationSeconds);
   }
 
   updateFromDb(player: Player) {
     this.shuffle = player.shuffle;
     this.repeat = player.repeat;
-    this.playingQueueEntryId = player.playingQueueEntryId;
+    this.playingQueueEntryCombinedId = player.playingQueueEntryCombinedId;
     this.playingFromType = player.playingFromType;
     this.playingFromId = player.playingFromId;
     this.played = player.played;
@@ -72,33 +56,47 @@ export default class Player {
   }
 
   seekTo(value: number) {
-    this.store?.reactPlayer.seekTo(value);
+    this.store.reactPlayer.seekTo(value);
     this.setProgress(value);
   }
 
   toggleMute() {
     this.muted = !this.muted;
-    this.store?.updateDb(this);
+    this.store.updateDb(this);
   }
 
   togglePlaying() {
     this.playing = !this.playing;
   }
 
+  Play() {
+    this.playing = true;
+  }
+
+  Pause() {
+    this.playing = false;
+  }
+
   toggleShuffle() {
+    const { queueStore } = this.store.rootStore;
     this.shuffle = !this.shuffle;
-    this.store?.updateDb(this);
+    if (this.shuffle) {
+      queueStore.shuffleQueue();
+    } else {
+      queueStore.unshuffleQueue();
+    }
+    this.store.updateDb(this);
   }
 
   setRepeatAll() {
     this.repeat = Repeat.All;
-    this.store?.updateDb(this);
+    this.store.updateDb(this);
   }
 
   toggleRepeat() {
     this.repeat++;
     if (this.repeat > 2) this.repeat = 0;
-    this.store?.updateDb(this);
+    this.store.updateDb(this);
   }
 
   setVolume(volume: number) {
@@ -107,84 +105,62 @@ export default class Player {
 
   setVolumeAndSave(volume: number) {
     this.volume = volume;
-    this.store?.updateDb(this);
+    this.store.updateDb(this);
   }
 
   setProgressAndSave(played: number) {
     this.played = played;
-    this.store?.updateDb(this);
+    this.store.updateDb(this);
   }
 
   setProgress(played: number) {
     this.played = played;
   }
 
-  setPlayingQueueEntryId(playingQueueEntryId: number) {
-    this.playingQueueEntryId = playingQueueEntryId;
-    this.store?.updateDb(this);
-  }
-
-  setPlayingFromType(playingFromType: PlayingFromType) {
-    this.playingFromType = playingFromType;
-    this.store?.updateDb(this);
-  }
-
-  setPlayingFromId(playingFromId: number) {
-    this.playingFromId = playingFromId;
-    this.store?.updateDb(this);
-  }
-
-  setNewPlayingQueue(
-    playingFromType: PlayingFromType,
-    playingQueueEntryId: number
-  ) {
-    this.playingFromType = playingFromType;
-    this.playingQueueEntryId = playingQueueEntryId;
-    this.store?.updateDb(this);
-  }
-
-  queueAll() {
-    this.store?.rootStore.queueStore.replaceQueue(
-      this.store?.rootStore.musicStore.musicList
-    );
-    this.setNewPlayingQueue(
-      PlayingFromType.MainLibrary,
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      this.store!.rootStore.queueStore.queue[0].id!
-    );
+  playCurrentMainLibrary(musicId: number) {
+    /* should remove current playing queueEntryPriority */
+    const { queueStore, musicStore } = this.store.rootStore;
+    if (this.playingFromType === PlayingFromType.MainLibrary) {
+      if (queueStore.currentQueueEntry)
+        queueStore.currentQueueEntry.setState(QueueEntryState.None);
+    } else {
+      queueStore.replaceQueue(musicStore.musicList);
+      if (this.shuffle) queueStore.shuffleQueue();
+    }
+    queueStore.setPlayingByMusicId(musicId);
+    /* Create method to save all queue at once */
+    this.Play();
+    if (this.repeat === Repeat.Track) {
+      this.setRepeatAll();
+    }
   }
 
   prevSong() {
+    const { queueStore } = this.store.rootStore;
     if (this.repeat === Repeat.Track) this.setRepeatAll();
     if (this.played <= 0.1) {
-      const queueEntry = this.store?.rootStore.queueStore.getPrevQueueEntry(
-        this.playingQueueEntryId!
-      );
-      this.setPlayingQueueEntryId(queueEntry!.id!);
+      queueStore.prevEntry();
     } else {
       this.seekTo(0);
     }
   }
 
   nextSong(forced = false) {
-    if (forced) this.setRepeatAll();
+    const { queueStore } = this.store.rootStore;
+    this.seekTo(0);
     if (this.repeat === Repeat.Track) {
-      this.seekTo(0);
-      return;
-    }
-    if (
+      if (forced) {
+        this.Play();
+        this.setRepeatAll();
+      } else return;
+    } else if (
+      !forced &&
       this.repeat === Repeat.None &&
-      this.store?.rootStore.queueStore.isLastSong(this.playingQueueEntryId!)
+      queueStore.isLastSong
     ) {
       this.playing = false;
-      this.seekTo(0);
       return;
     }
-    const queueEntry = this.store?.rootStore.queueStore.getNextQueueEntry(
-      this.playingQueueEntryId!
-    );
-    this.setPlayingQueueEntryId(queueEntry!.id!);
+    queueStore.nextEntry();
   }
 }
-
-export const NullPlayer = new Player(undefined);

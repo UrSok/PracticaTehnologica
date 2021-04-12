@@ -15,13 +15,12 @@ import Navigation from '../utils/Navigation';
 import { ButtonsClassNames } from '../constants/ClassNames';
 import { StoreContext } from '../utils/StoreContext';
 import RootStore from '../back-end/store/RootStore';
-import { NullMusic, Repeat } from '../back-end/models';
+import { Repeat } from '../back-end/models';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface Props {}
 
 interface State {
-  firstStart: boolean;
   seeking: boolean;
 }
 
@@ -35,7 +34,6 @@ export default class MusicPlayer extends React.PureComponent<Props, State> {
     super(props);
 
     this.state = {
-      firstStart: true,
       seeking: false,
     };
   }
@@ -74,17 +72,22 @@ export default class MusicPlayer extends React.PureComponent<Props, State> {
     const { playerStore } = this.context as RootStore;
     playerStore.player.togglePlaying();
 
-    const { firstStart } = this.state;
+    /* const { firstStart } = this.state;
     if (firstStart) {
       if (playerStore.player.store?.rootStore.queueStore.queue.length === 0)
         playerStore.player.queueAll();
       this.setState({ firstStart: !firstStart });
-    }
+    } */
   };
 
   handleQueueVisibility = () => {
+    console.log(Navigation.currentLocationIs(PathData.Queue));
     if (!Navigation.currentLocationIs(PathData.Queue)) {
+      console.log('???');
       Navigation.push(PathData.Queue);
+      if (!Navigation.isLastVisitedLocation) {
+        Navigation.history.goForward();
+      }
     } else {
       Navigation.goBack();
     }
@@ -107,25 +110,27 @@ export default class MusicPlayer extends React.PureComponent<Props, State> {
       <Observer>
         {() => (
           <>
-            <ReactPlayer
-              style={{ display: 'none' }}
-              ref={this.ref}
-              url={playerStore.player.currentPlayingMusic.src}
-              playing={playerStore.player.playing}
-              volume={playerStore.player.volume}
-              muted={playerStore.player.muted}
-              onProgress={this.handleProgress}
-              onEnded={() => {
-                playerStore.player.nextSong();
-              }}
-            />
+            {playerStore.player.currentPlayingMusic && (
+              <ReactPlayer
+                style={{ display: 'none' }}
+                ref={this.ref}
+                url={playerStore.player.currentPlayingMusic.src}
+                playing={playerStore.player.playing}
+                volume={playerStore.player.volume}
+                muted={playerStore.player.muted}
+                onProgress={this.handleProgress}
+                onEnded={() => {
+                  playerStore.player.nextSong();
+                }}
+              />
+            )}
             <div className="MusicPlayerBar">
               <SliderWithTooltip
                 min={0}
                 max={0.9999999}
                 step={0.000001}
                 value={playerStore.player.played}
-                disabled={playerStore.player.currentPlayingMusic === NullMusic}
+                disabled={!playerStore.player.currentPlayingMusic}
                 className="ProgressBar"
                 tipFormatter={() => `${playerStore.player.timeString}`}
                 onBeforeChange={this.handleStartSeeking}
@@ -196,32 +201,34 @@ export default class MusicPlayer extends React.PureComponent<Props, State> {
                     }`}
                   />
                 </div>
-                {playerStore.player.currentPlayingMusic !== NullMusic && (
-                  <div className="MusicInfo">
-                    <img
-                      src={
-                        playerStore.player.currentPlayingMusic.albumArt !==
-                        undefined
-                          ? playerStore.player.currentPlayingMusic.albumArt
-                          : noAlbumArt
-                      }
-                      alt="album-art"
-                      className="AlbumArt"
-                    />
-                    <div className="TextContainer">
-                      <div className="Title">
-                        {playerStore.player.currentPlayingMusic.title}
+                <div className="MusicInfo">
+                  {playerStore.player.currentPlayingMusic && (
+                    <>
+                      <img
+                        src={
+                          playerStore.player.currentPlayingMusic.albumArt !==
+                          undefined
+                            ? playerStore.player.currentPlayingMusic.albumArt
+                            : noAlbumArt
+                        }
+                        alt="album-art"
+                        className="AlbumArt"
+                      />
+                      <div className="TextContainer">
+                        <div className="Title">
+                          {playerStore.player.currentPlayingMusic.title}
+                        </div>
+                        <div className="ArtistAlbum">
+                          {playerStore.player.currentPlayingMusic.artists !==
+                          undefined
+                            ? `${playerStore.player.currentPlayingMusic.artists} — `
+                            : ''}
+                          {playerStore.player.currentPlayingMusic.album}
+                        </div>
                       </div>
-                      <div className="ArtistAlbum">
-                        {playerStore.player.currentPlayingMusic.artists !==
-                        undefined
-                          ? `${playerStore.player.currentPlayingMusic.artists} — `
-                          : ''}
-                        {playerStore.player.currentPlayingMusic.album}
-                      </div>
-                    </div>
-                  </div>
-                )}
+                    </>
+                  )}
+                </div>
                 <div className="RightControls">
                   <IconButton
                     icon={

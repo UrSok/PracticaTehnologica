@@ -47,7 +47,7 @@ export default class LibraryStore {
     }
   }
 
-  addLibraryIfDoesntExist(library: Library) {
+  addLibraryIfDoesntExist(library: Library): boolean {
     if (!this.libraryExists(library)) {
       this.addLibrary(library);
       return true;
@@ -56,7 +56,6 @@ export default class LibraryStore {
   }
 
   async addLibrary(library: Library) {
-    // should I use it in firstlaunchwindow?
     const resultId = await this.repository.add(library.path);
     if (resultId !== 0) {
       library.id = resultId;
