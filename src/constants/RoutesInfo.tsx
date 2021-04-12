@@ -12,7 +12,7 @@ interface PageData {
 
 export enum PathData {
   // Home = '/',
-  RecentlyPlayed = '/recently',
+  // RecentlyPlayed = '/recently',
   MainLibrary = '/mainlibrary',
   Playlist = '/playlist',
   // Artists = '/artists',
@@ -22,7 +22,7 @@ export enum PathData {
 
 export enum PageTitle {
   // Home = 'Home',
-  RecentlyPlayed = 'Recently Played',
+  // RecentlyPlayed = 'Recently Played',
   MainLibrary = 'Library',
   Playlist = 'Playlist',
   // Artists = 'Artists',
@@ -38,13 +38,13 @@ export const PagesData: PageData[] = [
   //   icon: <BsIcons.BsHouse />,
   //   iconActive: <BsIcons.BsHouseFill />,
   // },
-  {
-    key: 'recentlyPlayed',
-    title: PageTitle.RecentlyPlayed,
-    path: PathData.RecentlyPlayed,
-    icon: <BsIcons.BsClock />,
-    iconActive: <BsIcons.BsClockFill />,
-  },
+  // {
+  //   key: 'recentlyPlayed',
+  //   title: PageTitle.RecentlyPlayed,
+  //   path: PathData.RecentlyPlayed,
+  //   icon: <BsIcons.BsClock />,
+  //   iconActive: <BsIcons.BsClockFill />,
+  // },
   {
     key: 'mainLibrary',
     title: PageTitle.MainLibrary,

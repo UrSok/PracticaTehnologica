@@ -19,9 +19,7 @@ import {
   PlaylistPage,
 } from './constants/RoutesInfo';
 import './App.global.scss';
-import Home from './pages/Home';
 import MusicPlayer from './components/MusicPlayer';
-import RecentlyPlayed from './pages/RecentlyPlayed';
 import MainLibrary from './pages/MainLibrary';
 import Queue from './pages/Queue';
 import Navigation from './utils/Navigation';
@@ -60,7 +58,7 @@ class App extends React.Component<Props, {}> {
     const { history } = this.props;
     if (!Navigation.history) {
       Navigation.init(history);
-      Navigation.replace(PathData.RecentlyPlayed);
+      Navigation.replace(PathData.MainLibrary);
     }
     return (
       <div className={AppClassNames.Main}>
@@ -79,12 +77,34 @@ class App extends React.Component<Props, {}> {
               {PagesData.map((item) => {
                 const isActive = Navigation.currentLocationIs(item.path);
                 return (
-                  <MenuItem
-                    key={item.key}
-                    active={isActive}
-                    icon={isActive ? item.iconActive : item.icon}
-                    onClick={() => Navigation.push(item.path)}
-                  />
+                  <>
+                    <div className={AppClassNames.HeaderBar}>
+                      <IconButton
+                        icon={
+                          <Ioios.IoIosArrowBack
+                            className={ButtonsClassNames.Icon}
+                          />
+                        }
+                        onClick={() => Navigation.goBack()}
+                        disabled={Navigation.isFirstVisitedLocation()}
+                      />
+                      <IconButton
+                        icon={
+                          <Ioios.IoIosArrowForward
+                            className={ButtonsClassNames.Icon}
+                          />
+                        }
+                        onClick={() => Navigation.goForward()}
+                        disabled={Navigation.isLastVisitedLocation()}
+                      />
+                    </div>
+                    <MenuItem
+                      key={item.key}
+                      active={isActive}
+                      icon={isActive ? item.iconActive : item.icon}
+                      onClick={() => Navigation.push(item.path)}
+                    />
+                  </>
                 );
               })}
             </Menu>
@@ -147,6 +167,7 @@ class App extends React.Component<Props, {}> {
           </SidebarFooter>
         </ProSidebar>
         <div className={AppClassNames.MainContent}>
+          {/* // previous position of arrow buttons
           <div className={AppClassNames.HeaderBar}>
             <IconButton
               icon={<Ioios.IoIosArrowBack className={ButtonsClassNames.Icon} />}
@@ -160,7 +181,7 @@ class App extends React.Component<Props, {}> {
               onClick={() => Navigation.goForward()}
               disabled={Navigation.isLastVisitedLocation()}
             />
-          </div>
+          </div> */}
           <Scrollbars autoHide>
             <div className={AppClassNames.Content}>
               <Switch>
@@ -170,10 +191,10 @@ class App extends React.Component<Props, {}> {
                   exact
                   component={FirstLaunchWindow}
                 /> */}
-                <Route
+                {/* <Route
                   path={PathData.RecentlyPlayed}
                   component={RecentlyPlayed}
-                />
+                /> */}
                 <Route path={PathData.MainLibrary} component={MainLibrary} />
                 <Route path={PathData.Settings} component={Settings} />
                 <Route path={PathData.Queue} component={Queue} />
