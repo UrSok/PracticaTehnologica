@@ -1,21 +1,23 @@
 CREATE TABLE QueueEntry (
-    id      INTEGER PRIMARY KEY AUTOINCREMENT,
-    musicId INTEGER REFERENCES Music (id)
-                    NOT NULL
+    id         INTEGER NOT NULL,
+    musicId    INTEGER REFERENCES Music (id)
+                       NOT NULL,
+    fromType   INTEGER NOT NULL,
+    fromId     INTEGER,
+    state      INTEGER NOT NULL
 );
 
 CREATE TABLE Player (
-    shuffle             BOOLEAN        NOT NULL,
-    repeat              INT            NOT NULL
+    shuffle                       BOOLEAN        NOT NULL,
+    repeat                        INTEGER        NOT NULL
                                        CHECK (repeat BETWEEN 0 AND 2),
-    playingQueueEntryId INT            REFERENCES QueueEntry (id),
-    playingFromType     INTEGER        CHECK (playingFromType >= 0),
-    playingFromId       INTEGER,
-    played              DECIMAL (8, 7) NOT NULL
+    playingFromType               INTEGER NOT NULL,
+    playingFromId                 INTEGER,
+    played                        DECIMAL (8, 7) NOT NULL
                                        CHECK (played BETWEEN 0 AND 1),
-    volume              DECIMAL (3, 2) NOT NULL
+    volume                        DECIMAL (3, 2) NOT NULL
                                        CHECK (volume BETWEEN 0 AND 1),
-    muted               BOOLEAN        NOT NULL
+    muted                         BOOLEAN        NOT NULL
 );
 
 CREATE TABLE UserData (
@@ -23,5 +25,5 @@ CREATE TABLE UserData (
     firstLaunch BOOLEAN NOT NULL
 );
 
-INSERT INTO Player(shuffle, repeat, played, volume, muted) VALUES(false, false, 0, 1, false);
+INSERT INTO Player(shuffle, repeat, playingFromType, played, volume, muted) VALUES(false, false, 0, 0, 1, false);
 INSERT INTO UserData(firstLaunch, scanOnStart) VALUES(true, true);
