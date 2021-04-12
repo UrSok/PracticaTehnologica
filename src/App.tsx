@@ -12,17 +12,21 @@ import { Scrollbars } from 'rc-scrollbars';
 import * as Ioios from 'react-icons/io';
 import { RiTestTubeFill } from 'react-icons/ri';
 import { Observer } from 'mobx-react-lite';
-import { PathData, PagesData, SettingsPage } from './constants/RoutesInfo';
+import {
+  PathData,
+  PagesData,
+  SettingsPage,
+  PlaylistPage,
+} from './constants/RoutesInfo';
 import './App.global.scss';
-import Home from './pages/Home';
 import MusicPlayer from './components/MusicPlayer';
-import RecentlyPlayed from './pages/RecentlyPlayed';
 import MainLibrary from './pages/MainLibrary';
 import Queue from './pages/Queue';
 import Navigation from './utils/Navigation';
 import IconButton from './components/IconButton';
 import Settings from './pages/Settings';
 import { AppClassNames, ButtonsClassNames } from './constants/ClassNames';
+import Playlist from './pages/Playlist';
 import FirstLaunchWindow from './components/FirstLaunchWindow';
 import { StoreContext } from './utils/StoreContext';
 import RootStore from './back-end/store/RootStore';
@@ -54,7 +58,7 @@ class App extends React.Component<Props, {}> {
     const { history } = this.props;
     if (!Navigation.history) {
       Navigation.init(history);
-      Navigation.replace(PathData.Home);
+      Navigation.replace(PathData.MainLibrary);
     }
     return (
       <div className={AppClassNames.Main}>
@@ -69,6 +73,22 @@ class App extends React.Component<Props, {}> {
         </Observer>
         <ProSidebar>
           <SidebarHeader>
+            <div className={AppClassNames.HeaderBar}>
+              <IconButton
+                icon={
+                  <Ioios.IoIosArrowBack className={ButtonsClassNames.Icon} />
+                }
+                onClick={() => Navigation.goBack()}
+                disabled={Navigation.isFirstVisitedLocation}
+              />
+              <IconButton
+                icon={
+                  <Ioios.IoIosArrowForward className={ButtonsClassNames.Icon} />
+                }
+                onClick={() => Navigation.goForward()}
+                disabled={Navigation.isLastVisitedLocation}
+              />
+            </div>
             <Menu iconShape="round">
               {PagesData.map((item) => {
                 const isActive = Navigation.currentLocationIs(item.path);
@@ -87,6 +107,16 @@ class App extends React.Component<Props, {}> {
             <Scrollbars autoHide>
               <Menu iconShape="round">
                 {/* TEST DATA */}
+                <MenuItem
+                  key={PlaylistPage.key}
+                  active={Navigation.currentLocationIs(PlaylistPage.path)}
+                  icon={
+                    Navigation.currentLocationIs(PlaylistPage.path)
+                      ? PlaylistPage.iconActive
+                      : PlaylistPage.icon
+                  }
+                  onClick={() => Navigation.push(PlaylistPage.path)}
+                />
                 <MenuItem active={false} icon={<RiTestTubeFill />} />
                 <MenuItem active={false} icon={<RiTestTubeFill />} />
                 <MenuItem active={false} icon={<RiTestTubeFill />} />
@@ -131,6 +161,7 @@ class App extends React.Component<Props, {}> {
           </SidebarFooter>
         </ProSidebar>
         <div className={AppClassNames.MainContent}>
+          {/* // previous position of arrow buttons
           <div className={AppClassNames.HeaderBar}>
             <IconButton
               icon={<Ioios.IoIosArrowBack className={ButtonsClassNames.Icon} />}
@@ -144,18 +175,24 @@ class App extends React.Component<Props, {}> {
               onClick={() => Navigation.goForward()}
               disabled={Navigation.isLastVisitedLocation}
             />
-          </div>
+          </div> */}
           <Scrollbars autoHide>
             <div className={AppClassNames.Content}>
               <Switch>
-                <Route path={PathData.Home} exact component={Home} />
+                {/* // testing the FirstLaunchWindow page
                 <Route
+                  path={PathData.Home}
+                  exact
+                  component={FirstLaunchWindow}
+                /> */}
+                {/* <Route
                   path={PathData.RecentlyPlayed}
                   component={RecentlyPlayed}
-                />
+                /> */}
                 <Route path={PathData.MainLibrary} component={MainLibrary} />
                 <Route path={PathData.Settings} component={Settings} />
                 <Route path={PathData.Queue} component={Queue} />
+                <Route path={PathData.Playlist} component={Playlist} />
               </Switch>
             </div>
           </Scrollbars>

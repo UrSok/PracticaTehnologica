@@ -225,7 +225,7 @@ export default class QueueStore {
     const queueEntry = this.queue.find((x) => x.musicId == musicId);
     if (queueEntry) {
       queueEntry.state = QueueEntryState.Playing;
-      queueEntry.save();
+      // queueEntry.save();
     }
   }
 

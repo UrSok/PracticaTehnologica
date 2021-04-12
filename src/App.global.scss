@@ -19,6 +19,8 @@
 /* Pages */
 @import './scss/MainLibrary';
 @import './scss/Settings';
+@import './scss/Playlist';
+@import './scss/Queue';
 
 * {
   margin: 0;
@@ -57,12 +59,7 @@ body {
   border-radius: 15px;
   box-shadow: 0 0 10px 3px #0000003b;
   position: relative;
-  .HeaderBar {
-    position: absolute;
-    z-index: 1;
-    margin-top: 20px;
-    margin-left: 30px;
-  }
+
   .rc-scrollbars-container {
     height: calc(100% - #{$player-height}) !important;
     border-radius: 15px;
@@ -73,6 +70,17 @@ body {
       padding: 20px;
       padding-left: 50px;
       padding-right: 50px;
+    }
+  }
+}
+
+.HeaderBar {
+  margin-top: 15px;
+  margin-left: 10px;
+  .IconButton {
+    color: $sidebar-color;
+    &:disabled {
+      color: rgb(90, 90, 90);
     }
   }
 }

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Observer } from 'mobx-react-lite';
 import PageTitle from '../components/PageTitle';
 import { PagesClassNames } from '../constants/ClassNames';
 import { useRootStore } from '../utils/StoreContext';
@@ -13,10 +14,14 @@ const MainLibrary: React.FC = () => {
       <div className="">
         <PageTitle PageName="Main Library" />
       </div>
-      <MusicList
-        musicList={musicStore.musicList}
-        playingFromType={PlayingFromType.MainLibrary}
-      />
+      <Observer>
+        {() => (
+          <MusicList
+            musicList={musicStore.musicList}
+            playingFromType={PlayingFromType.MainLibrary}
+          />
+        )}
+      </Observer>
     </div>
   );
 };

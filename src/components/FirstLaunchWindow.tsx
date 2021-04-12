@@ -64,9 +64,10 @@ export default class FirstLaunchWindow extends React.PureComponent<{}, State> {
         <div className={AppClassNames.MainContent}>
           <Scrollbars autoHide>
             <div className={AppClassNames.Content}>
-              <h1>Welcome!</h1>
-              <h2>Thank you for chosing us.</h2>
-              <h3>Please setup bla bla bla</h3>
+              <h1 className="Headers H1">Welcome!</h1>
+              <h2 className="Headers">Thank you for chosing us.</h2>
+              <h3 className="Headers">Please setup bla bla bla</h3>
+              <hr className="Line" />
               <Section
                 title="Add your first music source"
                 className={FirstLaunchWindowClassNames.FirstSection}
