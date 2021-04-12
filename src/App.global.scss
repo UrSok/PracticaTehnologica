@@ -1,7 +1,7 @@
 @import './scss/Variables';
 
 /* Dependencies */
-@import '~roboto-fontface/css/roboto/roboto-fontface.css';
+@import '~@fontsource/roboto/index.css';
 @import '~rc-slider/assets/index.css';
 
 /* Components */
@@ -11,7 +11,7 @@
 @import './scss/Buttons';
 @import './scss/MusicPlayerBar';
 @import './scss/Slider';
-@import './scss/Table';
+@import './scss/MusicList';
 @import './scss/Cards';
 @import './scss/MainContentHeader';
 @import './scss/AudioSourcesSettings';
@@ -66,6 +66,9 @@ body {
   .rc-scrollbars-container {
     height: calc(100% - #{$player-height}) !important;
     border-radius: 15px;
+    .rc-scrollbars-track-h {
+      display: none;
+    }
     .Content {
       padding: 20px;
       padding-left: 50px;
