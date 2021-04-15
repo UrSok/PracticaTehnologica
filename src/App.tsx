@@ -46,16 +46,19 @@ class App extends React.Component<Props, {}> {
   // eslint-disable-next-line class-methods-use-this
   onScroll(values: ScrollValues) {
     const pageHeader = document.querySelector('.StickyHeader');
-    console.log(values.scrollHeight, values.top);
+    const tableHeader = document.querySelector('.Head');
+    // console.log(values.scrollHeight, values.top);
 
     if (!pageHeader) return;
     if (values.top > 0) {
       // if (pageHeader.classList.contains('Scrolled')) return;
       pageHeader?.classList.add('Scrolled');
-      // console.log(pageHeader?.className.includes('Scrolled'));
+      tableHeader?.classList.add('StickyTableHeader');
+      // console.log(tableHeader?.className.includes('StickyTableHeader'));
     } else {
       pageHeader?.classList.remove('Scrolled');
-      // console.log(pageHeader?.className.includes('Scrolled'));
+      tableHeader?.classList.remove('StickyTableHeader');
+      // console.log(tableHeader?.className.includes('StickyTableHeader'));
     }
     // console.log(pageHeader);
   }

@@ -50,7 +50,7 @@
       } */
     }
     .Head {
-      top: 70px;
+      // top: 70px;
       position: sticky;
       text-align: left;
       align-items: center;
@@ -164,10 +164,9 @@
       grid-template-columns: $first-grid-column-size $grid-column-sizes;
       column-gap: $grid-column-gap;
       padding: 0 16px;
-      top: 69px;
+
       height: 40px;
       background-color: $main-bg-color;
-      position: sticky;
       div {
         letter-spacing: 2px;
         font-size: 11px;
