@@ -1,5 +1,44 @@
 .StickyHeader {
-  top: 30px;
+  top: 0px;
   position: sticky;
-  background-color: #44475a; // $main-bg-color
+  background-color: $main-bg-color; // $main-bg-color
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 100px;
+  font-size: 22px;
+  transition: 0.7s;
+}
+
+.Scrolled {
+  height: 70px;
+  font-size: 15px;
+  margin: -50px;
+  padding-left: 50px;
+  // display: flex;
+  z-index: 1;
+  // justify-content: center;
+  color: $active-control-fg-color;
+  border-bottom: 1px solid $active-control-fg-color;
+}
+.page-header--scrolled {
+  transform: translatex(0);
+  opacity: 1;
+  visibility: visible;
+}
+.page-header {
+  position: sticky;
+  top: 0;
+  // left: 0;
+  // height: 100vh;
+  // width: 100%;
+  // background-color: #212121;
+  transition: 1s;
+  padding: 0 200px;
+  box-sizing: border-box;
+
+  &--scrolled {
+    height: 50px;
+    font-size: 10px;
+  }
 }

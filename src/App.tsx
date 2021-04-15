@@ -8,7 +8,7 @@ import {
   SidebarFooter,
 } from 'react-pro-sidebar';
 import { Switch, Route, withRouter } from 'react-router-dom';
-import { Scrollbars } from 'rc-scrollbars';
+import { Scrollbars, ScrollValues } from 'rc-scrollbars';
 import * as Ioios from 'react-icons/io';
 import { RiTestTubeFill } from 'react-icons/ri';
 import { Observer } from 'mobx-react-lite';
@@ -41,6 +41,23 @@ interface Props {
 class App extends React.Component<Props, {}> {
   async componentDidMount() {
     this.launch();
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  onScroll(values: ScrollValues) {
+    const pageHeader = document.querySelector('.StickyHeader');
+    console.log(values.scrollHeight, values.top);
+
+    if (!pageHeader) return;
+    if (values.top > 0) {
+      // if (pageHeader.classList.contains('Scrolled')) return;
+      pageHeader?.classList.add('Scrolled');
+      // console.log(pageHeader?.className.includes('Scrolled'));
+    } else {
+      pageHeader?.classList.remove('Scrolled');
+      // console.log(pageHeader?.className.includes('Scrolled'));
+    }
+    // console.log(pageHeader);
   }
 
   launch = async () => {
@@ -176,7 +193,7 @@ class App extends React.Component<Props, {}> {
               disabled={Navigation.isLastVisitedLocation}
             />
           </div> */}
-          <Scrollbars autoHide>
+          <Scrollbars autoHide onUpdate={this.onScroll}>
             <div className={AppClassNames.Content}>
               <Switch>
                 {/* // testing the FirstLaunchWindow page
