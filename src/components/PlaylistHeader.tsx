@@ -22,7 +22,7 @@ const PlaylistHeader: React.FC<Props> = () => {
   const { id, imageSource, title, nrOfSongs, duration } = playlistEx;
   return (
     <div className="PlaylistHeader" key={id}>
-      <img className="HeaderImage" src={imageSource} alt="test" />
+      {/* <img className="HeaderImage" src={imageSource} alt="test" /> */}
       <div className="HeaderData">
         <span className="HeaderLabel">PLAYLIST</span>
         <h1 className="HeaderTitle">{title}</h1>

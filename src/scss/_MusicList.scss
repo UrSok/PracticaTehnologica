@@ -2,7 +2,7 @@
   .Filter {
     margin-top: 15px;
     margin-bottom: 15px;
-    border-bottom: 1px solid #ffb86c;
+    border-bottom: 1px solid $main-fg-color;
     position: relative;
     .Icon {
       left: 10px;
@@ -18,7 +18,7 @@
       vertical-align: middle;
       width: 100%;
       color: $main-fg-color;
-      border: 1px solid #44475a;
+      border: 1px solid $main-bg-color;
       z-index: 1;
       &:focus {
         outline: none;

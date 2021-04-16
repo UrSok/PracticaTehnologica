@@ -15,9 +15,9 @@
 @import './scss/Cards';
 @import './scss/MainContentHeader';
 @import './scss/AudioSourcesSettings';
+@import './scss/StickyHeader';
 
 /* Pages */
-@import './scss/MainLibrary';
 @import './scss/Settings';
 @import './scss/Playlist';
 @import './scss/Queue';
@@ -80,7 +80,7 @@ body {
   .IconButton {
     color: $sidebar-color;
     &:disabled {
-      color: rgb(90, 90, 90);
+      color: #581316;
     }
   }
 }

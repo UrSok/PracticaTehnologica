@@ -11,9 +11,10 @@ const Queue: React.FC = () => {
 
   return (
     <div>
-      <div className={PagesClassNames.Queue}>
-        {/* <PageTitle PageName="Play Queue" /> */}
-        <h1 className="QueueHeader">Play Queue</h1>
+      <div className={PagesClassNames.Queue} style={{ paddingTop: '30px' }}>
+        <div className="StickyHeader">
+          <h1>Play Queue</h1>
+        </div>
 
         <div className="SectionDivider">
           <span>Now Playing</span>

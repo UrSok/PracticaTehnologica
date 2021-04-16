@@ -1,9 +1,9 @@
 /* Theme */
-$main-fg-color: #ffb86c;
-$main-bg-color: #44475a;
+$main-fg-color: #b80f0a;
+$main-bg-color: #151314;
 $main-bg-color-rgba: rgba(98, 114, 164, 0.45);
 $secondary-fg-color: #f0f0f0;
-$secondary-bg-color: #6272a4;
+$secondary-bg-color: rgb(133, 10, 10);
 $selected-button-color: #6272a4;
 $pressing-fg-color: #6272a4;
 $pressing-button-fg-color: #f0f0f0;
@@ -12,7 +12,7 @@ $sidebar-and-player-bg-color: #44475a;
 $sidebar-indeicator-and-hover-button-bg-color: #bd93f9;
 $color-overlay-and-shadow-color: #6272a4;
 $sidebar-indeicator-and-hover-button-bg-color: #6272a4;
-$slider-bg-color: #966530;
+$slider-bg-color: rgb(133, 10, 10);
 $scrollbar-fg-and-selected-row-bg-color-color: #ffb86c;
 $active-control-fg-color: #ffb86c;
 $indicator-fg-and-button-bg-color: #6272a4;
@@ -23,7 +23,7 @@ $tooltip-bg-color: #101010;
 $sidebar-item-fg-color: #c7c7c7;
 $sidebar-item-fg-hover-color: #ffffff;
 $enabled-option-hover-color: #303030;
-
+$button-and-scrollbar-inactive-color: #3c3131;
 /* Sizes  */
 $player-height: 70px;
 $album-art-size: 52px;
