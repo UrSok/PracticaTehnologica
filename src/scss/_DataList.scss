@@ -37,7 +37,9 @@
       }
     }
   }
+
   .List {
+    $outer-padding: 0 10px;
     font-size: 14px;
     cursor: default;
     .LeftOptions,
@@ -61,7 +63,7 @@
         grid-template-columns: 0.1fr $grid-column-sizes !important;
       }
       column-gap: $grid-column-gap;
-      padding: 0 16px;
+      padding: $outer-padding;
       align-items: center;
       position: sticky;
       height: 40px;
@@ -81,7 +83,7 @@
 
     .Items {
       .Item {
-        padding: 0 10px;
+        padding: $outer-padding;
         display: grid;
         grid-template-columns: $first-grid-column-size $grid-column-sizes;
         @media (min-width: 1340px) {
