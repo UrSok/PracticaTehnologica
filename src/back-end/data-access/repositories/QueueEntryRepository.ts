@@ -44,6 +44,31 @@ export class QueueEntryRepository extends BaseRepository {
     await db.run(query);
   }
 
+  async replacePriorityQueue(queueEntries: QueueEntry[]) {
+    const { db } = this.appDb;
+    await db.run(SQL`DELETE FROM QueueEntryPriority`);
+    if (queueEntries.length === 0) return;
+    const query = SQL`INSERT INTO QueueEntryPriority VALUES `;
+    let index = 0;
+    // eslint-disable-next-line no-restricted-syntax
+    for await (const queueEntry of queueEntries) {
+      query.append(
+        SQL`(${queueEntry.id}, ${queueEntry.musicId}, ${queueEntry.fromType}, ${queueEntry.fromId}, ${queueEntry.state})`
+      );
+      if (index !== queueEntries.length - 1) {
+        query.append(', ');
+      }
+      index++;
+    }
+    await db.run(query);
+  }
+
+  async addPriorityQueueEntry(queueEntry: QueueEntry) {
+    const { db } = this.appDb;
+    const query = SQL`INSERT INTO QueueEntryPriority VALUES(${queueEntry.id}, ${queueEntry.musicId}, ${queueEntry.fromType}, ${queueEntry.fromId}, ${queueEntry.state})`;
+    await db.run(query);
+  }
+
   async getAll(shuffled = false): Promise<QueueEntry[]> {
     try {
       const { db } = this.appDb;

@@ -48,7 +48,6 @@ export default class Player {
   updateFromDb(player: Player) {
     this.shuffle = player.shuffle;
     this.repeat = player.repeat;
-    this.playingQueueEntryCombinedId = player.playingQueueEntryCombinedId;
     this.playingFromType = player.playingFromType;
     this.playingFromId = player.playingFromId;
     this.played = player.played;
@@ -108,8 +107,7 @@ export default class Player {
     this.store.updateDb(this);
   }
 
-  setProgressAndSave(played: number) {
-    this.played = played;
+  saveToDb() {
     this.store.updateDb(this);
   }
 

@@ -2,6 +2,7 @@ import React from 'react';
 import AudioSourcesSettings from '../components/settings/AudioSourcesSettings';
 import PageTitle from '../components/PageTitle';
 import { PagesClassNames } from '../constants/ClassNames';
+import ScrollToTop from '../components/ScrollToTop';
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface Props {}
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -14,6 +15,7 @@ class Settings extends React.PureComponent<Props, {}> {
   render() {
     return (
       <div className={PagesClassNames.Settings}>
+        <ScrollToTop />
         <PageTitle PageName="Settings" />
         <AudioSourcesSettings />
       </div>

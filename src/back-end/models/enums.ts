@@ -8,6 +8,7 @@ export enum PlayingFromType {
   None = 0,
   MainLibrary = 1,
   Playlist = 2,
+  PriorityQueue = 3,
 }
 
 export enum QueueEntryState {

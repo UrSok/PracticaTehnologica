@@ -37,7 +37,8 @@ export default class Music {
       const hours = Math.floor(minutes / 60);
       const days = Math.floor(hours / 24);
 
-      if (seconds > 0 && seconds < 60) return '1< minute ago';
+      if (seconds > 0 && seconds < 60)
+        return `${seconds} second${seconds > 1 ? 's' : ''} ago`;
       if (minutes > 0 && minutes < 60)
         return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
       if (hours > 0 && hours < 24)
@@ -50,6 +51,23 @@ export default class Music {
 
   get durationString(): string {
     return getTimeString(this.durationSeconds);
+  }
+
+  get artistsString(): string {
+    if (!this.artists) return '';
+    return this.artists.join(',');
+  }
+
+  get albumString(): string {
+    if (!this.album) return '';
+    return this.album;
+  }
+
+  get artistsAlbumString(): string {
+    const artists = this.artistsString;
+    return `${artists} ${this.artists && this.album ? '-' : ''} ${
+      this.albumString
+    }`;
   }
 
   updateFromDb(music: Music) {

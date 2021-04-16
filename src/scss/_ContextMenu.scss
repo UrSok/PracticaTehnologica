@@ -1,0 +1,23 @@
+.react-contexify {
+  background-color: $main-bg-color !important;
+  border: 1px solid $selected-bg-color;
+  padding: 0;
+  .Icon {
+    width: 1.5em;
+    height: 1.5em;
+  }
+}
+
+.react-contexify__item:not(.react-contexify__item--disabled):hover
+  > .react-contexify__item__content,
+.react-contexify__item:not(.react-contexify__item--disabled):focus
+  > .react-contexify__item__content {
+  color: $main-fg-color;
+  background-color: $selected-bg-color;
+}
+
+.react-contexify__item__content {
+  padding: 10px;
+  padding-left: 20px;
+  justify-content: space-between;
+}

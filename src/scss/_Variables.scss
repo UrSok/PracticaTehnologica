@@ -9,10 +9,10 @@ $pressing-fg-color: #6272a4;
 $pressing-button-fg-color: #f0f0f0;
 $pressing-button-fg-color: #bd93f9;
 $sidebar-and-player-bg-color: #44475a;
-$sidebar-indeicator-and-hover-button-bg-color: #bd93f9;
+$sidebar-indicator-and-hover-button-bg-color: #bd93f9;
+$selected-bg-color: #5c567a;
 $color-overlay-and-shadow-color: #6272a4;
-$sidebar-indeicator-and-hover-button-bg-color: #6272a4;
-$slider-bg-color: rgb(133, 10, 10);
+$slider-bg-color: #966530;
 $scrollbar-fg-and-selected-row-bg-color-color: #ffb86c;
 $active-control-fg-color: #ffb86c;
 $indicator-fg-and-button-bg-color: #6272a4;
@@ -29,23 +29,14 @@ $player-height: 70px;
 $album-art-size: 52px;
 $small-album-art-size: 42px;
 
-/* Dracula theme
-  main-fg                               = ffb86c
-  main-bg                               = 44475a
-  secondary-fg                          = F0F0F0
-  secondary-bg                          = 6272a4
-  selected-button                       = 6272a4
-  pressing-fg                           = 6272a4
-  pressing-button-fg                    = F0F0F0
-  pressing-button-bg                    = bd93f9
-  sidebar-and-player-bg                 = 44475a
-  sidebar-indicator-and-hover-button-bg = bd93f9
-  cover-overlay-and-shadow              = 6272a4
-  slider-bg                             = 966530
-  scrollbar-fg-and-selected-row-bg      = ffb86c
-  active-control-fg                     = ffb86c
-  indicator-fg-and-button-bg            = 6272a4
-  miscellaneous-bg                      = 6272a4
-  miscellaneous-hover-bg                = DEDEDE
-  preserve-1                            = EBDFFF
-*/
+/* Animation vars */
+$dot-width: 10px;
+$dot-height: 10px;
+$dot-radius: $dot-width/2;
+
+$dot-color: $main-fg-color;
+$dot-bg-color: $dot-color;
+$dot-before-color: $dot-color;
+$dot-after-color: $dot-color;
+
+$dot-spacing: $dot-width + $dot-width/2;

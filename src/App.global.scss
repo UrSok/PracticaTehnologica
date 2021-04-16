@@ -3,6 +3,8 @@
 /* Dependencies */
 @import '~@fontsource/roboto/index.css';
 @import '~rc-slider/assets/index.css';
+@import '~react-contexify/dist/ReactContexify.css';
+@import '~three-dots/sass/three-dots.scss';
 
 /* Components */
 @import './scss/Section';
@@ -11,11 +13,12 @@
 @import './scss/Buttons';
 @import './scss/MusicPlayerBar';
 @import './scss/Slider';
-@import './scss/MusicList';
-@import './scss/Cards';
+@import './scss/DataList';
 @import './scss/MainContentHeader';
 @import './scss/AudioSourcesSettings';
 @import './scss/StickyHeader';
+@import './scss/ContextMenu';
+@import './scss/Animations';
 
 /* Pages */
 @import './scss/Settings';

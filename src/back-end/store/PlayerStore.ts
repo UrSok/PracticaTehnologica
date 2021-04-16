@@ -27,8 +27,7 @@ export default class PlayerStore {
     try {
       const player = await this.repository.get();
       runInAction(() => {
-        this.player = new Player(this);
-        this.player.updateFromDb(player);
+        if (player) this.player.updateFromDb(player);
       });
       this.actionState = ActionState.Done;
     } catch (reason) {

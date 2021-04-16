@@ -36,7 +36,7 @@ export default class Navigation {
   }
 
   static get isLastVisitedLocation() {
-    return this.currentLocationPosition === this.history.length - 1;
+    return this.currentLocationPosition >= this.history.length - 1;
   }
 
   static goBack() {

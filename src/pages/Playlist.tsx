@@ -6,15 +6,19 @@ import PlaylistHeader from '../components/PlaylistHeader';
 import RootStore from '../back-end/store/RootStore';
 import MusicList from '../components/MusicList';
 import { PlayingFromType } from '../back-end/models';
+import ScrollToTop from '../components/ScrollToTop';
+import DataList from '../components/DataList';
 
 const Playlist: React.FC = () => {
   const { musicStore } = useRootStore() as RootStore;
   return (
     <div className={PagesClassNames.Playlist}>
+      <ScrollToTop />
       <PlaylistHeader />
-      <MusicList
-        musicList={musicStore.musicList}
+      <DataList
+        data={musicStore.musicList}
         playingFromType={PlayingFromType.Playlist}
+        handleOnPlay={() => {}}
       />
     </div>
   );

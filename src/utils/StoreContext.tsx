@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+// eslint-disable-next-line import/no-cycle
 import RootStore from '../back-end/store/RootStore';
 
 export const store: RootStore = new RootStore();

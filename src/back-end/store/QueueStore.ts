@@ -162,6 +162,9 @@ export default class QueueStore {
     if (!queueEntry) {
       queueEntry = new QueueEntry(this);
       queueEntry.updateFromDb(queueEntryDb);
+      queueEntry.music = this.rootStore.musicStore.musicList.find(
+        (x) => x.id == queueEntry?.musicId
+      );
       this.queue.push(queueEntry);
     }
   }
@@ -177,6 +180,9 @@ export default class QueueStore {
     if (!queueEntry) {
       queueEntry = new QueueEntry(this);
       queueEntry.updateFromDb(queueEntryDb);
+      queueEntry.music = this.rootStore.musicStore.musicList.find(
+        (x) => x.id == queueEntry?.musicId
+      );
       this.initialQueue.push(queueEntry);
     }
   }
@@ -192,6 +198,9 @@ export default class QueueStore {
     if (!queueEntry) {
       queueEntry = new QueueEntry(this);
       queueEntry.updateFromDb(queueEntryDb);
+      queueEntry.music = this.rootStore.musicStore.musicList.find(
+        (x) => x.id == queueEntry?.musicId
+      );
       this.priorityQueue.push(queueEntry);
     }
   }
@@ -202,9 +211,11 @@ export default class QueueStore {
       const queueEntry = new QueueEntry(this);
       queueEntry.id = index + 1;
       queueEntry.musicId = music.id;
+      queueEntry.music = music;
       this.queue.push(queueEntry);
     });
     if (this.queue.length > 0) this.repository.replaceQueue(this.queue);
+    this.updateQueuesDb();
   }
 
   shuffleQueue() {
@@ -214,53 +225,65 @@ export default class QueueStore {
       [this.queue[i], this.queue[j]] = [this.queue[j], this.queue[i]];
     }
     this.repository.replaceShuffledQueue(this.queue);
+    this.updateQueuesDb();
   }
 
   unshuffleQueue() {
     this.queue.splice(0, this.queue.length, ...this.initialQueue);
     this.repository.replaceShuffledQueue([]);
+    this.updateQueuesDb();
   }
 
   setPlayingByMusicId(musicId: number) {
     const queueEntry = this.queue.find((x) => x.musicId == musicId);
-    if (queueEntry) {
-      queueEntry.state = QueueEntryState.Playing;
-      // queueEntry.save();
+    if (!queueEntry) return;
+    this.removePlayedQueueEntryPriority();
+    if (
+      this.currentQueueEntry &&
+      this.currentQueueEntry.state === QueueEntryState.Playing
+    )
+      this.currentQueueEntry.setState(QueueEntryState.None);
+    queueEntry.setState(QueueEntryState.Playing);
+    this.updateQueuesDb();
+    this.repository.replacePriorityQueue(this.priorityQueue);
+  }
+
+  setPlayingPriorityQueueEntryByIndex(index: number) {
+    if (index < 0 || index >= this.priorityQueue.length) return;
+    if (this.isQueueEntryPriorityPlaying && this.currentQueueEntry)
+      this.currentQueueEntry.setState(QueueEntryState.WasPlaying);
+    this.priorityQueue.slice(0, index);
+    this.priorityQueue[0].setState(QueueEntryState.Playing);
+    this.updateQueuesDb();
+    this.repository.replacePriorityQueue(this.priorityQueue);
+  }
+
+  addPriorityQueue(musicId: number) {
+    const queueEntry = new QueueEntry(this);
+    queueEntry.id = this.nextItemId;
+    queueEntry.musicId = musicId;
+    queueEntry.music = this.rootStore.musicStore.musicList.find(
+      (x) => x.id == queueEntry?.musicId
+    );
+    this.priorityQueue.push(queueEntry);
+    this.repository.addPriorityQueueEntry(queueEntry);
+  }
+
+  updateQueuesDb() {
+    if (this.rootStore.playerStore.player.shuffle) {
+      this.repository.replaceShuffledQueue(this.queue);
+      this.repository.replaceQueue(this.initialQueue);
+    } else {
+      this.repository.replaceShuffledQueue([]);
+      this.repository.replaceQueue(this.initialQueue);
     }
   }
 
-  /* Implement the logic for adding QueueEntries */
-
-  /* addQueueEntry(queueEntry: QueueEntry): string {
-    const { shuffle } = this.rootStore.playerStore.player;
-    queueEntry.id = this.nextItemId;
-    queueEntry.setCombinedId();
-    if (this.queue.length < 2) {
-      this.queue.push(queueEntry);
-      if (shuffle) this.initialQueue.push(queueEntry);
-    } else {
-      const index = this.queue.findIndex(
-        (x) =>
-          x.combinedId ==
-          this.rootStore.playerStore.player.playingQueueEntryCombinedId
-      );
-      this.queue.splice(index + 1, 0, queueEntry);
-      if (shuffle) {
-        const shuffledIndex = this.initialQueue.findIndex(
-          (x) =>
-            x.combinedId ==
-            this.rootStore.playerStore.player.playingQueueEntryCombinedId
-        );
-        this.queue.splice(shuffledIndex + 1, 0, queueEntry);
-      }
-    }
-    this.repository.replaceQueue(!shuffle ? this.queue : this.initialQueue);
-    if (shuffle) this.repository.replaceShuffledQueue(this.queue);
-    return queueEntry.combinedId;
-  } */
-
   removeQueueEntry(queueEntry: QueueEntry) {
     this.queue.splice(this.queue.indexOf(queueEntry), 1);
-    this.repository.replaceQueue(this.queue);
+    this.queue.splice(this.initialQueue.indexOf(queueEntry), 1);
+    this.queue.splice(this.priorityQueue.indexOf(queueEntry), 1);
+    this.updateQueuesDb();
+    this.repository.replacePriorityQueue(this.priorityQueue);
   }
 }

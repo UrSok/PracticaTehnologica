@@ -15,6 +15,10 @@ window.onload = () => {
   }
 };
 
+window.onunload = () => {
+  store.playerStore.player.saveToDb();
+};
+
 render(
   <HashRouter>
     <StoreContext.Provider value={store}>

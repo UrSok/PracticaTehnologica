@@ -1,3 +1,5 @@
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable class-methods-use-this */
 import React from 'react';
 import {
   ProSidebar,
@@ -30,6 +32,7 @@ import Playlist from './pages/Playlist';
 import FirstLaunchWindow from './components/FirstLaunchWindow';
 import { StoreContext } from './utils/StoreContext';
 import RootStore from './back-end/store/RootStore';
+import GlobalRefs from './utils/Ref';
 
 interface Props {
   history: any;
@@ -74,6 +77,21 @@ class App extends React.Component<Props, {}> {
     console.log(userDataStore.userData?.firstLaunch);
     if (!userDataStore.userData?.firstLaunch) {
     } */
+  };
+
+  handleScroll = (e: React.UIEvent<HTMLElement>) => {
+    const scrollTop = GlobalRefs.scrollRef.getScrollTop();
+    console.log(scrollTop, GlobalRefs.queueEntriesRef);
+    if (GlobalRefs.musicListRef) {
+      GlobalRefs.musicListRef._onScrollVertical(e);
+    }
+    if (GlobalRefs.queueEntriesRef) {
+      if (scrollTop > 600) GlobalRefs.queueEntriesRef.scrollTo(scrollTop / 2);
+    }
+    if (GlobalRefs.priorityQueueEntriesRef) {
+      if (GlobalRefs.scrollRef.getScrollTop() > 300)
+        GlobalRefs.priorityQueueEntriesRef._onScrollVertical(e);
+    }
   };
 
   render() {
@@ -199,19 +217,16 @@ class App extends React.Component<Props, {}> {
               disabled={Navigation.isLastVisitedLocation}
             />
           </div> */}
-          <Scrollbars autoHide onUpdate={this.onScroll}>
+          <Scrollbars
+            autoHide
+            onUpdate={this.onScroll}
+            onScroll={this.handleScroll}
+            ref={(node) => {
+              GlobalRefs.scrollRef = node;
+            }}
+          >
             <div className={AppClassNames.Content}>
               <Switch>
-                {/* // testing the FirstLaunchWindow page
-                <Route
-                  path={PathData.Home}
-                  exact
-                  component={FirstLaunchWindow}
-                /> */}
-                {/* <Route
-                  path={PathData.RecentlyPlayed}
-                  component={RecentlyPlayed}
-                /> */}
                 <Route path={PathData.MainLibrary} component={MainLibrary} />
                 <Route path={PathData.Settings} component={Settings} />
                 <Route path={PathData.Queue} component={Queue} />

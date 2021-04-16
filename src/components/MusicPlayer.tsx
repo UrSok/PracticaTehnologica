@@ -71,23 +71,11 @@ export default class MusicPlayer extends React.PureComponent<Props, State> {
   handlePlayPause = () => {
     const { playerStore } = this.context as RootStore;
     playerStore.player.togglePlaying();
-
-    /* const { firstStart } = this.state;
-    if (firstStart) {
-      if (playerStore.player.store?.rootStore.queueStore.queue.length === 0)
-        playerStore.player.queueAll();
-      this.setState({ firstStart: !firstStart });
-    } */
   };
 
   handleQueueVisibility = () => {
-    console.log(Navigation.currentLocationIs(PathData.Queue));
     if (!Navigation.currentLocationIs(PathData.Queue)) {
-      console.log('???');
       Navigation.push(PathData.Queue);
-      if (!Navigation.isLastVisitedLocation) {
-        Navigation.history.goForward();
-      }
     } else {
       Navigation.goBack();
     }
@@ -219,11 +207,10 @@ export default class MusicPlayer extends React.PureComponent<Props, State> {
                           {playerStore.player.currentPlayingMusic.title}
                         </div>
                         <div className="ArtistAlbum">
-                          {playerStore.player.currentPlayingMusic.artists !==
-                          undefined
-                            ? `${playerStore.player.currentPlayingMusic.artists} — `
-                            : ''}
-                          {playerStore.player.currentPlayingMusic.album}
+                          {
+                            playerStore.player.currentPlayingMusic
+                              .artistsAlbumString
+                          }
                         </div>
                       </div>
                     </>
