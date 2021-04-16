@@ -8,6 +8,7 @@
   height: 100px;
   font-size: x-large;
   transition: 0.7s;
+  z-index: 101;
 }
 
 .Scrolled {
@@ -20,6 +21,7 @@
   // justify-content: center;
   color: $main-fg-color;
   border-bottom: 1px solid $main-fg-color;
+  z-index: 101;
 }
 
 .StickyTableHeader {

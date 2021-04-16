@@ -88,8 +88,8 @@ class Queue extends React.Component {
                   data={this.getNextInQueueList()}
                   playingFromType={PlayingFromType.PriorityQueue}
                   handleOnPlay={() => {}}
-                  headerHidden
                   filterHidden
+                  addedHidden
                 />
               )}
             </Observer>
@@ -105,7 +105,6 @@ class Queue extends React.Component {
               data={this.getNextUpList()}
               playingFromType={PlayingFromType.None}
               handleOnPlay={() => {}}
-              headerHidden
               filterHidden
               addedHidden
             />

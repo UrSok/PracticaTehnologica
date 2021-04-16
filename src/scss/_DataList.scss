@@ -65,6 +65,8 @@
       align-items: center;
       position: sticky;
       height: 40px;
+      background-color: $main-bg-color;
+      z-index: 100;
       div {
         letter-spacing: 2px;
         font-size: 12px;
