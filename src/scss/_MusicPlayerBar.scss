@@ -13,7 +13,13 @@
     align-items: center;
     height: 100%;
     padding: 0 15px;
-    // background: radial-gradient(ellipse at right 50% bottom -80px, $main-fg-color-rgba, $main-fg-color 70%);
+    background: radial-gradient(
+      ellipse at right 50% bottom -80px,
+      $main-bg-color-rgba,
+      $main-bg-color 70%
+    );
+    border-bottom-left-radius: inherit;
+    border-bottom-right-radius: inherit;
     .IconButton {
       margin: 0 7px;
     }
