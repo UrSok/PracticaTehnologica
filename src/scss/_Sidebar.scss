@@ -22,6 +22,25 @@ $sidebar-color: $sidebar-item-fg-color !default;
       // border-width: 30px;
       // border-image-slice: 2;
       // border-image: linear-gradient(0deg,rgba(86,101,144,0) 0%, red 100%);
+      .pro-menu-item {
+        .pro-item-content {
+          position: absolute;
+          width: $sidebar-width;
+          margin-left: -12px;
+          font-size: 10px;
+          font-weight: 600;
+          .pro-icon-number {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
+        }
+      }
+      .pro-menu-item.active {
+        .pro-icon-number {
+          color: $main-fg-color;
+        }
+      }
     }
     .pro-sidebar-layout {
       overflow-y: hidden;
@@ -38,6 +57,9 @@ $sidebar-color: $sidebar-item-fg-color !default;
         margin: 0 !important;
         padding: 13px !important;
         border-radius: 10px !important;
+        .pro-icon {
+          animation: none !important;
+        }
       }
     }
   }

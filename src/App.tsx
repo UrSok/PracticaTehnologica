@@ -49,7 +49,7 @@ class App extends React.Component<Props, {}> {
   // eslint-disable-next-line class-methods-use-this
   onScroll(values: ScrollValues) {
     const pageHeader = document.querySelector('.StickyHeader');
-    const playButtonPlaylist = document.querySelector('.PlaylistHeader');
+    const playlistHeader = document.querySelector('.PlaylistHeader');
     const tableHeader = document.querySelector('.Head');
     // console.log(values.scrollHeight, values.scrollTop);
 
@@ -57,12 +57,12 @@ class App extends React.Component<Props, {}> {
     if (values.top > 0) {
       // if (pageHeader.classList.contains('Scrolled')) return;
       pageHeader?.classList.add('Scrolled');
-      playButtonPlaylist?.classList.add('PlaylistHeaderScrolled');
+      playlistHeader?.classList.add('PlaylistHeaderScrolled');
       tableHeader?.classList.add('StickyTableHeader');
       // console.log(playButtonPlaylist);
     } else {
       pageHeader?.classList.remove('Scrolled');
-      playButtonPlaylist?.classList.remove('PlaylistHeaderScrolled');
+      playlistHeader?.classList.remove('PlaylistHeaderScrolled');
       tableHeader?.classList.remove('StickyTableHeader');
       // console.log(playButtonPlaylist?.className.includes('PlaylistHeaderScrolled'));
     }
@@ -80,22 +80,24 @@ class App extends React.Component<Props, {}> {
   };
 
   handleScroll = (e: React.UIEvent<HTMLElement>) => {
+    // 250px priorityQueue
+    // 250px + 160px + priorityQueueLength * 50
+    const { queueStore } = this.context as RootStore;
     const scrollTop = GlobalRefs.scrollRef.getScrollTop();
-    console.log(scrollTop, GlobalRefs.queueEntriesRef);
     if (GlobalRefs.musicListRef) {
       GlobalRefs.musicListRef._onScrollVertical(e);
     }
-    if (GlobalRefs.queueEntriesRef) {
-      if (scrollTop > 600) GlobalRefs.queueEntriesRef.scrollTo(scrollTop / 2);
-    }
     if (GlobalRefs.priorityQueueEntriesRef) {
-      if (GlobalRefs.scrollRef.getScrollTop() > 300)
-        GlobalRefs.priorityQueueEntriesRef._onScrollVertical(e);
+      GlobalRefs.priorityQueueEntriesRef.scrollTo(scrollTop - 250);
+    }
+    if (GlobalRefs.queueEntriesRef) {
+      const diffScroll = 250 + 160 + 50 * queueStore.priorityQueue.length;
+      GlobalRefs.queueEntriesRef.scrollTo(scrollTop - diffScroll);
     }
   };
 
   render() {
-    const { userDataStore } = this.context as RootStore;
+    const { userDataStore, playlistStore } = this.context as RootStore;
     const { history } = this.props;
     if (!Navigation.history) {
       Navigation.init(history);
@@ -146,44 +148,29 @@ class App extends React.Component<Props, {}> {
           </SidebarHeader>
           <SidebarContent>
             <Scrollbars autoHide>
-              <Menu iconShape="round">
-                {/* TEST DATA */}
-                <MenuItem
-                  key={PlaylistPage.key}
-                  active={Navigation.currentLocationIs(PlaylistPage.path)}
-                  icon={
-                    Navigation.currentLocationIs(PlaylistPage.path)
-                      ? PlaylistPage.iconActive
-                      : PlaylistPage.icon
-                  }
-                  onClick={() => Navigation.push(PlaylistPage.path)}
-                />
-                <MenuItem active={false} icon={<RiTestTubeFill />} />
-                <MenuItem active={false} icon={<RiTestTubeFill />} />
-                <MenuItem active={false} icon={<RiTestTubeFill />} />
-                <MenuItem active={false} icon={<RiTestTubeFill />} />
-                <MenuItem active={false} icon={<RiTestTubeFill />} />
-                <MenuItem active={false} icon={<RiTestTubeFill />} />
-                <MenuItem active={false} icon={<RiTestTubeFill />} />
-                <MenuItem active={false} icon={<RiTestTubeFill />} />
-                <MenuItem active={false} icon={<RiTestTubeFill />} />
-                <MenuItem active={false} icon={<RiTestTubeFill />} />
-                <MenuItem active={false} icon={<RiTestTubeFill />} />
-                <MenuItem active={false} icon={<RiTestTubeFill />} />
-                <MenuItem active={false} icon={<RiTestTubeFill />} />
-                <MenuItem active={false} icon={<RiTestTubeFill />} />
-                <MenuItem active={false} icon={<RiTestTubeFill />} />
-                <MenuItem active={false} icon={<RiTestTubeFill />} />
-                <MenuItem active={false} icon={<RiTestTubeFill />} />
-                <MenuItem active={false} icon={<RiTestTubeFill />} />
-                <MenuItem active={false} icon={<RiTestTubeFill />} />
-                <MenuItem active={false} icon={<RiTestTubeFill />} />
-                <MenuItem active={false} icon={<RiTestTubeFill />} />
-                <MenuItem active={false} icon={<RiTestTubeFill />} />
-                <MenuItem active={false} icon={<RiTestTubeFill />} />
-                <MenuItem active={false} icon={<RiTestTubeFill />} />
-                {/* TEST DATA END */}
-              </Menu>
+              <Observer>
+                {() => (
+                  <Menu iconShape="round">
+                    {playlistStore.playlists.map((playlist, index) => {
+                      const { id } = playlist;
+                      return (
+                        <MenuItem
+                          key={id}
+                          active={Navigation.currentPlaylistLocationIs(id)}
+                          icon={
+                            Navigation.currentPlaylistLocationIs(id)
+                              ? PlaylistPage.iconActive
+                              : PlaylistPage.icon
+                          }
+                          onClick={() => Navigation.pushPlaylist(id)}
+                        >
+                          <div className="pro-icon-number">{index + 1}</div>
+                        </MenuItem>
+                      );
+                    })}
+                  </Menu>
+                )}
+              </Observer>
             </Scrollbars>
           </SidebarContent>
           <SidebarFooter>
@@ -202,21 +189,6 @@ class App extends React.Component<Props, {}> {
           </SidebarFooter>
         </ProSidebar>
         <div className={AppClassNames.MainContent}>
-          {/* // previous position of arrow buttons
-          <div className={AppClassNames.HeaderBar}>
-            <IconButton
-              icon={<Ioios.IoIosArrowBack className={ButtonsClassNames.Icon} />}
-              onClick={() => Navigation.goBack()}
-              disabled={Navigation.isFirstVisitedLocation}
-            />
-            <IconButton
-              icon={
-                <Ioios.IoIosArrowForward className={ButtonsClassNames.Icon} />
-              }
-              onClick={() => Navigation.goForward()}
-              disabled={Navigation.isLastVisitedLocation}
-            />
-          </div> */}
           <Scrollbars
             autoHide
             onUpdate={this.onScroll}
@@ -230,7 +202,7 @@ class App extends React.Component<Props, {}> {
                 <Route path={PathData.MainLibrary} component={MainLibrary} />
                 <Route path={PathData.Settings} component={Settings} />
                 <Route path={PathData.Queue} component={Queue} />
-                <Route path={PathData.Playlist} component={Playlist} />
+                <Route path={`${PathData.Playlist}/:id`} component={Playlist} />
               </Switch>
             </div>
           </Scrollbars>

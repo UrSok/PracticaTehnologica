@@ -1,5 +1,7 @@
 /* eslint-disable no-plusplus */
 
+import { PathData } from '../constants/RoutesInfo';
+
 export default class Navigation {
   static history: any;
 
@@ -27,7 +29,25 @@ export default class Navigation {
     }
   }
 
+  static pushPlaylist(id: number) {
+    const newLocation = `${PathData.Playlist}/${id}`;
+    if (this.history.location.pathname !== newLocation) {
+      this.history.push(newLocation);
+      this.lastLocationName = newLocation;
+      this.currentLocationPosition++;
+    }
+  }
+
   static currentLocationIs(location: string) {
+    return this.history.location.pathname === location;
+  }
+
+  static get currentLocationIsPlaylist() {
+    return this.history.location.pathname.includes(PathData.Playlist);
+  }
+
+  static currentPlaylistLocationIs(id: number) {
+    const location = `${PathData.Playlist}/${id}`;
     return this.history.location.pathname === location;
   }
 

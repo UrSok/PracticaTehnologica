@@ -3,7 +3,7 @@
 import { makeAutoObservable } from 'mobx';
 import ActionState from '../constants/ActionState';
 import queueEntryRepository from '../data-access/repositories/QueueEntryRepository';
-import { Music, QueueEntry, QueueEntryState } from '../models';
+import { Music, PlayingFromType, QueueEntry, QueueEntryState } from '../models';
 // eslint-disable-next-line import/no-cycle
 import RootStore from './RootStore';
 
@@ -205,20 +205,22 @@ export default class QueueStore {
     }
   }
 
-  replaceQueue(musicList: Music[]) {
+  async replaceQueueFromMainLibrary(musicList: Music[]) {
+    // I'm not checking if the queue should be shuffled..
     this.queue = [];
     musicList.forEach((music, index) => {
       const queueEntry = new QueueEntry(this);
       queueEntry.id = index + 1;
       queueEntry.musicId = music.id;
       queueEntry.music = music;
+      queueEntry.fromType = PlayingFromType.MainLibrary;
       this.queue.push(queueEntry);
     });
     if (this.queue.length > 0) this.repository.replaceQueue(this.queue);
     this.updateQueuesDb();
   }
 
-  shuffleQueue() {
+  async shuffleQueue() {
     this.initialQueue.splice(0, this.initialQueue.length, ...this.queue);
     for (let i = this.queue.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -228,7 +230,7 @@ export default class QueueStore {
     this.updateQueuesDb();
   }
 
-  unshuffleQueue() {
+  async unshuffleQueue() {
     this.queue.splice(0, this.queue.length, ...this.initialQueue);
     this.repository.replaceShuffledQueue([]);
     this.updateQueuesDb();
@@ -258,13 +260,17 @@ export default class QueueStore {
     this.repository.replacePriorityQueue(this.priorityQueue);
   }
 
-  addPriorityQueue(musicId: number) {
+  addPriorityQueue(
+    musicId: number,
+    fromType?: PlayingFromType,
+    fromId?: number
+  ) {
     const queueEntry = new QueueEntry(this);
     queueEntry.id = this.nextItemId;
     queueEntry.musicId = musicId;
-    queueEntry.music = this.rootStore.musicStore.musicList.find(
-      (x) => x.id == queueEntry?.musicId
-    );
+    queueEntry.music = this.rootStore.musicStore.getById(musicId);
+    queueEntry.fromType = fromType ?? PlayingFromType.MainLibrary;
+    queueEntry.fromId = fromId;
     this.priorityQueue.push(queueEntry);
     this.repository.addPriorityQueueEntry(queueEntry);
   }

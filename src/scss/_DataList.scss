@@ -8,23 +8,30 @@
     margin-bottom: 15px;
     border-bottom: 1px solid $main-fg-color;
     position: relative;
+    display: flex;
+    align-items: center;
     .Icon {
       left: 10px;
       position: absolute;
       z-index: 0;
       pointer-events: none;
     }
+    .ClearButton {
+      cursor: default;
+      position: absolute;
+      z-index: 0;
+      right: 10px;
+      width: 1.3em;
+      height: 1.3em;
+    }
     .FilterInput {
       background-color: transparent;
-      border-radius: 0;
-      margin-left: 5px;
-      padding: 0 28px;
-      padding-bottom: 8px;
-      vertical-align: middle;
       width: 100%;
+      border-radius: 0;
+      padding: 8px 35px;
+      box-sizing: border-box;
       color: $main-fg-color;
       border: none;
-      z-index: 1000;
       &:focus {
         outline: none;
       }
@@ -69,6 +76,7 @@
       height: 40px;
       background-color: $main-bg-color;
       z-index: 100;
+      user-select: none;
       div {
         letter-spacing: 2px;
         font-size: 12px;
@@ -174,7 +182,6 @@
         }
       }
       .Active {
-        background-color: $selected-bg-color !important;
         .Order {
           display: block !important;
           color: $main-fg-color;
@@ -235,6 +242,25 @@
             .Title {
               color: $main-fg-color !important;
             }
+          }
+        }
+      }
+      .FilterableItem {
+        .Title:hover {
+          cursor: pointer;
+          color: $main-fg-color;
+          text-decoration: underline;
+        }
+        .Album:hover {
+          cursor: pointer;
+          color: $main-fg-color;
+          text-decoration: underline;
+        }
+        .Artists {
+          .Artist:hover {
+            cursor: pointer;
+            color: $main-fg-color;
+            text-decoration: underline;
           }
         }
       }

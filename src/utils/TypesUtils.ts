@@ -1,5 +1,5 @@
 /* eslint-disable class-methods-use-this */
-import { Music, QueueEntry } from '../back-end/models';
+import { Music, QueueEntry, PlaylistEntry } from '../back-end/models';
 
 export default class TypesUtils {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -17,6 +17,18 @@ export default class TypesUtils {
 
   static isArray(data: any) {
     if (data instanceof Array) return true;
+    return false;
+  }
+
+  static isPlaylistEntry(data: any) {
+    if (data instanceof PlaylistEntry) return true;
+    return false;
+  }
+
+  static isPlaylistEntryArray(data: any) {
+    if (this.isArray(data)) {
+      if (data.length > 0 && this.isPlaylistEntry(data[0])) return true;
+    }
     return false;
   }
 

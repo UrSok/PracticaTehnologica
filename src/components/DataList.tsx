@@ -1,15 +1,17 @@
+/* eslint-disable no-plusplus */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable class-methods-use-this */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable eqeqeq */
 /* eslint-disable react/sort-comp */
-import { Observer, observer } from 'mobx-react';
+import { observer } from 'mobx-react';
 import * as BsIcons from 'react-icons/bs';
 import * as BiIcons from 'react-icons/bi';
 import * as FiIcons from 'react-icons/fi';
+import * as RiIcons from 'react-icons/ri';
 import * as React from 'react';
-import { ReactWindowScroller } from 'react-window-scroller';
-import AutoSizer from 'react-virtualized-auto-sizer';
 import { FixedSizeList as LazyList } from 'react-window';
-import Scrollbars from 'rc-scrollbars';
-import { WindowScroller } from 'react-virtualized';
 import { contextMenu, ShowContextMenuParams } from 'react-contexify';
 import {
   Music,
@@ -26,41 +28,50 @@ import noAlbumArt from '../../assets/no-album-art.png';
 import RootStore from '../back-end/store/RootStore';
 import { StoreContext } from '../utils/StoreContext';
 import PlayingIcon from './PlayingIcon';
+import PlaylistEntry from '../back-end/models/PlaylistEntry.model';
+import Navigation from '../utils/Navigation';
 
-type DataType = Music[] | QueueEntry[] | QueueEntry | undefined; // | Playlist
+type DataType =
+  | Music[]
+  | QueueEntry[]
+  | QueueEntry
+  | PlaylistEntry[]
+  | undefined;
+type DataTypeForContextMenu = Music | QueueEntry | PlaylistEntry | undefined;
 
 interface Props {
   data: DataType;
   headerHidden?: boolean;
   filterHidden?: boolean;
   addedHidden?: boolean;
+  showPlayingFrom?: boolean;
   playingFromType: PlayingFromType;
   playingFromId?: number;
   handleOnPlay: (...args: any) => void;
 }
 
 interface State {
-  filter: string;
+  textFilter: string;
 }
 
 const DataList = observer(
   class DataList extends React.Component<Props, State> {
-    filteredData = new Array<Music>();
+    filteredData: Array<Music> | Array<PlaylistEntry> = new Array<Music>();
 
     constructor(props: Props) {
       super(props);
 
       this.state = {
-        filter: '',
+        textFilter: '',
       };
     }
 
-    handleContextMenu(event: any, musicId: number) {
+    handleContextMenu(event: any, entry: DataTypeForContextMenu) {
       const params: ShowContextMenuParams = {
         id: MENU_ID,
         event,
         props: {
-          musicId,
+          entry,
           context: this.context,
         },
       };
@@ -82,39 +93,63 @@ const DataList = observer(
       return false;
     }
 
-    filterData() {
-      const { filter } = this.state;
+    filterMusicData() {
+      const { textFilter } = this.state;
       const { data } = this.props;
       this.filteredData = (data as Array<Music>).filter(
         (music) =>
-          (music.title && music.title.toLowerCase().includes(filter)) ||
-          (music.album && music.album.toLowerCase().includes(filter)) ||
+          (music.title &&
+            music.title.toLowerCase().includes(textFilter.toLowerCase())) ||
+          (music.album &&
+            music.album.toLowerCase().includes(textFilter.toLowerCase())) ||
           (music.artists &&
             music.artists.some((artist) =>
-              artist.toLowerCase().includes(filter)
+              artist.toLowerCase().includes(textFilter.toLowerCase())
             ))
       );
     }
 
-    CurrentQueueEntryItemView = observer(() => {
+    filterPlaylistData() {
+      const { textFilter } = this.state;
       const { data } = this.props;
-      const { playerStore } = this.context as RootStore;
+      this.filteredData = (data as Array<PlaylistEntry>).filter(
+        (entry) =>
+          (entry &&
+            entry.music &&
+            entry.music.title &&
+            entry.music.title
+              .toLowerCase()
+              .includes(textFilter.toLowerCase())) ||
+          (entry.music.album &&
+            entry.music.album
+              .toLowerCase()
+              .includes(textFilter.toLowerCase())) ||
+          (entry.music.artists &&
+            entry.music.artists.some((artist) =>
+              artist.toLowerCase().includes(textFilter.toLowerCase())
+            ))
+      );
+      console.log(this.filteredData);
+    }
+
+    CurrentQueueEntryItemView = observer(() => {
+      const { data, showPlayingFrom } = this.props;
+      const { playerStore, playlistStore } = this.context as RootStore;
       if (!(data as QueueEntry).music) return null;
       const queueEntry = data as QueueEntry;
+      const { fromName } = queueEntry;
       const {
         id,
         title,
         artists,
         album,
         albumArt,
-        addedString,
         durationString,
       } = queueEntry.music!;
-      const isActive = this.isCurrentActive(id);
       return (
         <div
           className={`Item Active ${
-            isActive && playerStore.player.playing ? 'Playing' : ''
+            playerStore.player.playing ? 'Playing' : ''
           }`}
         >
           <div className="LeftOptions">
@@ -141,29 +176,29 @@ const DataList = observer(
             />
             <div className="TextContainer">
               <div className="Title">{title}</div>
-              <div className="Artists">{artists?.join(',')}</div>
+              <div className="Artists">{artists?.join(', ')}</div>
             </div>
           </div>
           <div className="Album">{album}</div>
-          <div className="Added" />
+          <div className="Added">{showPlayingFrom && `${fromName}`}</div>
           <div className="Duration">{durationString}</div>
         </div>
       );
     });
 
     QueueEntryItemView = observer(({ index, style }) => {
-      const { data } = this.props;
+      const { data, showPlayingFrom } = this.props;
       const { playerStore } = this.context as RootStore;
-      if (!(data as Array<QueueEntry>)[index].music) return null;
+      const queueEntry = (data as Array<QueueEntry>)[index] as QueueEntry;
+      if (!queueEntry.music) return null;
+      const { fromName } = queueEntry;
       const {
-        id,
         title,
         artists,
         album,
         albumArt,
-        addedString,
         durationString,
-      } = (data as Array<QueueEntry>)[index].music!;
+      } = queueEntry.music!;
       return (
         <div style={style}>
           <div className="Item">
@@ -193,12 +228,120 @@ const DataList = observer(
               />
               <div className="TextContainer">
                 <div className="Title">{title}</div>
-                <div className="Artists">{artists?.join(',')}</div>
+                <div className="Artists">{artists?.join(', ')}</div>
               </div>
             </div>
             <div className="Album">{album}</div>
-            <div className="Added" />
+            <div className="Added">{showPlayingFrom && `${fromName}`}</div>
             <div className="Duration">{durationString}</div>
+          </div>
+        </div>
+      );
+    });
+
+    PlaylistEntryItem = observer(({ index, style }) => {
+      const { data } = this.props;
+      const { textFilter } = this.state;
+      const { playerStore } = this.context as RootStore;
+      const { music, addedString } =
+        textFilter.length > 0
+          ? (this.filteredData as Array<PlaylistEntry>)[index]
+          : (data as Array<PlaylistEntry>)[index];
+      if (!music) return null;
+      const { id, title, artists, album, albumArt, durationString } = music;
+      const isActive = this.isCurrentActive(id);
+      if (title) {
+        return (
+          <div style={style}>
+            <div
+              className={`Item FilterableItem ${isActive ? 'Active' : ''} ${
+                isActive && playerStore.player.playing ? 'Playing' : ''
+              }`}
+              onContextMenu={(event) => {
+                this.handleContextMenu(
+                  event,
+                  (data as Array<PlaylistEntry>)[index]
+                );
+              }}
+            >
+              <div className="LeftOptions">
+                <span className="Order">{index + 1}</span>
+                <IconButton
+                  icon={
+                    <BsIcons.BsPlayFill className={ButtonsClassNames.Icon} />
+                  }
+                  className="PlayButton"
+                  onClick={() => {
+                    if (isActive) {
+                      playerStore.player.togglePlaying();
+                    } else {
+                      // playerStore.player.playCurrentMainLibrary(id);
+                    }
+                  }}
+                />
+                <IconButton
+                  icon={
+                    <BsIcons.BsPauseFill className={ButtonsClassNames.Icon} />
+                  }
+                  className="PauseButton"
+                  onClick={() => playerStore.player.togglePlaying()}
+                />
+                <PlayingIcon className="PlayingIcon" />
+              </div>
+              <div className="MusicInfo">
+                <img
+                  src={albumArt !== undefined ? albumArt : noAlbumArt}
+                  alt="album-art"
+                  className="AlbumArt"
+                />
+                <div className="TextContainer">
+                  <div
+                    className="Title"
+                    onClick={() => {
+                      this.handleFilter(title);
+                    }}
+                  >
+                    {title}
+                  </div>
+                  <div className="Artists">
+                    {artists?.map((artist, artistIndex) => {
+                      return (
+                        <>
+                          <span
+                            className="Artist"
+                            onClick={() => {
+                              this.handleFilter(artist);
+                            }}
+                          >
+                            {artist}
+                          </span>
+                          <span>
+                            {artists.length - 1 !== artistIndex ? ', ' : ''}
+                          </span>
+                        </>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+              <div
+                className="Album"
+                onClick={() => {
+                  if (album) this.handleFilter(album);
+                }}
+              >
+                {album}
+              </div>
+              <div className="Added">{addedString}</div>
+              <div className="Duration">{durationString}</div>
+            </div>
+          </div>
+        );
+      }
+      return (
+        <div style={style}>
+          <div className="LoadingItem">
+            <div className="dot-elastic" />
           </div>
         </div>
       );
@@ -206,7 +349,7 @@ const DataList = observer(
 
     MusicItem = observer(({ index, style }) => {
       const { data } = this.props;
-      const { filter } = this.state;
+      const { textFilter: filter } = this.state;
       const { playerStore } = this.context as RootStore;
       const {
         id,
@@ -218,18 +361,18 @@ const DataList = observer(
         durationString,
       } =
         filter.length > 0
-          ? this.filteredData[index]
+          ? (this.filteredData as Array<Music>)[index]
           : (data as Array<Music>)[index];
       const isActive = this.isCurrentActive(id);
       if (title) {
         return (
           <div style={style}>
             <div
-              className={`Item ${isActive ? 'Active' : ''} ${
+              className={`Item FilterableItem ${isActive ? 'Active' : ''} ${
                 isActive && playerStore.player.playing ? 'Playing' : ''
               }`}
               onContextMenu={(event) => {
-                this.handleContextMenu(event, id);
+                this.handleContextMenu(event, (data as Array<Music>)[index]);
               }}
             >
               <div className="LeftOptions">
@@ -263,11 +406,43 @@ const DataList = observer(
                   className="AlbumArt"
                 />
                 <div className="TextContainer">
-                  <div className="Title">{title}</div>
-                  <div className="Artists">{artists?.join(',')}</div>
+                  <div
+                    className="Title"
+                    onClick={() => {
+                      this.handleFilter(title);
+                    }}
+                  >
+                    {title}
+                  </div>
+                  <div className="Artists">
+                    {artists?.map((artist, artistIndex) => {
+                      return (
+                        <>
+                          <span
+                            className="Artist"
+                            onClick={() => {
+                              this.handleFilter(artist);
+                            }}
+                          >
+                            {artist}
+                          </span>
+                          <span>
+                            {artists.length - 1 !== artistIndex ? ', ' : ''}
+                          </span>
+                        </>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
-              <div className="Album">{album}</div>
+              <div
+                className="Album"
+                onClick={() => {
+                  if (album) this.handleFilter(album);
+                }}
+              >
+                {album}
+              </div>
               <div className="Added">{addedString}</div>
               <div className="Duration">{durationString}</div>
             </div>
@@ -285,6 +460,30 @@ const DataList = observer(
 
     DataList = () => {
       const { data, playingFromType } = this.props;
+      const { textFilter } = this.state;
+      if (TypesUtils.isPlaylistEntryArray(data)) {
+        if (textFilter.length > 0) this.filterPlaylistData();
+        return (
+          <LazyList
+            className="window-scroller-override"
+            height={window.innerHeight}
+            width={600}
+            itemSize={50}
+            style={{ overflow: 'hidden' }}
+            itemCount={
+              textFilter.length > 0
+                ? (this.filteredData as Array<PlaylistEntry>).length
+                : (data as Array<PlaylistEntry>).length
+            }
+            ref={(node) => {
+              GlobalRefs.musicListRef = node;
+            }}
+          >
+            {this.PlaylistEntryItem}
+          </LazyList>
+        );
+      }
+
       if (TypesUtils.isQueueEntryArray(data)) {
         return (
           <LazyList
@@ -308,8 +507,7 @@ const DataList = observer(
       }
 
       if (TypesUtils.isMusicArray(data as Array<QueueEntry>)) {
-        const { filter } = this.state;
-        if (filter.length > 0) this.filterData();
+        if (textFilter.length > 0) this.filterMusicData();
         return (
           <LazyList
             className="window-scroller-override"
@@ -318,7 +516,7 @@ const DataList = observer(
             itemSize={50}
             style={{ overflow: 'hidden' }}
             itemCount={
-              filter.length > 0
+              textFilter.length > 0
                 ? (this.filteredData as Array<Music>).length
                 : (data as Array<Music>).length
             }
@@ -340,17 +538,28 @@ const DataList = observer(
       }
       if (TypesUtils.isQueueEntryArray(data)) return true;
       if (TypesUtils.isMusicArray(data)) return true;
+      if (TypesUtils.isPlaylistEntryArray(data)) return true;
       return false;
     }
 
-    handleOnFilterChnage = (e: React.FormEvent<HTMLInputElement>) => {
-      this.setState({ filter: e.currentTarget.value });
+    handleOnTextFilterChange = (e: React.FormEvent<HTMLInputElement>) => {
+      this.setState({ textFilter: e.currentTarget.value });
+    };
+
+    handleFilter = (textFilter: string) => {
+      this.setState({ textFilter });
     };
 
     render() {
       if (this.dataExists()) {
-        const { filterHidden, headerHidden, addedHidden, data } = this.props;
-        const { filter } = this.state;
+        const {
+          filterHidden,
+          headerHidden,
+          addedHidden,
+          showPlayingFrom,
+          data,
+        } = this.props;
+        const { textFilter } = this.state;
         return (
           <div className="DataList">
             {!filterHidden && (
@@ -361,9 +570,17 @@ const DataList = observer(
                     className="FilterInput"
                     type="text"
                     placeholder="Filter"
-                    value={filter}
-                    onChange={this.handleOnFilterChnage}
+                    value={textFilter}
+                    onChange={this.handleOnTextFilterChange}
                   />
+                  {textFilter.length > 0 && (
+                    <RiIcons.RiCloseLine
+                      className="ClearButton"
+                      onClick={() => {
+                        this.handleFilter('');
+                      }}
+                    />
+                  )}
                 </div>
               </div>
             )}
@@ -374,11 +591,14 @@ const DataList = observer(
                   <div className="MusicInfo">TITLE</div>
                   <div className="Album">ALBUM</div>
                   <div className="Added">
-                    {!addedHidden && (
-                      <BiIcons.BiCalendarAlt
-                        className={ButtonsClassNames.Icon}
-                      />
+                    {!addedHidden && !showPlayingFrom && (
+                      <div>
+                        <BiIcons.BiCalendarAlt
+                          className={ButtonsClassNames.Icon}
+                        />
+                      </div>
                     )}
+                    {showPlayingFrom && 'FROM'}
                   </div>
                   <div className="Duration">
                     <FiIcons.FiClock className={ButtonsClassNames.Icon} />

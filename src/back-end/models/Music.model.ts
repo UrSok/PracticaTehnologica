@@ -1,7 +1,7 @@
 import { makeAutoObservable, runInAction } from 'mobx';
 import * as musicMedatada from 'music-metadata';
 import MusicStore from '../store/MusicStore';
-import getTimeString from '../utils/utils';
+import DateUtils from '../utils/DateUtils';
 
 export default class Music {
   id = -1;
@@ -16,7 +16,7 @@ export default class Music {
 
   albumArt?: string;
 
-  added?: Date;
+  added = new Date(Date.now());
 
   durationSeconds = 0;
 
@@ -28,34 +28,16 @@ export default class Music {
   }
 
   get addedString(): string {
-    const { added } = this;
-    if (added !== undefined) {
-      const currentDate = new Date(Date.now());
-      const milliseconds = currentDate.getTime() - added?.getTime();
-      const seconds = Math.floor(milliseconds / 1000);
-      const minutes = Math.floor(seconds / 60);
-      const hours = Math.floor(minutes / 60);
-      const days = Math.floor(hours / 24);
-
-      if (seconds > 0 && seconds < 60)
-        return `${seconds} second${seconds > 1 ? 's' : ''} ago`;
-      if (minutes > 0 && minutes < 60)
-        return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
-      if (hours > 0 && hours < 24)
-        return `${hours} hour${hours > 1 ? 's' : ''} ago`;
-      if (days > 0 && days < 14) return `${days} day${days > 1 ? 's' : ''} ago`;
-      return added.toLocaleDateString();
-    }
-    return '';
+    return DateUtils.getDateDiffOrDateString(this.added);
   }
 
   get durationString(): string {
-    return getTimeString(this.durationSeconds);
+    return DateUtils.getTimeString(this.durationSeconds);
   }
 
   get artistsString(): string {
     if (!this.artists) return '';
-    return this.artists.join(',');
+    return this.artists.join(', ');
   }
 
   get albumString(): string {
@@ -74,8 +56,7 @@ export default class Music {
     this.id = music.id;
     this.src = music.src;
     this.title = music.title;
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    this.added = new Date(music.added!);
+    this.added = new Date(music.added);
   }
 
   private getTitleWithoutFileExtension(): string {

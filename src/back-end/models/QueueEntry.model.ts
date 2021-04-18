@@ -24,6 +24,15 @@ export default class QueueEntry {
     this.fromType = PlayingFromType.None;
   }
 
+  get fromName() {
+    if (this.fromType === PlayingFromType.Playlist && this.fromId) {
+      const { playlistStore } = this.store.rootStore;
+      const playlist = playlistStore.getById(this.fromId);
+      if (playlist) return playlist.name;
+    }
+    return 'Main Library';
+  }
+
   setState(state: QueueEntryState) {
     this.state = state;
   }

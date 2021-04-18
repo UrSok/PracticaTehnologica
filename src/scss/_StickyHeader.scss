@@ -1,29 +1,29 @@
 .StickyHeader {
-  top: 0px;
-  position: sticky;
-  background-color: $main-bg-color;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  height: 100px;
-  font-size: x-large;
-  transition: 0.7s;
-  z-index: 101;
+  // top: 0px;
+  // position: sticky;
+  // background-color: $main-bg-color;
+  // display: flex;
+  // flex-direction: column;
+  // justify-content: flex-end;
+  // height: 100px;
+  // font-size: x-large;
+  // transition: 0.7s;
+  // z-index: 101;
 }
 
 .Scrolled {
-  height: 70px;
-  font-size: 15px;
-  margin: -50px;
-  padding-left: 50px;
-  // display: flex;
-  z-index: 1;
-  // justify-content: center;
-  color: $main-fg-color;
-  border-bottom: 1px solid $main-fg-color;
-  z-index: 101;
+  // height: 70px;
+  // font-size: 15px;
+  // margin: -50px;
+  // padding-left: 50px;
+  // // display: flex;
+  // z-index: 1;
+  // // justify-content: center;
+  // color: $main-fg-color;
+  // border-bottom: 1px solid $main-fg-color;
+  // z-index: 101;
 }
 
 .StickyTableHeader {
-  top: 70px;
+  // top: 70px;
 }

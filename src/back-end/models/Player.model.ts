@@ -3,9 +3,9 @@
 /* eslint-disable eqeqeq */
 /* eslint-disable no-plusplus */
 import { makeAutoObservable } from 'mobx';
-import { Music, PlayingFromType, Repeat } from '.';
+import { Music, PlayingFromType, PlaylistEntry, Repeat } from '.';
 import PlayerStore from '../store/PlayerStore';
-import getTimeString from '../utils/utils';
+import DateUtils from '../utils/DateUtils';
 import { QueueEntryState } from './enums';
 
 export default class Player {
@@ -42,7 +42,7 @@ export default class Player {
   get timeString(): string {
     const music = this.currentPlayingMusic;
     if (!music) return '';
-    return getTimeString(this.played * music.durationSeconds);
+    return DateUtils.getTimeString(this.played * music.durationSeconds);
   }
 
   updateFromDb(player: Player) {
@@ -116,22 +116,41 @@ export default class Player {
   }
 
   playCurrentMainLibrary(musicId: number) {
+    // Rewrite it tou use playing from type, id an etc..
     /* should remove current playing queueEntryPriority */
     const { queueStore, musicStore } = this.store.rootStore;
     if (this.playingFromType === PlayingFromType.MainLibrary) {
       if (queueStore.currentQueueEntry)
         queueStore.currentQueueEntry.setState(QueueEntryState.None);
+      // What's the point of the shit above?
     } else {
-      queueStore.replaceQueue(musicStore.musicList);
+      queueStore.replaceQueueFromMainLibrary(musicStore.musicList);
+      this.playingFromType = PlayingFromType.MainLibrary;
       if (this.shuffle) queueStore.shuffleQueue();
     }
     queueStore.setPlayingByMusicId(musicId);
-    /* Create method to save all queue at once */
+    queueStore.updateQueuesDb();
     this.Play();
     if (this.repeat === Repeat.Track) {
       this.setRepeatAll();
     }
   }
+
+  /* playCurrentPlaylist(playlistEnty: PlaylistEntry) {
+    const { queueStore, musicStore } = this.store.rootStore;
+    if (
+      this.playingFromType === PlayingFromType.Playlist &&
+      this.playingFromId === playlistEnty.playlistId
+    ) {
+    } else {
+      queueStore.setPlayingByMusicId(musicId);
+      queueStore.updateQueuesDb();
+      this.Play();
+      if (this.repeat === Repeat.Track) {
+        this.setRepeatAll();
+      }
+    }
+  } */
 
   prevSong() {
     const { queueStore } = this.store.rootStore;

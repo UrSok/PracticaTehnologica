@@ -2,7 +2,7 @@
 import { makeAutoObservable, runInAction } from 'mobx';
 import ActionState from '../constants/ActionState';
 import musicRepository from '../data-access/repositories/MusicRepository';
-import { Music, NullMusic } from '../models';
+import { Music } from '../models';
 // eslint-disable-next-line import/no-cycle
 import RootStore from './RootStore';
 
@@ -32,11 +32,11 @@ export default class MusicStore {
     }
   }
 
-  private setMusicList(musicList: Music[]) {
+  private async setMusicList(musicList: Music[]) {
     musicList.forEach((music) => this.updateMusicFromDb(music));
   }
 
-  private updateMusicFromDb(musicDb: Music) {
+  private async updateMusicFromDb(musicDb: Music) {
     // eslint-disable-next-line eqeqeq
     let music = this.musicList.find((x) => x.id == musicDb.id);
     if (!music) {
@@ -57,7 +57,6 @@ export default class MusicStore {
     const resultId = await this.repository.add(music);
     if (resultId !== 0) {
       music.id = resultId;
-      music.added = new Date(Date.now());
       music.updateMedatada();
       runInAction(() => {
         this.musicList.push(music);
