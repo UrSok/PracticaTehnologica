@@ -1,14 +1,24 @@
+.InitialHeader {
+  padding-top: 42px;
+  padding-bottom: 16px;
+  font-size: 48px;
+}
+
 .StickyHeader {
-  // top: 0px;
-  // position: sticky;
-  // background-color: $main-bg-color;
-  // display: flex;
-  // flex-direction: column;
-  // justify-content: flex-end;
-  // height: 100px;
-  // font-size: x-large;
-  // transition: 0.7s;
-  // z-index: 101;
+  top: 0px;
+  position: sticky;
+  background-color: $main-bg-color;
+  display: none;
+  flex-direction: row;
+  justify-content: space-between;
+  height: 100px;
+  font-size: x-large;
+  z-index: 101;
+  align-items: center;
+}
+
+.StickyHeaderVisible {
+  display: flex;
 }
 
 .Scrolled {
@@ -26,4 +36,13 @@
 
 .StickyTableHeader {
   // top: 70px;
+}
+
+.PlaylistStickyHeader {
+  .RightControls {
+    display: flex;
+    justify-content: space-between;
+    width: 130px;
+    align-items: center;
+  }
 }

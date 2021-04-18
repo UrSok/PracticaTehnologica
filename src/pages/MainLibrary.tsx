@@ -7,6 +7,7 @@ import { PlayingFromType } from '../back-end/models';
 import RootStore from '../back-end/store/RootStore';
 import DataList from '../components/DataList';
 import ScrollToTop from '../components/ScrollToTop';
+import StickyHeader from '../components/StickyHeader';
 
 class MainLibrary extends React.Component {
   handlePlay(musicId: number, rootStore: RootStore) {
@@ -17,21 +18,26 @@ class MainLibrary extends React.Component {
   render() {
     const { musicStore } = this.context as RootStore;
     return (
-      <div className={PagesClassNames.MainLibrary}>
-        <ScrollToTop />
-        <div className="StickyHeader">
-          <h1>Main Library</h1>
+      <>
+        <StickyHeader title="Main Library">
+          <div />
+        </StickyHeader>
+
+        <div className={PagesClassNames.MainLibrary}>
+          <ScrollToTop />
+          <h1 className="InitialHeader">Main Library</h1>
+
+          <Observer>
+            {() => (
+              <DataList
+                data={musicStore.musicList}
+                playingFromType={PlayingFromType.MainLibrary}
+                handleOnPlay={this.handlePlay}
+              />
+            )}
+          </Observer>
         </div>
-        <Observer>
-          {() => (
-            <DataList
-              data={musicStore.musicList}
-              playingFromType={PlayingFromType.MainLibrary}
-              handleOnPlay={this.handlePlay}
-            />
-          )}
-        </Observer>
-      </div>
+      </>
     );
   }
 }

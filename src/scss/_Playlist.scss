@@ -50,20 +50,19 @@
         margin-top: 40px;
         margin-right: 12px;
         height: 32px;
-
-        .PlayButton {
-          height: 32px;
-          font-size: 14px;
-        }
-        .DeleteButton {
-          height: 32px;
-          font-size: 14px;
-          padding: 5px 8px;
-          letter-spacing: 0.1em;
-        }
+        align-self: baseline;
       }
     }
   }
+}
+
+.PlayButton {
+  height: 32px;
+  font-size: 14px;
+}
+.DeleteButton {
+  width: 20px;
+  height: 20px;
 }
 
 /* .PlaylistHeaderScrolled {

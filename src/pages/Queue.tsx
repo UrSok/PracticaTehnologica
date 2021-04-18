@@ -6,6 +6,7 @@ import { QueueEntry, PlayingFromType, Repeat } from '../back-end/models';
 import RootStore from '../back-end/store/RootStore';
 import DataList from '../components/DataList';
 import ScrollToTop from '../components/ScrollToTop';
+import StickyHeader from '../components/StickyHeader';
 import { PagesClassNames } from '../constants/ClassNames';
 import { StoreContext } from '../utils/StoreContext';
 
@@ -56,64 +57,68 @@ class Queue extends React.Component {
 
   render() {
     return (
-      <div className={PagesClassNames.Queue} style={{ paddingTop: '30px' }}>
-        <ScrollToTop />
-        <div className="StickyHeader">
-          <h1>Play Queue</h1>
-        </div>
+      <>
+        <StickyHeader title="Play Queue" className="StickyHeader">
+          <div />
+        </StickyHeader>
 
-        <div className="SectionDivider">
-          <span>Now Playing</span>
-        </div>
-        <Observer>
-          {() => (
-            <DataList
-              data={this.getCurrentlyPlaying()}
-              playingFromType={PlayingFromType.None}
-              handleOnPlay={() => {}}
-              filterHidden
-              addedHidden
-              showPlayingFrom
-            />
+        <div className={PagesClassNames.Queue}>
+          <ScrollToTop />
+          <h1 className="InitialHeader">Play Queue</h1>
+
+          <div className="SectionDivider">
+            <span>Now Playing</span>
+          </div>
+          <Observer>
+            {() => (
+              <DataList
+                data={this.getCurrentlyPlaying()}
+                playingFromType={PlayingFromType.None}
+                handleOnPlay={() => {}}
+                filterHidden
+                addedHidden
+                showPlayingFrom
+              />
+            )}
+          </Observer>
+
+          {this.priorityQueueExists() && (
+            <>
+              <div className="SectionDivider">
+                <span>Next In Queue</span>
+              </div>
+              <Observer>
+                {() => (
+                  <DataList
+                    data={this.getNextInQueueList()}
+                    playingFromType={PlayingFromType.PriorityQueue}
+                    handleOnPlay={() => {}}
+                    filterHidden
+                    addedHidden
+                    showPlayingFrom
+                  />
+                )}
+              </Observer>
+            </>
           )}
-        </Observer>
 
-        {this.priorityQueueExists() && (
-          <>
-            <div className="SectionDivider">
-              <span>Next In Queue</span>
-            </div>
-            <Observer>
-              {() => (
-                <DataList
-                  data={this.getNextInQueueList()}
-                  playingFromType={PlayingFromType.PriorityQueue}
-                  handleOnPlay={() => {}}
-                  filterHidden
-                  addedHidden
-                  showPlayingFrom
-                />
-              )}
-            </Observer>
-          </>
-        )}
-
-        <div className="SectionDivider">
-          <span>Next Up</span>
+          <div className="SectionDivider">
+            <span>Next Up</span>
+          </div>
+          <Observer>
+            {() => (
+              <DataList
+                data={this.getNextUpList()}
+                playingFromType={PlayingFromType.None}
+                handleOnPlay={() => {}}
+                filterHidden
+                addedHidden
+                showPlayingFrom
+              />
+            )}
+          </Observer>
         </div>
-        <Observer>
-          {() => (
-            <DataList
-              data={this.getNextUpList()}
-              playingFromType={PlayingFromType.None}
-              handleOnPlay={() => {}}
-              filterHidden
-              addedHidden
-              showPlayingFrom
-            />
-          )}
-        </Observer>
-      </div>
+      </>
     );
   }
 }

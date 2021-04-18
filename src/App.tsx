@@ -49,24 +49,12 @@ class App extends React.Component<Props, {}> {
   // eslint-disable-next-line class-methods-use-this
   onScroll(values: ScrollValues) {
     const pageHeader = document.querySelector('.StickyHeader');
-    const playlistHeader = document.querySelector('.PlaylistHeader');
-    const tableHeader = document.querySelector('.Head');
-    // console.log(values.scrollHeight, values.scrollTop);
 
-    // if (!pageHeader) return;
-    if (values.top > 0) {
-      // if (pageHeader.classList.contains('Scrolled')) return;
-      pageHeader?.classList.add('Scrolled');
-      playlistHeader?.classList.add('PlaylistHeaderScrolled');
-      tableHeader?.classList.add('StickyTableHeader');
-      // console.log(playButtonPlaylist);
+    if (values.scrollTop > 200) {
+      pageHeader?.classList.add('StickyHeaderVisible');
     } else {
-      pageHeader?.classList.remove('Scrolled');
-      playlistHeader?.classList.remove('PlaylistHeaderScrolled');
-      tableHeader?.classList.remove('StickyTableHeader');
-      // console.log(playButtonPlaylist?.className.includes('PlaylistHeaderScrolled'));
+      pageHeader?.classList.remove('StickyHeaderVisible');
     }
-    // console.log(pageHeader);
   }
 
   launch = async () => {
