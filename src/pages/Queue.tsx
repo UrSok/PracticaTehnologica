@@ -95,6 +95,7 @@ class Queue extends React.Component {
                     handleOnPlay={() => {}}
                     filterHidden
                     addedHidden
+                    headerHidden
                     showPlayingFrom
                   />
                 )}
@@ -113,6 +114,7 @@ class Queue extends React.Component {
                 handleOnPlay={() => {}}
                 filterHidden
                 addedHidden
+                headerHidden
                 showPlayingFrom
               />
             )}

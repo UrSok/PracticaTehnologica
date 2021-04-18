@@ -46,17 +46,6 @@ class App extends React.Component<Props, {}> {
     this.launch();
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  onScroll(values: ScrollValues) {
-    const pageHeader = document.querySelector('.StickyHeader');
-
-    if (values.scrollTop > 200) {
-      pageHeader?.classList.add('StickyHeaderVisible');
-    } else {
-      pageHeader?.classList.remove('StickyHeaderVisible');
-    }
-  }
-
   launch = async () => {
     const { libraryStore } = this.context as RootStore;
     await libraryStore.loadLibaries();
@@ -68,19 +57,29 @@ class App extends React.Component<Props, {}> {
   };
 
   handleScroll = (e: React.UIEvent<HTMLElement>) => {
-    // 250px priorityQueue
-    // 250px + 160px + priorityQueueLength * 50
+    /* Lists refs */
+    // 300px priorityQueue
+    // 300px + 160px + priorityQueueLength * 50
     const { queueStore } = this.context as RootStore;
-    const scrollTop = GlobalRefs.scrollRef.getScrollTop();
+    const { scrollTop } = e.currentTarget;
     if (GlobalRefs.musicListRef) {
-      GlobalRefs.musicListRef._onScrollVertical(e);
+      GlobalRefs.musicListRef.scrollTo(scrollTop - 300);
     }
     if (GlobalRefs.priorityQueueEntriesRef) {
-      GlobalRefs.priorityQueueEntriesRef.scrollTo(scrollTop - 250);
+      GlobalRefs.priorityQueueEntriesRef.scrollTo(scrollTop - 400);
     }
     if (GlobalRefs.queueEntriesRef) {
-      const diffScroll = 250 + 160 + 50 * queueStore.priorityQueue.length;
+      const diffScroll = 400 + 160 + 50 * queueStore.priorityQueue.length;
       GlobalRefs.queueEntriesRef.scrollTo(scrollTop - diffScroll);
+    }
+
+    /* StickyHeader */
+    const pageHeader = document.querySelector('.StickyHeader');
+
+    if (scrollTop > 200) {
+      pageHeader?.classList.add('StickyHeaderVisible');
+    } else {
+      pageHeader?.classList.remove('StickyHeaderVisible');
     }
   };
 
@@ -179,7 +178,6 @@ class App extends React.Component<Props, {}> {
         <div className={AppClassNames.MainContent}>
           <Scrollbars
             autoHide
-            onUpdate={this.onScroll}
             onScroll={this.handleScroll}
             ref={(node) => {
               GlobalRefs.scrollRef = node;
