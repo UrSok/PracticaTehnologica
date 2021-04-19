@@ -91,7 +91,7 @@ const createWindow = async () => {
     minHeight: 600,
     backgroundColor: '#FFF',
     frame: false,
-    icon: getAssetPath('icon.png'),
+    icon: getAssetPath('music (1).png'),
     webPreferences: {
       nodeIntegration: true,
       enableRemoteModule: true,
