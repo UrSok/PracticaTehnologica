@@ -45,6 +45,10 @@ export default class QueueEntry {
     this.state = queueEntry.state;
   }
 
+  setMusicReference() {
+    this.music = this.store.rootStore.musicStore.getById(this.musicId);
+  }
+
   remove() {
     this.store.removeQueueEntry(this);
   }

@@ -22,6 +22,7 @@ interface Props {}
 
 interface State {
   seeking: boolean;
+  launch: boolean;
 }
 
 const SliderWithTooltip = createSliderWithTooltip(Slider);
@@ -35,6 +36,7 @@ export default class MusicPlayer extends React.PureComponent<Props, State> {
 
     this.state = {
       seeking: false,
+      launch: true,
     };
   }
 
@@ -42,7 +44,6 @@ export default class MusicPlayer extends React.PureComponent<Props, State> {
   ref = async (player: any) => {
     const { playerStore } = this.context as RootStore;
     await playerStore.setReactPlayer(player);
-    // playerStore.player.seekToSavedProgress();
   };
 
   handleStartSeeking = () => {
@@ -95,6 +96,7 @@ export default class MusicPlayer extends React.PureComponent<Props, State> {
 
   render() {
     const { playerStore } = this.context as RootStore;
+    const { launch } = this.state;
     return (
       <Observer>
         {() => (
@@ -110,6 +112,12 @@ export default class MusicPlayer extends React.PureComponent<Props, State> {
                 onProgress={this.handleProgress}
                 onEnded={() => {
                   playerStore.player.nextSong();
+                }}
+                onReady={() => {
+                  if (launch) {
+                    playerStore.player.seekToSavedProgress();
+                    this.setState({ launch: false });
+                  }
                 }}
               />
             )}

@@ -18,7 +18,6 @@ export default class UserDataStore {
   constructor(rootStore: RootStore) {
     makeAutoObservable(this);
     this.rootStore = rootStore;
-    this.loadUserData();
   }
 
   public async loadUserData() {

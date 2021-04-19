@@ -19,16 +19,13 @@ export default class PlayerStore {
   constructor(rootStore: RootStore) {
     makeAutoObservable(this);
     this.rootStore = rootStore;
-    this.loadPlayer();
   }
 
   async loadPlayer() {
     this.actionState = ActionState.Loading;
     try {
       const player = await this.repository.get();
-      runInAction(() => {
-        if (player) this.player.updateFromDb(player);
-      });
+      if (player) this.player.updateFromDb(player);
       this.actionState = ActionState.Done;
     } catch (reason) {
       this.actionState = ActionState.Error;

@@ -31,7 +31,6 @@ class MainLibrary extends React.Component {
             {() => (
               <DataList
                 data={musicStore.musicList}
-                playingFromType={PlayingFromType.MainLibrary}
                 handleOnPlay={this.handlePlay}
               />
             )}

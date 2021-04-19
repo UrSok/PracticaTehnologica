@@ -42,7 +42,11 @@ const Queue = observer(
             result.push(queueStore.queue[i]);
           }
         }
-        if (playerStore.player.repeat != Repeat.All) return result;
+        if (
+          playerStore.player.repeat != Repeat.All &&
+          playerStore.player.repeat != Repeat.Track
+        )
+          return result;
         for (let i = 0; i < index; i++) {
           if (queueStore.queue[i]) {
             if (queueStore.queue[i]) result.push(queueStore.queue[i]);
@@ -58,6 +62,7 @@ const Queue = observer(
     };
 
     render() {
+      const nextUpList = this.getNextUpList();
       return (
         <>
           <StickyHeader title="Play Queue" className="StickyHeader">
@@ -73,7 +78,6 @@ const Queue = observer(
             </div>
             <DataList
               data={this.getCurrentlyPlaying()}
-              playingFromType={PlayingFromType.None}
               handleOnPlay={() => {}}
               filterHidden
               addedHidden
@@ -95,7 +99,7 @@ const Queue = observer(
                 </div>
                 <DataList
                   data={this.getNextInQueueList()}
-                  playingFromType={PlayingFromType.PriorityQueue}
+                  priorityQueue
                   handleOnPlay={() => {}}
                   filterHidden
                   addedHidden
@@ -104,19 +108,21 @@ const Queue = observer(
                 />
               </>
             )}
-
-            <div className="SectionDivider">
-              <span>Next Up</span>
-            </div>
-            <DataList
-              data={this.getNextUpList()}
-              playingFromType={PlayingFromType.None}
-              handleOnPlay={() => {}}
-              filterHidden
-              addedHidden
-              headerHidden
-              showPlayingFrom
-            />
+            {nextUpList.length > 0 && (
+              <>
+                <div className="SectionDivider">
+                  <span>Next Up</span>
+                </div>
+                <DataList
+                  data={this.getNextUpList()}
+                  handleOnPlay={() => {}}
+                  filterHidden
+                  addedHidden
+                  headerHidden
+                  showPlayingFrom
+                />
+              </>
+            )}
           </div>
         </>
       );

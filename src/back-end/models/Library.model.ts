@@ -44,7 +44,7 @@ export default class Library {
           !file.isDirectory &&
           supportedExtensionsRegex.test(file.extension)
         ) {
-          log.info(`${index}/${total}`, file.fullname);
+          // log.info(`${index}/${total}`, file.fullname);
           const music = new Music(musicStore);
           runInAction(() => {
             music.src = file.fullname;

@@ -23,8 +23,8 @@ export default class RootStore {
     this.userDataStore = new UserDataStore(this);
     this.libraryStore = new LibraryStore(this);
     this.musicStore = new MusicStore(this);
-    this.playerStore = new PlayerStore(this);
-    this.queueStore = new QueueStore(this);
     this.playlistStore = new PlaylistStore(this);
+    this.queueStore = new QueueStore(this);
+    this.playerStore = new PlayerStore(this);
   }
 }

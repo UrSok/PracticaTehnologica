@@ -119,9 +119,7 @@ export default class Player {
     this.played = played;
   }
 
-  playCurrentMainLibrary(musicId: number) {
-    // Rewrite it tou use playing from type, id an etc..
-    /* should remove current playing queueEntryPriority */
+  playCurrentMainLibrary(musicId?: number) {
     const { queueStore, musicStore } = this.store.rootStore;
     if (this.playingFromType === PlayingFromType.MainLibrary) {
       if (queueStore.currentQueueEntry)
@@ -133,7 +131,12 @@ export default class Player {
       this.playingFromId = undefined;
       if (this.shuffle) queueStore.shuffleQueue();
     }
-    queueStore.setPlayingByMusicId(musicId);
+    const playMusicId =
+      musicId ??
+      musicStore.musicList[
+        Math.floor(Math.random() * musicStore.musicList.length)
+      ].id;
+    queueStore.setPlayingByMusicId(playMusicId);
     queueStore.updateQueuesDb();
     this.Play();
     if (this.repeat === Repeat.Track) {
@@ -147,7 +150,7 @@ export default class Player {
       this.playingFromType === PlayingFromType.Playlist &&
       this.playingFromId === playlist.id
     ) {
-      console.log('same shit');
+      console.log('same shit'); // Remove later
     } else {
       queueStore.replaceQueueFromPlaylist(playlist.entries);
       this.playingFromType = PlayingFromType.Playlist;

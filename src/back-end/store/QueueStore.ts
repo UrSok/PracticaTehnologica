@@ -29,7 +29,81 @@ export default class QueueStore {
   constructor(rootStore: RootStore) {
     makeAutoObservable(this);
     this.rootStore = rootStore;
-    this.loadQueues();
+  }
+
+  async loadQueues() {
+    this.actionState = ActionState.Loading;
+    try {
+      const { shuffle } = this.rootStore.playerStore.player;
+      const queue = await this.repository.getAll(shuffle);
+      this.setQueue(queue);
+      if (shuffle) {
+        const initialQueue = await this.repository.getAll();
+        this.setInitialQueue(initialQueue);
+      }
+      const priorityQueue = await this.repository.getAllPriority();
+      this.setPriorityQueue(priorityQueue);
+      this.actionState = ActionState.Done;
+    } catch (reason) {
+      this.actionState = ActionState.Error;
+    }
+  }
+
+  private setQueue(queue: QueueEntry[]) {
+    queue.forEach((queueEntry) => this.updateQueueEntryFromDb(queueEntry));
+  }
+
+  private updateQueueEntryFromDb(queueEntryDb: QueueEntry) {
+    let queueEntry = this.queue.find((x) => x.id == queueEntryDb.id);
+    if (!queueEntry) {
+      queueEntry = new QueueEntry(this);
+      queueEntry.updateFromDb(queueEntryDb);
+      queueEntry.setMusicReference();
+      this.queue.push(queueEntry);
+    }
+  }
+
+  private setInitialQueue(queue: QueueEntry[]) {
+    queue.forEach((queueEntry) =>
+      this.updateInitialQueueEntryFromDb(queueEntry)
+    );
+  }
+
+  private updateInitialQueueEntryFromDb(queueEntryDb: QueueEntry) {
+    let queueEntry = this.initialQueue.find((x) => x.id == queueEntryDb.id);
+    if (!queueEntry) {
+      queueEntry = new QueueEntry(this);
+      queueEntry.updateFromDb(queueEntryDb);
+      queueEntry.setMusicReference();
+      this.initialQueue.push(queueEntry);
+    }
+  }
+
+  private setPriorityQueue(queue: QueueEntry[]) {
+    queue.forEach((queueEntry) =>
+      this.updatePriorityQueueEntryFromDb(queueEntry)
+    );
+  }
+
+  private updatePriorityQueueEntryFromDb(queueEntryDb: QueueEntry) {
+    let queueEntry = this.priorityQueue.find((x) => x.id == queueEntryDb.id);
+    if (!queueEntry) {
+      queueEntry = new QueueEntry(this);
+      queueEntry.updateFromDb(queueEntryDb);
+      queueEntry.setMusicReference();
+      this.priorityQueue.push(queueEntry);
+    }
+  }
+
+  updateQueuesDb() {
+    if (this.rootStore.playerStore.player.shuffle) {
+      this.repository.replaceShuffledQueue(this.queue);
+      this.repository.replaceQueue(this.initialQueue);
+    } else {
+      this.repository.replaceShuffledQueue([]);
+      this.repository.replaceQueue(this.queue);
+    }
+    this.repository.replacePriorityQueue(this.priorityQueue);
   }
 
   get isQueueEmpty(): boolean {
@@ -94,7 +168,7 @@ export default class QueueStore {
     if (!this.isPriorityQueueEmpty) return this.priorityQueue[0];
     let index = this.currentQueueEntryIndex;
     index++;
-    if (index >= this.queue.length - 1) {
+    if (index > this.queue.length - 1) {
       index = 0;
     }
     return this.queue[index];
@@ -108,107 +182,6 @@ export default class QueueStore {
     this.priorityQueue = this.priorityQueue.filter(
       (x) => x.state === QueueEntryState.None
     );
-  }
-
-  prevEntry() {
-    if (!this.currentQueueEntryOrQueueEntryPriority) return;
-    if (!this.currentQueueEntry) return;
-    if (!this.prevQueueEntry) return;
-    this.removePlayedQueueEntryPriority();
-    if (this.currentQueueEntry.state === QueueEntryState.WasPlaying) {
-      this.currentQueueEntry.setState(QueueEntryState.Playing);
-    } else {
-      const current = this.currentQueueEntry;
-      const prev = this.prevQueueEntry;
-      current.setState(QueueEntryState.None);
-      prev.setState(QueueEntryState.Playing);
-    }
-    this.updateQueuesDb();
-  }
-
-  nextEntry() {
-    if (!this.currentQueueEntry) return;
-    if (!this.nextQueueEntry) return;
-    this.removePlayedQueueEntryPriority();
-    if (!this.isPriorityQueueEmpty) {
-      this.nextQueueEntry.setState(QueueEntryState.Playing);
-    } else {
-      const current = this.currentQueueEntry;
-      const next = this.nextQueueEntry;
-      current.setState(QueueEntryState.None);
-      next.setState(QueueEntryState.Playing);
-    }
-    this.updateQueuesDb();
-  }
-
-  private async loadQueues() {
-    this.actionState = ActionState.Loading;
-    try {
-      const { shuffle } = this.rootStore.playerStore.player;
-      const queue = await this.repository.getAll(shuffle);
-      this.setQueue(queue);
-      if (shuffle) {
-        const initialQueue = await this.repository.getAll();
-        this.setInitialQueue(initialQueue);
-      }
-      const priorityQueue = await this.repository.getAllPriority();
-      this.setPriorityQueue(priorityQueue);
-      this.actionState = ActionState.Done;
-    } catch (reason) {
-      this.actionState = ActionState.Error;
-    }
-  }
-
-  private setQueue(queue: QueueEntry[]) {
-    queue.forEach((queueEntry) => this.updateQueueEntryFromDb(queueEntry));
-  }
-
-  private updateQueueEntryFromDb(queueEntryDb: QueueEntry) {
-    let queueEntry = this.queue.find((x) => x.id == queueEntryDb.id);
-    if (!queueEntry) {
-      queueEntry = new QueueEntry(this);
-      queueEntry.updateFromDb(queueEntryDb);
-      queueEntry.music = this.rootStore.musicStore.musicList.find(
-        (x) => x.id == queueEntry?.musicId
-      );
-      this.queue.push(queueEntry);
-    }
-  }
-
-  private setInitialQueue(queue: QueueEntry[]) {
-    queue.forEach((queueEntry) =>
-      this.updateInitialQueueEntryFromDb(queueEntry)
-    );
-  }
-
-  private updateInitialQueueEntryFromDb(queueEntryDb: QueueEntry) {
-    let queueEntry = this.initialQueue.find((x) => x.id == queueEntryDb.id);
-    if (!queueEntry) {
-      queueEntry = new QueueEntry(this);
-      queueEntry.updateFromDb(queueEntryDb);
-      queueEntry.music = this.rootStore.musicStore.musicList.find(
-        (x) => x.id == queueEntry?.musicId
-      );
-      this.initialQueue.push(queueEntry);
-    }
-  }
-
-  private setPriorityQueue(queue: QueueEntry[]) {
-    queue.forEach((queueEntry) =>
-      this.updatePriorityQueueEntryFromDb(queueEntry)
-    );
-  }
-
-  private updatePriorityQueueEntryFromDb(queueEntryDb: QueueEntry) {
-    let queueEntry = this.priorityQueue.find((x) => x.id == queueEntryDb.id);
-    if (!queueEntry) {
-      queueEntry = new QueueEntry(this);
-      queueEntry.updateFromDb(queueEntryDb);
-      queueEntry.music = this.rootStore.musicStore.musicList.find(
-        (x) => x.id == queueEntry?.musicId
-      );
-      this.priorityQueue.push(queueEntry);
-    }
   }
 
   async clearPriorityQueue() {
@@ -247,18 +220,40 @@ export default class QueueStore {
     this.updateQueuesDb();
   }
 
+  addPriorityQueue(
+    musicId: number,
+    fromType?: PlayingFromType,
+    fromId?: number
+  ) {
+    const queueEntry = new QueueEntry(this);
+    queueEntry.id = this.nextItemId;
+    queueEntry.musicId = musicId;
+    queueEntry.setMusicReference();
+    queueEntry.fromType = fromType ?? PlayingFromType.MainLibrary;
+    queueEntry.fromId = fromId;
+    this.priorityQueue.push(queueEntry);
+    this.repository.addPriorityQueueEntry(queueEntry);
+  }
+
+  removeQueueEntry(queueEntry: QueueEntry) {
+    this.queue.splice(this.queue.indexOf(queueEntry), 1);
+    this.queue.splice(this.initialQueue.indexOf(queueEntry), 1);
+    this.queue.splice(this.priorityQueue.indexOf(queueEntry), 1); // why do I do that ??
+    this.updateQueuesDb();
+    this.repository.replacePriorityQueue(this.priorityQueue);
+  }
+
   async shuffleQueue() {
-    this.initialQueue.splice(0, this.initialQueue.length, ...this.queue);
+    this.initialQueue = this.queue.slice();
     for (let i = this.queue.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [this.queue[i], this.queue[j]] = [this.queue[j], this.queue[i]];
     }
-    this.repository.replaceShuffledQueue(this.queue);
     this.updateQueuesDb();
   }
 
   async unshuffleQueue() {
-    this.queue.splice(0, this.queue.length, ...this.initialQueue);
+    this.queue = this.initialQueue.slice();
     this.updateQueuesDb();
   }
 
@@ -273,50 +268,43 @@ export default class QueueStore {
       this.currentQueueEntry.setState(QueueEntryState.None);
     queueEntry.setState(QueueEntryState.Playing);
     this.updateQueuesDb();
-    this.repository.replacePriorityQueue(this.priorityQueue);
   }
 
   setPlayingPriorityQueueEntryByIndex(index: number) {
     if (index < 0 || index >= this.priorityQueue.length) return;
-    if (this.isQueueEntryPriorityPlaying && this.currentQueueEntry)
-      this.currentQueueEntry.setState(QueueEntryState.WasPlaying);
     this.priorityQueue.slice(0, index);
     this.priorityQueue[0].setState(QueueEntryState.Playing);
     this.updateQueuesDb();
-    this.repository.replacePriorityQueue(this.priorityQueue);
   }
 
-  addPriorityQueue(
-    musicId: number,
-    fromType?: PlayingFromType,
-    fromId?: number
-  ) {
-    const queueEntry = new QueueEntry(this);
-    queueEntry.id = this.nextItemId;
-    queueEntry.musicId = musicId;
-    queueEntry.music = this.rootStore.musicStore.getById(musicId);
-    queueEntry.fromType = fromType ?? PlayingFromType.MainLibrary;
-    queueEntry.fromId = fromId;
-    this.priorityQueue.push(queueEntry);
-    this.repository.addPriorityQueueEntry(queueEntry);
-  }
-
-  updateQueuesDb() {
-    if (this.rootStore.playerStore.player.shuffle) {
-      this.repository.replaceShuffledQueue(this.queue);
-      this.repository.replaceQueue(this.initialQueue);
+  prevEntry() {
+    if (!this.currentQueueEntryOrQueueEntryPriority) return;
+    if (!this.currentQueueEntry) return;
+    if (!this.prevQueueEntry) return;
+    this.removePlayedQueueEntryPriority();
+    if (this.currentQueueEntry.state === QueueEntryState.WasPlaying) {
+      this.currentQueueEntry.setState(QueueEntryState.Playing);
     } else {
-      this.repository.replaceShuffledQueue([]);
-      this.repository.replaceQueue(this.queue);
+      const current = this.currentQueueEntry;
+      const prev = this.prevQueueEntry;
+      current.setState(QueueEntryState.None);
+      prev.setState(QueueEntryState.Playing);
     }
-    this.repository.replacePriorityQueue(this.priorityQueue);
+    this.updateQueuesDb();
   }
 
-  removeQueueEntry(queueEntry: QueueEntry) {
-    this.queue.splice(this.queue.indexOf(queueEntry), 1);
-    this.queue.splice(this.initialQueue.indexOf(queueEntry), 1);
-    this.queue.splice(this.priorityQueue.indexOf(queueEntry), 1); // why do I do that ??
+  nextEntry() {
+    if (!this.currentQueueEntry) return;
+    if (!this.nextQueueEntry) return;
+    this.removePlayedQueueEntryPriority();
+    if (!this.isPriorityQueueEmpty) {
+      this.nextQueueEntry.setState(QueueEntryState.Playing);
+    } else {
+      const current = this.currentQueueEntry;
+      const next = this.nextQueueEntry;
+      current.setState(QueueEntryState.None);
+      next.setState(QueueEntryState.Playing);
+    }
     this.updateQueuesDb();
-    this.repository.replacePriorityQueue(this.priorityQueue);
   }
 }

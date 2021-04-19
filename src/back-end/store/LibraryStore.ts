@@ -69,11 +69,12 @@ export default class LibraryStore {
     return this.libraries.some((x) => x.path === library.path);
   }
 
-  scanPaths() {
-    this.libraries.forEach((library) => {
+  async scanPaths() {
+    // eslint-disable-next-line no-restricted-syntax
+    for await (const library of this.libraries) {
       if (library.active) {
         library.scanPath();
       }
-    });
+    }
   }
 }

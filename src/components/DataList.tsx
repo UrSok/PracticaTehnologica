@@ -29,7 +29,6 @@ import RootStore from '../back-end/store/RootStore';
 import { StoreContext } from '../utils/StoreContext';
 import PlayingIcon from './PlayingIcon';
 import PlaylistEntry from '../back-end/models/PlaylistEntry.model';
-import Navigation from '../utils/Navigation';
 
 type DataType =
   | Music[]
@@ -45,8 +44,8 @@ interface Props {
   filterHidden?: boolean;
   addedHidden?: boolean;
   showPlayingFrom?: boolean;
-  playingFromType: PlayingFromType;
-  playingFromId?: number;
+  priorityQueue?: boolean;
+  fromId?: number;
   handleOnPlay: (...args: any) => void;
 }
 
@@ -81,7 +80,7 @@ const DataList = observer(
     isCurrentActive(musicId: number): boolean {
       const { queueStore } = this.context as RootStore;
       const { currentQueueEntryOrQueueEntryPriority } = queueStore;
-      const { playingFromId } = this.props;
+      const { fromId: playingFromId } = this.props;
       if (!currentQueueEntryOrQueueEntryPriority) return false;
       if (
         playingFromId &&
@@ -188,7 +187,7 @@ const DataList = observer(
 
     QueueEntryItemView = observer(({ index, style }) => {
       const { data, showPlayingFrom } = this.props;
-      const { playerStore } = this.context as RootStore;
+      const { playerStore, queueStore } = this.context as RootStore;
       const queueEntry = (data as Array<QueueEntry>)[index] as QueueEntry;
       if (!queueEntry.music) return null;
       const { fromName } = queueEntry;
@@ -203,7 +202,63 @@ const DataList = observer(
         <div style={style}>
           <div className="Item">
             <div className="LeftOptions">
-              <span className="Order">{index ? index + 1 : 1}</span>
+              <span className="Order">
+                {index + queueStore.priorityQueue.length + 2}
+              </span>
+              <IconButton
+                icon={<BsIcons.BsPlayFill className={ButtonsClassNames.Icon} />}
+                className="PlayButton"
+                onClick={() => {
+                  playerStore.player.togglePlaying();
+                }}
+              />
+              <IconButton
+                icon={
+                  <BsIcons.BsPauseFill className={ButtonsClassNames.Icon} />
+                }
+                className="PauseButton"
+                onClick={() => playerStore.player.togglePlaying()}
+              />
+              <PlayingIcon className="PlayingIcon" />
+            </div>
+            <div className="MusicInfo">
+              <img
+                src={albumArt !== undefined ? albumArt : noAlbumArt}
+                alt="album-art"
+                className="AlbumArt"
+              />
+              <div className="TextContainer">
+                <div className="Title">{title}</div>
+                <div className="Artists">{artists?.join(', ')}</div>
+              </div>
+            </div>
+            <div className="Album">{album}</div>
+            <div className="Added">{showPlayingFrom && `${fromName}`}</div>
+            <div className="Duration">{durationString}</div>
+          </div>
+        </div>
+      );
+    });
+
+    PriorityQueueEntryItemView = observer(({ data, index, style }) => {
+      const { showPlayingFrom, priorityQueue } = this.props;
+      console.log(data);
+      const { playerStore, queueStore } = this.context as RootStore;
+      const queueEntry = data[index] as QueueEntry;
+      if (!queueEntry.music) return null;
+      const { fromName } = queueEntry;
+      const {
+        title,
+        artists,
+        album,
+        albumArt,
+        durationString,
+      } = queueEntry.music!;
+      return (
+        <div style={style}>
+          <div className="Item">
+            <div className="LeftOptions">
+              <span className="Order">{index + 2}</span>
               <IconButton
                 icon={<BsIcons.BsPlayFill className={ButtonsClassNames.Icon} />}
                 className="PlayButton"
@@ -459,7 +514,7 @@ const DataList = observer(
     });
 
     DataList = () => {
-      const { data, playingFromType } = this.props;
+      const { data, priorityQueue } = this.props;
       const { textFilter } = this.state;
       if (TypesUtils.isPlaylistEntryArray(data)) {
         if (textFilter.length > 0) this.filterPlaylistData();
@@ -484,6 +539,33 @@ const DataList = observer(
         );
       }
 
+      if (TypesUtils.isQueueEntryArray(data) && priorityQueue) {
+        const { queueStore } = this.context as RootStore;
+        const priorityQueueWithoutFirst = queueStore.isQueueEntryPriorityPlaying
+          ? queueStore.priorityQueue.slice(1, queueStore.priorityQueue.length)
+          : undefined;
+        return (
+          <LazyList
+            className="window-scroller-override"
+            height={window.innerHeight}
+            width={600}
+            itemSize={50}
+            style={{ overflow: 'hidden' }}
+            itemData={priorityQueueWithoutFirst ?? queueStore.priorityQueue}
+            itemCount={
+              priorityQueueWithoutFirst
+                ? priorityQueueWithoutFirst.length
+                : queueStore.priorityQueue.length
+            }
+            ref={(node) => {
+              GlobalRefs.priorityQueueEntriesRef = node;
+            }}
+          >
+            {this.PriorityQueueEntryItemView}
+          </LazyList>
+        );
+      }
+
       if (TypesUtils.isQueueEntryArray(data)) {
         return (
           <LazyList
@@ -494,11 +576,7 @@ const DataList = observer(
             style={{ overflow: 'hidden' }}
             itemCount={(data as Array<QueueEntry>).length}
             ref={(node) => {
-              if (playingFromType === PlayingFromType.PriorityQueue) {
-                GlobalRefs.priorityQueueEntriesRef = node;
-              } else {
-                GlobalRefs.queueEntriesRef = node;
-              }
+              GlobalRefs.queueEntriesRef = node;
             }}
           >
             {this.QueueEntryItemView}

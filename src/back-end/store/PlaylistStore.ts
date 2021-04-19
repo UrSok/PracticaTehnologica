@@ -19,10 +19,9 @@ export default class PlaylistStore {
   constructor(rootStore: RootStore) {
     makeAutoObservable(this);
     this.rootStore = rootStore;
-    this.loadPlaylists();
   }
 
-  private async loadPlaylists() {
+  async loadPlaylists() {
     this.actionState = ActionState.Loading;
     try {
       const playlists = await this.repository.getAll();

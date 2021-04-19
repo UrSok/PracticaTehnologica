@@ -14,6 +14,7 @@ import { Switch, Route, withRouter } from 'react-router-dom';
 import { Scrollbars } from 'rc-scrollbars';
 import * as Ioios from 'react-icons/io';
 import { Observer } from 'mobx-react-lite';
+import toast, { Toaster } from 'react-hot-toast';
 import {
   PathData,
   PagesData,
@@ -47,13 +48,25 @@ class App extends React.Component<Props, {}> {
   }
 
   launch = async () => {
-    const { libraryStore } = this.context as RootStore;
+    const {
+      libraryStore,
+      userDataStore,
+      musicStore,
+      playlistStore,
+      queueStore,
+      playerStore,
+    } = this.context as RootStore;
     await libraryStore.loadLibaries();
-    libraryStore.scanPaths();
-    /* const { libraryStore, userDataStore } = this.context as RootStore;
-    console.log(userDataStore.userData?.firstLaunch);
-    if (!userDataStore.userData?.firstLaunch) {
-    } */
+    await userDataStore.loadUserData();
+    await musicStore.loadMusicList();
+    await playlistStore.loadPlaylists();
+    await playerStore.loadPlayer();
+    await queueStore.loadQueues();
+    toast.promise(libraryStore.scanPaths(), {
+      loading: 'Scanning paths',
+      success: 'Scanning has finished',
+      error: 'Error while scanning',
+    });
   };
 
   handleScroll = (e: React.UIEvent<HTMLElement>) => {
@@ -69,7 +82,9 @@ class App extends React.Component<Props, {}> {
       GlobalRefs.priorityQueueEntriesRef.scrollTo(scrollTop - 400);
     }
     if (GlobalRefs.queueEntriesRef) {
-      const diffScroll = 400 + 160 + 50 * queueStore.priorityQueue.length;
+      let diffScroll = 400;
+      if (!queueStore.isPriorityQueueEmpty)
+        diffScroll += 160 + 50 * queueStore.priorityQueue.length;
       GlobalRefs.queueEntriesRef.scrollTo(scrollTop - diffScroll);
     }
 
@@ -190,6 +205,13 @@ class App extends React.Component<Props, {}> {
                 <Route path={PathData.Queue} component={Queue} />
                 <Route path={`${PathData.Playlist}/:id`} component={Playlist} />
               </Switch>
+              <Toaster
+                toastOptions={{
+                  className: 'CustomToaster',
+                }}
+                position="bottom-center"
+                reverseOrder
+              />
             </div>
           </Scrollbars>
           <MusicPlayer />
