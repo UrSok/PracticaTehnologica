@@ -40,6 +40,17 @@ yarn package
 - [Roboto Fontface](https://www.npmjs.com/package/roboto-fontface)
 - [React Switch](https://github.com/markusenglund/react-switch)
 - [Custom Electron Titlebar](https://github.com/AlexTorresSk/custom-electron-titlebar)
+- [React Contextify](https://www.npmjs.com/package/react-contexify)
+- [React Window](https://github.com/bvaughn/react-window)
+- [Three Dots](https://github.com/nzbin/three-dots)
+- [React Hot Toast](https://react-hot-toast.com/)
+
+### To Be Implemented
+
+- [Itunes Album Art](https://www.npmjs.com/package/itunes-albumart?activeTab=readme)
+- [Chokidar](https://www.npmjs.com/package/chokidar)
+- [Photo Collage](https://www.npmjs.com/package/@nodefactory/photo-collage)
+- [Genius Lyrics](https://www.npmjs.com/package/genius-lyrics)
 
 ## Miscellaneous
 
