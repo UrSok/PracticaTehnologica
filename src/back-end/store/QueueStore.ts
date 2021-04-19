@@ -3,7 +3,13 @@
 import { makeAutoObservable } from 'mobx';
 import ActionState from '../constants/ActionState';
 import queueEntryRepository from '../data-access/repositories/QueueEntryRepository';
-import { Music, PlayingFromType, QueueEntry, QueueEntryState } from '../models';
+import {
+  Music,
+  PlayingFromType,
+  PlaylistEntry,
+  QueueEntry,
+  QueueEntryState,
+} from '../models';
 // eslint-disable-next-line import/no-cycle
 import RootStore from './RootStore';
 
@@ -205,9 +211,16 @@ export default class QueueStore {
     }
   }
 
+  async clearPriorityQueue() {
+    this.priorityQueue = this.priorityQueue.filter(
+      (x) => x.state === QueueEntryState.Playing
+    );
+    this.repository.replacePriorityQueue(this.priorityQueue);
+  }
+
   async replaceQueueFromMainLibrary(musicList: Music[]) {
-    // I'm not checking if the queue should be shuffled..
     this.queue = [];
+    this.initialQueue = [];
     musicList.forEach((music, index) => {
       const queueEntry = new QueueEntry(this);
       queueEntry.id = index + 1;
@@ -216,7 +229,21 @@ export default class QueueStore {
       queueEntry.fromType = PlayingFromType.MainLibrary;
       this.queue.push(queueEntry);
     });
-    if (this.queue.length > 0) this.repository.replaceQueue(this.queue);
+    this.updateQueuesDb();
+  }
+
+  async replaceQueueFromPlaylist(playlistEntry: PlaylistEntry[]) {
+    this.queue = [];
+    this.initialQueue = [];
+    playlistEntry.forEach((entry, index) => {
+      const queueEntry = new QueueEntry(this);
+      queueEntry.id = index + 1;
+      queueEntry.musicId = entry.musicId;
+      queueEntry.music = entry.music;
+      queueEntry.fromType = PlayingFromType.Playlist;
+      queueEntry.fromId = entry.playlistId;
+      this.queue.push(queueEntry);
+    });
     this.updateQueuesDb();
   }
 
@@ -232,7 +259,6 @@ export default class QueueStore {
 
   async unshuffleQueue() {
     this.queue.splice(0, this.queue.length, ...this.initialQueue);
-    this.repository.replaceShuffledQueue([]);
     this.updateQueuesDb();
   }
 
@@ -281,14 +307,14 @@ export default class QueueStore {
       this.repository.replaceQueue(this.initialQueue);
     } else {
       this.repository.replaceShuffledQueue([]);
-      this.repository.replaceQueue(this.initialQueue);
+      this.repository.replaceQueue(this.queue);
     }
   }
 
   removeQueueEntry(queueEntry: QueueEntry) {
     this.queue.splice(this.queue.indexOf(queueEntry), 1);
     this.queue.splice(this.initialQueue.indexOf(queueEntry), 1);
-    this.queue.splice(this.priorityQueue.indexOf(queueEntry), 1);
+    this.queue.splice(this.priorityQueue.indexOf(queueEntry), 1); // why do I do that ??
     this.updateQueuesDb();
     this.repository.replacePriorityQueue(this.priorityQueue);
   }

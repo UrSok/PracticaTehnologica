@@ -3,7 +3,7 @@
 /* eslint-disable eqeqeq */
 /* eslint-disable no-plusplus */
 import { makeAutoObservable } from 'mobx';
-import { Music, PlayingFromType, PlaylistEntry, Repeat } from '.';
+import { Music, PlayingFromType, Playlist, PlaylistEntry, Repeat } from '.';
 import PlayerStore from '../store/PlayerStore';
 import DateUtils from '../utils/DateUtils';
 import { QueueEntryState } from './enums';
@@ -57,6 +57,10 @@ export default class Player {
   seekTo(value: number) {
     this.store.reactPlayer.seekTo(value);
     this.setProgress(value);
+  }
+
+  seekToSavedProgress() {
+    this.store.reactPlayer.seekTo(this.played);
   }
 
   toggleMute() {
@@ -126,6 +130,7 @@ export default class Player {
     } else {
       queueStore.replaceQueueFromMainLibrary(musicStore.musicList);
       this.playingFromType = PlayingFromType.MainLibrary;
+      this.playingFromId = undefined;
       if (this.shuffle) queueStore.shuffleQueue();
     }
     queueStore.setPlayingByMusicId(musicId);
@@ -136,27 +141,37 @@ export default class Player {
     }
   }
 
-  /* playCurrentPlaylist(playlistEnty: PlaylistEntry) {
-    const { queueStore, musicStore } = this.store.rootStore;
+  playCurrentPlaylist(playlist: Playlist, musicId?: number) {
+    const { queueStore } = this.store.rootStore;
     if (
       this.playingFromType === PlayingFromType.Playlist &&
-      this.playingFromId === playlistEnty.playlistId
+      this.playingFromId === playlist.id
     ) {
+      console.log('same shit');
     } else {
-      queueStore.setPlayingByMusicId(musicId);
-      queueStore.updateQueuesDb();
-      this.Play();
-      if (this.repeat === Repeat.Track) {
-        this.setRepeatAll();
-      }
+      queueStore.replaceQueueFromPlaylist(playlist.entries);
+      this.playingFromType = PlayingFromType.Playlist;
+      this.playingFromId = playlist.id;
+      if (this.shuffle) queueStore.shuffleQueue();
     }
-  } */
+    const playMusicId =
+      musicId ??
+      playlist.entries[Math.floor(Math.random() * playlist.entries.length)]
+        .musicId;
+    queueStore.setPlayingByMusicId(playMusicId);
+    queueStore.updateQueuesDb();
+    this.Play();
+    if (this.repeat === Repeat.Track) {
+      this.setRepeatAll();
+    }
+  }
 
   prevSong() {
     const { queueStore } = this.store.rootStore;
-    if (this.repeat === Repeat.Track) this.setRepeatAll();
     if (this.played <= 0.1) {
       queueStore.prevEntry();
+      if (this.repeat === Repeat.Track) this.setRepeatAll();
+      if (!this.playing) this.Play();
     } else {
       this.seekTo(0);
     }

@@ -1,5 +1,5 @@
 import { BsTrashFill } from 'react-icons/bs';
-import React from 'react';
+import React, { useContext } from 'react';
 import { observer } from 'mobx-react';
 import { Playlist } from '../back-end/models';
 import Button from './Button';
@@ -7,6 +7,8 @@ import IconButton from './IconButton';
 import Navigation from '../utils/Navigation';
 import { PathData } from '../constants/RoutesInfo';
 import StickyHeader from './StickyHeader';
+import RootStore from '../back-end/store/RootStore';
+import { StoreContext } from '../utils/StoreContext';
 
 interface Props {
   playlist: Playlist;
@@ -15,6 +17,17 @@ interface Props {
 const PlaylistHeader: React.FC<Props> = observer((props: Props) => {
   const { playlist } = props;
   const { name, totalSongs, totalSongsDuration, dateCreated } = playlist;
+  const { playerStore } = useContext(StoreContext) as RootStore;
+
+  function handlePlay() {
+    playerStore.player.playCurrentPlaylist(playlist);
+  }
+
+  function handleRemove() {
+    /* remove queue if playlist got removed */
+    playlist.remove();
+    Navigation.replace(PathData.MainLibrary);
+  }
 
   return (
     <>
@@ -34,17 +47,14 @@ const PlaylistHeader: React.FC<Props> = observer((props: Props) => {
 
           <div className="HeaderButtons">
             <div className="HeaderButton">
-              <Button className="PlayButton" text="Play" onClick={() => {}} />
+              <Button className="PlayButton" text="Play" onClick={handlePlay} />
             </div>
 
             <div className="HeaderButton">
               <IconButton
                 className="DeleteButton"
                 icon={<BsTrashFill className="Icon" />}
-                onClick={() => {
-                  playlist.remove();
-                  Navigation.replace(PathData.MainLibrary);
-                }}
+                onClick={handleRemove}
               />
             </div>
           </div>
@@ -53,14 +63,11 @@ const PlaylistHeader: React.FC<Props> = observer((props: Props) => {
 
       <StickyHeader title={name} className="PlaylistStickyHeader">
         <div className="RightControls">
-          <Button className="PlayButton" text="Play" onClick={() => {}} />
+          <Button className="PlayButton" text="Play" onClick={handlePlay} />
           <IconButton
             className="DeleteButton"
             icon={<BsTrashFill className="Icon" />}
-            onClick={() => {
-              playlist.remove();
-              Navigation.replace(PathData.MainLibrary);
-            }}
+            onClick={handleRemove}
           />
         </div>
       </StickyHeader>

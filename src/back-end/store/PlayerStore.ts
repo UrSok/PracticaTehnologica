@@ -35,7 +35,7 @@ export default class PlayerStore {
     }
   }
 
-  setReactPlayer(reactPlayer: any) {
+  async setReactPlayer(reactPlayer: any) {
     this.reactPlayer = reactPlayer;
   }
 

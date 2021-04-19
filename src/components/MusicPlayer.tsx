@@ -39,9 +39,10 @@ export default class MusicPlayer extends React.PureComponent<Props, State> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ref = (player: any) => {
+  ref = async (player: any) => {
     const { playerStore } = this.context as RootStore;
-    playerStore.setReactPlayer(player);
+    await playerStore.setReactPlayer(player);
+    // playerStore.player.seekToSavedProgress();
   };
 
   handleStartSeeking = () => {

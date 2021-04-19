@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable class-methods-use-this */
 import React from 'react';
@@ -10,9 +11,8 @@ import {
   SidebarFooter,
 } from 'react-pro-sidebar';
 import { Switch, Route, withRouter } from 'react-router-dom';
-import { Scrollbars, ScrollValues } from 'rc-scrollbars';
+import { Scrollbars } from 'rc-scrollbars';
 import * as Ioios from 'react-icons/io';
-import { RiTestTubeFill } from 'react-icons/ri';
 import { Observer } from 'mobx-react-lite';
 import {
   PathData,
