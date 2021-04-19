@@ -116,21 +116,21 @@ export default class QueueStore {
     if (!this.prevQueueEntry) return;
     this.removePlayedQueueEntryPriority();
     if (this.currentQueueEntry.state === QueueEntryState.WasPlaying) {
-      this.currentQueueEntry.setState(QueueEntryState.None);
+      this.currentQueueEntry.setState(QueueEntryState.Playing);
     } else {
       const current = this.currentQueueEntry;
       const prev = this.prevQueueEntry;
       current.setState(QueueEntryState.None);
       prev.setState(QueueEntryState.Playing);
     }
-    /* Save to DB */
+    this.updateQueuesDb();
   }
 
   nextEntry() {
     if (!this.currentQueueEntry) return;
     if (!this.nextQueueEntry) return;
     this.removePlayedQueueEntryPriority();
-    if (this.isQueueEntryPriorityPlaying) {
+    if (!this.isPriorityQueueEmpty) {
       this.nextQueueEntry.setState(QueueEntryState.Playing);
     } else {
       const current = this.currentQueueEntry;
@@ -138,7 +138,7 @@ export default class QueueStore {
       current.setState(QueueEntryState.None);
       next.setState(QueueEntryState.Playing);
     }
-    /* Save to DB */
+    this.updateQueuesDb();
   }
 
   private async loadQueues() {
@@ -309,6 +309,7 @@ export default class QueueStore {
       this.repository.replaceShuffledQueue([]);
       this.repository.replaceQueue(this.queue);
     }
+    this.repository.replacePriorityQueue(this.priorityQueue);
   }
 
   removeQueueEntry(queueEntry: QueueEntry) {
