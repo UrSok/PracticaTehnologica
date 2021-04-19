@@ -53,3 +53,4 @@ src/main.prod.js.LICENSE.txt
 data.db
 log.txt
 /music
+data.db-journal
