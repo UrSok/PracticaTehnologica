@@ -2,6 +2,7 @@ import { remote, shell } from 'electron';
 import { Scrollbars } from 'rc-scrollbars';
 import React from 'react';
 import * as IoIcons from 'react-icons/io5';
+import toast from 'react-hot-toast';
 import RootStore from '../back-end/store/RootStore';
 import {
   AppClassNames,
@@ -53,7 +54,11 @@ export default class FirstLaunchWindow extends React.PureComponent<{}, State> {
       library.path = localPath;
       libraryStore.addLibrary(library);
       userDataStore.userData?.toggleFirstLaunch();
-      library.scanPath();
+      toast.promise(library.scanPath(), {
+        loading: 'Scanning path',
+        success: 'Scanning has finished',
+        error: 'Error while scanning',
+      });
     }
   };
 

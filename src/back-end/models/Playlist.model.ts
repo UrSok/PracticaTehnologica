@@ -94,4 +94,9 @@ export default class Playlist {
     if (!this.isPlaylistEmpty) this.entries.slice(0, this.entries.length);
     this.store.removePlaylist(this);
   }
+
+  setName(name: string) {
+    this.name = name;
+    this.store.updateName(this);
+  }
 }

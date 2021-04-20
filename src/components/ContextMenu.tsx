@@ -24,34 +24,48 @@ export const MENU_ID = 1;
 const ContextMenu = observer(
   class ContextMenu extends React.Component {
     handleAddToQueue({ props }: ItemParams<any, any>) {
-      const { entry, context } = props;
-      const { queueStore } = context as RootStore;
-      if (TypesUtils.isMusic(entry)) {
-        queueStore.addPriorityQueue((entry as Music).id);
-      }
-      if (TypesUtils.isPlaylistEntry(entry)) {
-        queueStore.addPriorityQueue(
-          (entry as PlaylistEntry).musicId,
-          PlayingFromType.Playlist,
-          (entry as PlaylistEntry).playlistId
-        );
-      }
-      if (TypesUtils.isQueueEntry(entry)) {
-        const queueEntry = entry as QueueEntry;
-        queueStore.addPriorityQueue(
-          queueEntry.musicId,
-          queueEntry.fromType ?? PlayingFromType.MainLibrary,
-          queueEntry.fromId
-        );
+      try {
+        const { entry, context } = props;
+        const { queueStore } = context as RootStore;
+        if (TypesUtils.isMusic(entry)) {
+          queueStore.addPriorityQueue((entry as Music).id);
+        }
+        if (TypesUtils.isPlaylistEntry(entry)) {
+          queueStore.addPriorityQueue(
+            (entry as PlaylistEntry).musicId,
+            PlayingFromType.Playlist,
+            (entry as PlaylistEntry).playlistId
+          );
+        }
+        if (TypesUtils.isQueueEntry(entry)) {
+          const queueEntry = entry as QueueEntry;
+          queueStore.addPriorityQueue(
+            queueEntry.musicId,
+            queueEntry.fromType ?? PlayingFromType.MainLibrary,
+            queueEntry.fromId
+          );
+        }
+        toast.success('Added to queue.');
+      } catch (reason) {
+        toast.error('An error occured.');
       }
     }
 
     handleRemoveFromQueue({ props }: ItemParams<any, any>) {
       const { entry, priorityQueue, context } = props;
-      const { playerStore } = context as RootStore;
+      const { playerStore, queueStore } = context as RootStore;
       const queueEntry = entry as QueueEntry;
-      if (queueEntry.state === QueueEntryState.Playing)
+      if (
+        queueEntry.state === QueueEntryState.Playing &&
+        (queueStore.queue.length > 1 || queueStore.priorityQueue.length > 1)
+      ) {
         playerStore.player.nextSong(true);
+      } else if (
+        queueStore.queue.length <= 1 &&
+        queueStore.priorityQueue.length <= 1
+      ) {
+        playerStore.player.Pause();
+      }
 
       queueEntry.remove(priorityQueue);
     }

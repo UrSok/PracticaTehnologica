@@ -238,6 +238,10 @@ export default class QueueStore {
     queueEntry.setMusicReference();
     queueEntry.fromType = fromType ?? PlayingFromType.MainLibrary;
     queueEntry.fromId = fromId;
+    if (this.isQueueEmpty) {
+      queueEntry.state = QueueEntryState.Playing;
+      this.rootStore.playerStore.player.Play();
+    }
     this.priorityQueue.push(queueEntry);
     this.repository.addPriorityQueueEntry(queueEntry);
   }
@@ -291,8 +295,9 @@ export default class QueueStore {
 
   setPlayingPriorityQueueEntryByIndex(index: number) {
     if (index < 0 || index >= this.priorityQueue.length) return;
-    this.priorityQueue.slice(0, index);
-    this.priorityQueue[0].setState(QueueEntryState.Playing);
+    const newIndex = this.isQueueEntryPriorityPlaying ? index + 1 : index;
+    this.priorityQueue.splice(0, newIndex);
+    this.rootStore.playerStore.player.nextSong();
     this.rootStore.playerStore.player.Play();
     this.updateQueuesDb();
   }

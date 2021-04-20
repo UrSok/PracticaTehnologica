@@ -15,9 +15,9 @@ export default class DateUtils {
     const minutes = Math.trunc((timeSeconds % 3600) / 60);
     const seconds = Math.trunc((timeSeconds % 3600) % 60);
     return `
-      ${hours > 0 ? `${hours} hr` : ''} ${
-      minutes > 0 ? `${minutes} min` : ''
-    } ${seconds > 0 ? `${seconds} sec` : ''}
+      ${hours > 0 ? `${hours} hr${hours > 1 ? 's' : ''}` : ''} ${
+      minutes > 0 ? `${minutes} min${minutes > 1 ? 's' : ''}` : ''
+    } ${seconds > 0 ? `${seconds} sec${seconds > 1 ? 's' : ''}` : ''}
     `;
   }
 

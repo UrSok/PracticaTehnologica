@@ -19,10 +19,6 @@
   font-size: x-large;
   z-index: 101;
   border-bottom: 1px solid $main-fg-color;
-  .Icon {
-    width: 1.5em;
-    height: 1.5em;
-  }
   .Head {
     display: flex;
     flex-direction: row;
@@ -30,6 +26,10 @@
     padding-top: 30px;
   }
   .ListHead {
+    .Icon {
+      width: 1.5em;
+      height: 1.5em;
+    }
     .LeftOptions,
     .Duration {
       text-align: right;

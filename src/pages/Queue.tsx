@@ -1,3 +1,6 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable eqeqeq */
 /* eslint-disable no-plusplus */
 import { observer } from 'mobx-react';
@@ -9,16 +12,12 @@ import DataList from '../components/DataList';
 import ScrollToTop from '../components/ScrollToTop';
 import StickyHeader from '../components/StickyHeader';
 import { PagesClassNames } from '../constants/ClassNames';
+import { PathData } from '../constants/RoutesInfo';
+import Navigation from '../utils/Navigation';
 import { StoreContext } from '../utils/StoreContext';
 
 const Queue = observer(
   class Queue extends React.Component {
-    handleQueueEntryPlay = (musicId: number) => {
-      const { queueStore, playerStore } = this.context as RootStore;
-      queueStore.setPlayingByMusicId(musicId);
-      playerStore.player.Play();
-    };
-
     getCurrentlyPlaying = (): QueueEntry | undefined => {
       const { queueStore } = this.context as RootStore;
       const current = queueStore.currentQueueEntryOrQueueEntryPriority;
@@ -73,56 +72,63 @@ const Queue = observer(
       return (
         <>
           <StickyHeader title="Play Queue" className="StickyHeader" />
-
           <div className={PagesClassNames.Queue}>
             <ScrollToTop />
             <h1 className="InitialHeader">Play Queue</h1>
 
-            <div className="SectionDivider">
-              <span>Now Playing</span>
-            </div>
-            <DataList
-              data={currentlyPlaying}
-              filterHidden
-              addedHidden
-              showPlayingFrom
-            />
-
-            {this.isPriorityQueueVisible() && (
-              <>
-                <div className="SectionDivider SectionDividerWithButtons">
-                  <span>Next In Queue</span>
-                  <Button
-                    className="ClearQueueButton"
-                    text="Clear"
-                    onClick={() => {
-                      const { queueStore } = this.context as RootStore;
-                      queueStore.clearPriorityQueue();
-                    }}
-                  />
-                </div>
-                <DataList
-                  data={priorityQueueList}
-                  priorityQueue
-                  filterHidden
-                  addedHidden
-                  headerHidden
-                  showPlayingFrom
-                />
-              </>
-            )}
-            {nextUpList.length > 0 && (
+            {priorityQueueList.length === 0 &&
+            nextUpList.length === 0 &&
+            !currentlyPlaying ? (
+              <div>Queue is empty. Play something from the library.</div>
+            ) : (
               <>
                 <div className="SectionDivider">
-                  <span>Next Up</span>
+                  <span>Now Playing</span>
                 </div>
                 <DataList
-                  data={this.getNextUpList()}
+                  data={currentlyPlaying}
                   filterHidden
                   addedHidden
-                  headerHidden
                   showPlayingFrom
                 />
+
+                {this.isPriorityQueueVisible() && (
+                  <>
+                    <div className="SectionDivider SectionDividerWithButtons">
+                      <span>Next In Queue</span>
+                      <Button
+                        className="ClearQueueButton"
+                        text="Clear"
+                        onClick={() => {
+                          const { queueStore } = this.context as RootStore;
+                          queueStore.clearPriorityQueue();
+                        }}
+                      />
+                    </div>
+                    <DataList
+                      data={priorityQueueList}
+                      priorityQueue
+                      filterHidden
+                      addedHidden
+                      headerHidden
+                      showPlayingFrom
+                    />
+                  </>
+                )}
+                {nextUpList.length > 0 && (
+                  <>
+                    <div className="SectionDivider">
+                      <span>Next Up</span>
+                    </div>
+                    <DataList
+                      data={this.getNextUpList()}
+                      filterHidden
+                      addedHidden
+                      headerHidden
+                      showPlayingFrom
+                    />
+                  </>
+                )}
               </>
             )}
           </div>

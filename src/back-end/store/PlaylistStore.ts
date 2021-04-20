@@ -89,6 +89,10 @@ export default class PlaylistStore {
 
   removePlaylist(playlist: Playlist) {
     this.playlists.splice(this.playlists.indexOf(playlist), 1);
-    this.repository.removePlaylist(playlist); // add removing option to remove queue entries as well
+    this.repository.removePlaylist(playlist);
+  }
+
+  updateName(playlist: Playlist) {
+    this.repository.updateName(playlist);
   }
 }

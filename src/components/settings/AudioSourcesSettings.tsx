@@ -6,6 +6,7 @@ import React from 'react';
 import Switch from 'react-switch';
 import * as IoIcons from 'react-icons/io5';
 import { Observer } from 'mobx-react';
+import toast from 'react-hot-toast';
 import Button from '../Button';
 import Section from '../Section';
 import {
@@ -27,19 +28,28 @@ class AudioSourcesSettings extends React.PureComponent {
       const library = new Library(libraryStore);
       // eslint-disable-next-line prefer-destructuring
       library.path = result[0];
-      libraryStore.addLibraryIfDoesntExist(library);
-      library.scanPath();
+      const libraryDoesntExists = libraryStore.addLibraryIfDoesntExist(library);
+      if (libraryDoesntExists) {
+        toast.promise(library.scanPath(), {
+          loading: 'Scanning path',
+          success: 'Scanning has finished',
+          error: 'Error while scanning',
+        });
+      }
     }
   };
 
-  handleChange = async (_check: boolean, _: any, stringId: any) => {
+  handleChange = (libraryId: number) => {
     const { libraryStore } = this.context as RootStore;
-    const numericId = stringId as number;
     // eslint-disable-next-line eqeqeq
-    const library = libraryStore.libraries.find((x) => x.id == numericId);
+    const library = libraryStore.libraries.find((x) => x.id == libraryId);
     library?.toggleActive();
     if (library?.active) {
-      library.scanPath();
+      toast.promise(library.scanPath(), {
+        loading: 'Scanning path',
+        success: 'Scanning has finished',
+        error: 'Error while scanning',
+      });
     }
   };
 
@@ -80,7 +90,9 @@ class AudioSourcesSettings extends React.PureComponent {
                       <Switch
                         className={AudioSourcesClassNames.Switch}
                         id={`${library.id}`}
-                        onChange={this.handleChange}
+                        onChange={() => {
+                          this.handleChange(library.id);
+                        }}
                         checked={library.active as boolean}
                         onColor="#850A0A"
                         onHandleColor="#ff0000"

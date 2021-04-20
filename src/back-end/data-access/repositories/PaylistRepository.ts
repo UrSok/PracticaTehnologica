@@ -85,6 +85,18 @@ export class PlaylistRepository extends BaseRepository {
       return new Array<PlaylistEntry>();
     }
   }
+
+  async updateName(playlist: Playlist) {
+    try {
+      const { db } = this.appDb;
+      await this.removeEntriesByPlaylistId(playlist.id);
+      db.run(SQL`UPDATE Playlist
+        set name = ${playlist.name}
+        WHERE id = ${playlist.id}`);
+    } catch (reason) {
+      log.error(`${LogLocation.PlaylistRepository} ${reason}`);
+    }
+  }
 }
 
 const playlistRepository = new PlaylistRepository();

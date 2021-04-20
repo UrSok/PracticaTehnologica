@@ -1,6 +1,8 @@
 import { BsTrashFill } from 'react-icons/bs';
-import React, { useContext } from 'react';
+import { IoClose, IoCheckmarkSharp } from 'react-icons/io5';
+import React, { useContext, useState } from 'react';
 import { observer } from 'mobx-react';
+import toast from 'react-hot-toast';
 import { Playlist } from '../back-end/models';
 import Button from './Button';
 import IconButton from './IconButton';
@@ -18,52 +20,114 @@ const PlaylistHeader: React.FC<Props> = observer((props: Props) => {
   const { playlist } = props;
   const { name, totalSongs, totalSongsDuration, dateCreated } = playlist;
   const { playerStore } = useContext(StoreContext) as RootStore;
+  const [controlsVisible, setControlsVisibility] = useState(false);
+  const [localName, setLocalName] = useState(name);
 
   function handlePlay() {
-    playerStore.player.playCurrentPlaylist(playlist);
+    if (playerStore.player.playingFromId !== playlist.id) {
+      playerStore.player.playCurrentPlaylist(playlist);
+    } else {
+      playerStore.player.togglePlaying();
+    }
   }
 
   function handleRemove() {
-    /* remove queue if playlist got removed */
     playlist.remove();
     Navigation.replace(PathData.MainLibrary);
   }
 
+  function isCurrentPlaylistPlaying() {
+    return (
+      playerStore.player.playingFromId === playlist.id &&
+      playerStore.player.playing
+    );
+  }
+
+  function handleFocus() {
+    setControlsVisibility(true);
+  }
+
+  function handleBlur() {
+    setControlsVisibility(false);
+  }
+
+  function handleInputChange(e: React.FormEvent<HTMLInputElement>) {
+    setLocalName(e.currentTarget.value);
+  }
+
+  function handleCancel() {
+    setControlsVisibility(false);
+    setLocalName(name);
+  }
+
+  function handleAccept() {
+    if (localName.length < 1) {
+      toast.error('Playlist name is too short!');
+      setLocalName(name);
+      return;
+    }
+    playlist.setName(localName);
+    toast.success('Playlist name has been saved!');
+  }
   return (
     <>
       <div className="PlaylistHeader">
-        <img
-          className="HeaderImage"
-          src="https://github.com/morpheusthewhite/spicetify-themes/raw/master/Dribbblish/base.png"
-          alt="test"
-        />
         <div className="HeaderData">
           <span className="HeaderLabel">PLAYLIST</span>
-          <h1 className="HeaderTitle">{name}</h1>
+          <div className="HeaderTitle">
+            <input
+              className="TitleInput"
+              type="text"
+              placeholder="Playlist name"
+              value={localName}
+              onFocus={handleFocus}
+              onBlur={() => {
+                setTimeout(handleBlur, 100);
+              }}
+              onChange={handleInputChange}
+            />
+            {controlsVisible && (
+              <div className="SaveControls">
+                <IconButton
+                  icon={<IoClose className="Icon" />}
+                  onClick={handleCancel}
+                />
+                <IconButton
+                  className="AcceptButton"
+                  icon={<IoCheckmarkSharp className="Icon" />}
+                  onClick={handleAccept}
+                />
+              </div>
+            )}
+          </div>
           <span className="HeaderMetaInfo">
             Created on {dateCreated} • {totalSongs} song
             {totalSongs > 1 ? 's' : ''}, {totalSongsDuration}
           </span>
 
           <div className="HeaderButtons">
-            <div className="HeaderButton">
-              <Button className="PlayButton" text="Play" onClick={handlePlay} />
-            </div>
+            <Button
+              className="PlayButton"
+              text={isCurrentPlaylistPlaying() ? 'Pause' : 'Play'}
+              onClick={handlePlay}
+            />
 
-            <div className="HeaderButton">
-              <IconButton
-                className="DeleteButton"
-                icon={<BsTrashFill className="Icon" />}
-                onClick={handleRemove}
-              />
-            </div>
+            <IconButton
+              className="DeleteButton"
+              icon={<BsTrashFill className="Icon" />}
+              onClick={handleRemove}
+            />
           </div>
         </div>
       </div>
 
       <StickyHeader title={name} className="PlaylistStickyHeader">
         <div className="RightControls">
-          <Button className="PlayButton" text="Play" onClick={handlePlay} />
+          <Button
+            className="PlayButton"
+            text={isCurrentPlaylistPlaying() ? 'Pause' : 'Play'}
+            onClick={handlePlay}
+          />
           <IconButton
             className="DeleteButton"
             icon={<BsTrashFill className="Icon" />}

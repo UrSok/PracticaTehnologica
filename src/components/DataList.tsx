@@ -136,7 +136,7 @@ const DataList = observer(
 
     CurrentQueueEntryItemView = observer(() => {
       const { data, showPlayingFrom } = this.props;
-      const { playerStore, playlistStore } = this.context as RootStore;
+      const { playerStore, queueStore } = this.context as RootStore;
       if (!(data as QueueEntry).music) return null;
       const queueEntry = data as QueueEntry;
       const { fromName } = queueEntry;
@@ -154,7 +154,11 @@ const DataList = observer(
             playerStore.player.playing ? 'Playing' : ''
           }`}
           onContextMenu={(event) => {
-            this.handleContextMenu(event, data as QueueEntry);
+            this.handleContextMenu(
+              event,
+              data as QueueEntry,
+              queueStore.isQueueEntryPriorityPlaying
+            );
           }}
         >
           <div className="LeftOptions">
@@ -245,7 +249,7 @@ const DataList = observer(
     });
 
     PriorityQueueEntryItemView = observer(({ data, index, style }) => {
-      const { showPlayingFrom, priorityQueue } = this.props;
+      const { showPlayingFrom } = this.props;
       const { playerStore, queueStore } = this.context as RootStore;
       const queueEntry = data[index] as QueueEntry;
       if (!queueEntry.music) return null;
@@ -275,17 +279,9 @@ const DataList = observer(
                 icon={<BsIcons.BsPlayFill className={ButtonsClassNames.Icon} />}
                 className="PlayButton"
                 onClick={() => {
-                  playerStore.player.togglePlaying();
+                  queueStore.setPlayingPriorityQueueEntryByIndex(index);
                 }}
               />
-              <IconButton
-                icon={
-                  <BsIcons.BsPauseFill className={ButtonsClassNames.Icon} />
-                }
-                className="PauseButton"
-                onClick={() => playerStore.player.togglePlaying()}
-              />
-              <PlayingIcon className="PlayingIcon" />
             </div>
             <div className="MusicInfo">
               <img
