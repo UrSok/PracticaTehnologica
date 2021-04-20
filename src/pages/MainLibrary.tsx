@@ -27,14 +27,7 @@ class MainLibrary extends React.Component {
           <ScrollToTop />
           <h1 className="InitialHeader">Main Library</h1>
 
-          <Observer>
-            {() => (
-              <DataList
-                data={musicStore.musicList}
-                handleOnPlay={this.handlePlay}
-              />
-            )}
-          </Observer>
+          <Observer>{() => <DataList data={musicStore.musicList} />}</Observer>
         </div>
       </>
     );

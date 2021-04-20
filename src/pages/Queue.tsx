@@ -83,7 +83,6 @@ const Queue = observer(
             </div>
             <DataList
               data={currentlyPlaying}
-              handleOnPlay={() => {}}
               filterHidden
               addedHidden
               showPlayingFrom
@@ -105,7 +104,6 @@ const Queue = observer(
                 <DataList
                   data={priorityQueueList}
                   priorityQueue
-                  handleOnPlay={() => {}}
                   filterHidden
                   addedHidden
                   headerHidden
@@ -120,7 +118,6 @@ const Queue = observer(
                 </div>
                 <DataList
                   data={this.getNextUpList()}
-                  handleOnPlay={() => {}}
                   filterHidden
                   addedHidden
                   headerHidden

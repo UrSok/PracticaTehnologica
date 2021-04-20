@@ -46,7 +46,6 @@ interface Props {
   showPlayingFrom?: boolean;
   priorityQueue?: boolean;
   fromId?: number;
-  handleOnPlay: (...args: any) => void;
 }
 
 interface State {
