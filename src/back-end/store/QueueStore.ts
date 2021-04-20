@@ -174,6 +174,15 @@ export default class QueueStore {
     return this.queue[index];
   }
 
+  get nextQueueEntryWithoutPriority(): QueueEntry | undefined {
+    let index = this.currentQueueEntryIndex;
+    index++;
+    if (index > this.queue.length - 1) {
+      index = 0;
+    }
+    return this.queue[index];
+  }
+
   getQueueEntryByMusicId(musicId: number): QueueEntry | undefined {
     return this.queue.find((x) => x.musicId == musicId);
   }
@@ -202,7 +211,6 @@ export default class QueueStore {
       queueEntry.fromType = PlayingFromType.MainLibrary;
       this.queue.push(queueEntry);
     });
-    this.updateQueuesDb();
   }
 
   async replaceQueueFromPlaylist(playlistEntry: PlaylistEntry[]) {
@@ -217,7 +225,6 @@ export default class QueueStore {
       queueEntry.fromId = entry.playlistId;
       this.queue.push(queueEntry);
     });
-    this.updateQueuesDb();
   }
 
   addPriorityQueue(
@@ -235,12 +242,23 @@ export default class QueueStore {
     this.repository.addPriorityQueueEntry(queueEntry);
   }
 
-  removeQueueEntry(queueEntry: QueueEntry) {
-    this.queue.splice(this.queue.indexOf(queueEntry), 1);
-    this.queue.splice(this.initialQueue.indexOf(queueEntry), 1);
-    this.queue.splice(this.priorityQueue.indexOf(queueEntry), 1); // why do I do that ??
-    this.updateQueuesDb();
-    this.repository.replacePriorityQueue(this.priorityQueue);
+  removeQueueEntry(queueEntry: QueueEntry, priorityQueue?: boolean) {
+    if (priorityQueue) {
+      this.priorityQueue.splice(this.priorityQueue.indexOf(queueEntry), 1);
+    } else {
+      if (
+        this.currentQueueEntry &&
+        this.currentQueueEntry === queueEntry &&
+        this.nextQueueEntryWithoutPriority
+      )
+        this.nextQueueEntryWithoutPriority.setState(QueueEntryState.Playing);
+      this.queue.splice(this.queue.indexOf(queueEntry), 1);
+      this.initialQueue.splice(this.initialQueue.indexOf(queueEntry), 1);
+      this.rootStore.playerStore.player.setPlayingFromType(
+        PlayingFromType.None
+      );
+    }
+    this.updateQueuesDb(); // Optimize it someday..
   }
 
   async shuffleQueue() {
@@ -267,6 +285,7 @@ export default class QueueStore {
     )
       this.currentQueueEntry.setState(QueueEntryState.None);
     queueEntry.setState(QueueEntryState.Playing);
+    this.rootStore.playerStore.player.Play();
     this.updateQueuesDb();
   }
 
@@ -274,6 +293,7 @@ export default class QueueStore {
     if (index < 0 || index >= this.priorityQueue.length) return;
     this.priorityQueue.slice(0, index);
     this.priorityQueue[0].setState(QueueEntryState.Playing);
+    this.rootStore.playerStore.player.Play();
     this.updateQueuesDb();
   }
 

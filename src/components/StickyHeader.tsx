@@ -8,7 +8,7 @@ import Navigation from '../utils/Navigation';
 interface Props {
   title: string;
   className?: string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 const StickyHeader: React.FC<Props> = (props: Props) => {
@@ -40,6 +40,7 @@ const StickyHeader: React.FC<Props> = (props: Props) => {
 
 StickyHeader.defaultProps = {
   className: '',
+  children: null,
 };
 
 export default StickyHeader;

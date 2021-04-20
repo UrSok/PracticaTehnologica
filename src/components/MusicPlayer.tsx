@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable promise/always-return */
 /* eslint-disable promise/catch-or-return */
@@ -75,14 +76,6 @@ export default class MusicPlayer extends React.PureComponent<Props, State> {
     playerStore.player.togglePlaying();
   };
 
-  handleQueueVisibility = () => {
-    if (!Navigation.currentLocationIs(PathData.Queue)) {
-      Navigation.push(PathData.Queue);
-    } else {
-      Navigation.goBack();
-    }
-  };
-
   /* Volume Handlers */
   handleVolumeChange = (volume: number) => {
     const { playerStore } = this.context as RootStore;
@@ -93,6 +86,23 @@ export default class MusicPlayer extends React.PureComponent<Props, State> {
     const { playerStore } = this.context as RootStore;
     playerStore.player.setVolumeAndSave(volume);
   };
+
+  animate(back?: boolean) {
+    const musicInfo = document.querySelector('.MusicInfoPlayerBar');
+    musicInfo?.animate(
+      [
+        // keyframes
+        { transform: `translateX(${back ? '-60px' : '60px'})`, opacity: 0 },
+        { transform: 'translateX(0)', opacity: 1 },
+      ],
+      {
+        // timing options
+        easing: 'ease',
+        duration: 300,
+        iterations: 1,
+      }
+    );
+  }
 
   render() {
     const { playerStore } = this.context as RootStore;
@@ -144,6 +154,7 @@ export default class MusicPlayer extends React.PureComponent<Props, State> {
                     }
                     onClick={() => {
                       playerStore.player.prevSong();
+                      this.animate(true);
                     }}
                   />
                   <IconButton
@@ -169,6 +180,7 @@ export default class MusicPlayer extends React.PureComponent<Props, State> {
                     }
                     onClick={() => {
                       playerStore.player.nextSong(true);
+                      this.animate();
                     }}
                   />
                   <IconButton
@@ -198,7 +210,7 @@ export default class MusicPlayer extends React.PureComponent<Props, State> {
                     }`}
                   />
                 </div>
-                <div className="MusicInfo">
+                <div className="MusicInfo MusicInfoPlayerBar">
                   {playerStore.player.currentPlayingMusic && (
                     <>
                       <img
@@ -232,7 +244,7 @@ export default class MusicPlayer extends React.PureComponent<Props, State> {
                         className={ButtonsClassNames.Icon}
                       />
                     }
-                    onClick={this.handleQueueVisibility}
+                    onClick={Navigation.toggleQueuePage}
                   />
                   <div className="VolumeBarContainer">
                     <IconButton

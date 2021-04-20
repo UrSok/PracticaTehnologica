@@ -2,7 +2,7 @@
 /* eslint-disable no-plusplus */
 import { observer } from 'mobx-react';
 import React from 'react';
-import { QueueEntry, PlayingFromType, Repeat } from '../back-end/models';
+import { QueueEntry, Repeat, QueueEntryState } from '../back-end/models';
 import RootStore from '../back-end/store/RootStore';
 import Button from '../components/Button';
 import DataList from '../components/DataList';
@@ -56,18 +56,23 @@ const Queue = observer(
       return result;
     };
 
-    priorityQueueExists = (): boolean => {
+    isPriorityQueueVisible = (): boolean => {
       const { queueStore } = this.context as RootStore;
+      if (
+        queueStore.priorityQueue.length === 1 &&
+        queueStore.priorityQueue[0].state === QueueEntryState.Playing
+      )
+        return false;
       return !queueStore.isPriorityQueueEmpty;
     };
 
     render() {
+      const currentlyPlaying = this.getCurrentlyPlaying();
+      const priorityQueueList = this.getNextInQueueList();
       const nextUpList = this.getNextUpList();
       return (
         <>
-          <StickyHeader title="Play Queue" className="StickyHeader">
-            <div />
-          </StickyHeader>
+          <StickyHeader title="Play Queue" className="StickyHeader" />
 
           <div className={PagesClassNames.Queue}>
             <ScrollToTop />
@@ -77,14 +82,14 @@ const Queue = observer(
               <span>Now Playing</span>
             </div>
             <DataList
-              data={this.getCurrentlyPlaying()}
+              data={currentlyPlaying}
               handleOnPlay={() => {}}
               filterHidden
               addedHidden
               showPlayingFrom
             />
 
-            {this.priorityQueueExists() && (
+            {this.isPriorityQueueVisible() && (
               <>
                 <div className="SectionDivider SectionDividerWithButtons">
                   <span>Next In Queue</span>
@@ -98,7 +103,7 @@ const Queue = observer(
                   />
                 </div>
                 <DataList
-                  data={this.getNextInQueueList()}
+                  data={priorityQueueList}
                   priorityQueue
                   handleOnPlay={() => {}}
                   filterHidden

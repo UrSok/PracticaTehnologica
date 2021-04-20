@@ -119,6 +119,11 @@ export default class Player {
     this.played = played;
   }
 
+  setPlayingFromType(playingFromType: PlayingFromType) {
+    this.playingFromType = playingFromType;
+    this.store.updateDb(this);
+  }
+
   playCurrentMainLibrary(musicId?: number) {
     const { queueStore, musicStore } = this.store.rootStore;
     if (this.playingFromType === PlayingFromType.MainLibrary) {

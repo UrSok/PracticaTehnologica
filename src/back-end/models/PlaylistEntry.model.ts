@@ -27,6 +27,7 @@ export default class PlaylistEntry {
   updateFromDb(playlistEntry: PlaylistEntry) {
     this.id = playlistEntry.id;
     this.musicId = playlistEntry.musicId;
+    this.playlistId = playlistEntry.playlistId;
     this.added = new Date(playlistEntry.added);
   }
 

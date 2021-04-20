@@ -57,12 +57,13 @@ export default class Playlist {
       entry = new PlaylistEntry(this);
       entry.updateFromDb(entryDb);
       entry.music = this.store.rootStore.musicStore.getById(entryDb.musicId);
+      entry.playlist = this;
       this.entries.push(entry);
     }
   }
 
-  async addEntryIfDoesntExist(musicId: number) {
-    // if (this.entries.some((x) => x.musicId == musicId)) return; // return something to tell the user about the problem.
+  async addEntryIfDoesntExist(musicId: number): Promise<boolean> {
+    if (this.entries.some((x) => x.musicId == musicId)) return false;
     const music = this.store.rootStore.musicStore.getById(musicId);
     if (music) {
       const entry = new PlaylistEntry(this);
@@ -78,7 +79,9 @@ export default class Playlist {
           this.entries.push(entry);
         });
       }
+      return true;
     }
+    return false;
   }
 
   removeEntry(playlistEntry: PlaylistEntry) {

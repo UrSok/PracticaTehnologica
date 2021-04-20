@@ -69,6 +69,7 @@
       display: flex;
       white-space: nowrap;
       overflow: hidden;
+      animation: musicInfoAnimation 0.5s ease forwards;
       .AlbumArt {
         width: $album-art-size;
         height: $album-art-size;

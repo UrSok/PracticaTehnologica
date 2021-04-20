@@ -49,7 +49,7 @@ export default class QueueEntry {
     this.music = this.store.rootStore.musicStore.getById(this.musicId);
   }
 
-  remove() {
-    this.store.removeQueueEntry(this);
+  remove(priorityQueue?: boolean) {
+    this.store.removeQueueEntry(this, priorityQueue);
   }
 }

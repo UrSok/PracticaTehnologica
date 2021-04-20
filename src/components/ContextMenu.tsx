@@ -4,15 +4,17 @@ import { observer } from 'mobx-react';
 import Scrollbars from 'rc-scrollbars';
 import * as React from 'react';
 import { Item, ItemParams, Menu, Submenu } from 'react-contexify';
+import toast from 'react-hot-toast';
 import * as IoIosIcons from 'react-icons/io';
 import {
   Music,
   PlayingFromType,
   PlaylistEntry,
   QueueEntry,
+  QueueEntryState,
 } from '../back-end/models';
 import RootStore from '../back-end/store/RootStore';
-import { PathData } from '../constants/RoutesInfo';
+import { PagesData, PathData } from '../constants/RoutesInfo';
 import Navigation from '../utils/Navigation';
 import { StoreContext } from '../utils/StoreContext';
 import TypesUtils from '../utils/TypesUtils';
@@ -21,7 +23,7 @@ export const MENU_ID = 1;
 
 const ContextMenu = observer(
   class ContextMenu extends React.Component {
-    handleQueueClick({ props }: ItemParams<any, any>) {
+    handleAddToQueue({ props }: ItemParams<any, any>) {
       const { entry, context } = props;
       const { queueStore } = context as RootStore;
       if (TypesUtils.isMusic(entry)) {
@@ -34,6 +36,24 @@ const ContextMenu = observer(
           (entry as PlaylistEntry).playlistId
         );
       }
+      if (TypesUtils.isQueueEntry(entry)) {
+        const queueEntry = entry as QueueEntry;
+        queueStore.addPriorityQueue(
+          queueEntry.musicId,
+          queueEntry.fromType ?? PlayingFromType.MainLibrary,
+          queueEntry.fromId
+        );
+      }
+    }
+
+    handleRemoveFromQueue({ props }: ItemParams<any, any>) {
+      const { entry, priorityQueue, context } = props;
+      const { playerStore } = context as RootStore;
+      const queueEntry = entry as QueueEntry;
+      if (queueEntry.state === QueueEntryState.Playing)
+        playerStore.player.nextSong(true);
+
+      queueEntry.remove(priorityQueue);
     }
 
     async handleCreatePlaylist({ props }: ItemParams<any, any>) {
@@ -52,7 +72,10 @@ const ContextMenu = observer(
       if (resultId !== 0) Navigation.pushPlaylist(resultId);
     }
 
-    handleAddToPlaylist({ props }: ItemParams<any, any>, playlistId: number) {
+    async handleAddToPlaylist(
+      { props }: ItemParams<any, any>,
+      playlistId: number
+    ) {
       const { entry, context } = props;
       let musicId = 0;
       if (TypesUtils.isMusic(entry)) {
@@ -66,7 +89,9 @@ const ContextMenu = observer(
       const { playlistStore } = context as RootStore;
       const playlist = playlistStore.getById(playlistId);
       if (!playlist) return;
-      playlist.addEntryIfDoesntExist(musicId);
+      const result = await playlist.addEntryIfDoesntExist(musicId);
+      if (!result) toast.error('Duplicate song!');
+      if (result) toast.success('Song added to playlist!');
     }
 
     handleRemoveFromPlaylist({ props }: ItemParams<any, any>) {
@@ -91,7 +116,10 @@ const ContextMenu = observer(
           animation="slide"
           style={{ zIndex: 9999 }}
         >
-          <Item onClick={this.handleQueueClick}>Add to Queue</Item>
+          <Item onClick={this.handleAddToQueue}>Add to Queue</Item>
+          {Navigation.currentLocationIs(PathData.Queue) && (
+            <Item onClick={this.handleRemoveFromQueue}>Remove from Queue</Item>
+          )}
           {Navigation.currentLocationIsPlaylist && (
             <Item onClick={this.handleRemoveFromPlaylist}>
               Remove from this Playlist

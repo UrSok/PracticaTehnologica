@@ -72,4 +72,16 @@ export default class Navigation {
       this.history.goForward();
     }
   }
+
+  static toggleQueuePage() {
+    if (!Navigation.currentLocationIs(PathData.Queue)) {
+      if (Navigation.lastLocationName === PathData.Queue) {
+        Navigation.goForward();
+      } else {
+        Navigation.push(PathData.Queue);
+      }
+    } else {
+      Navigation.goBack();
+    }
+  }
 }

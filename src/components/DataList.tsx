@@ -65,12 +65,17 @@ const DataList = observer(
       };
     }
 
-    handleContextMenu(event: any, entry: DataTypeForContextMenu) {
+    handleContextMenu(
+      event: any,
+      entry: DataTypeForContextMenu,
+      priorityQueue?: boolean
+    ) {
       const params: ShowContextMenuParams = {
         id: MENU_ID,
         event,
         props: {
           entry,
+          priorityQueue,
           context: this.context,
         },
       };
@@ -128,7 +133,6 @@ const DataList = observer(
               artist.toLowerCase().includes(textFilter.toLowerCase())
             ))
       );
-      console.log(this.filteredData);
     }
 
     CurrentQueueEntryItemView = observer(() => {
@@ -150,6 +154,9 @@ const DataList = observer(
           className={`Item Active ${
             playerStore.player.playing ? 'Playing' : ''
           }`}
+          onContextMenu={(event) => {
+            this.handleContextMenu(event, data as QueueEntry);
+          }}
         >
           <div className="LeftOptions">
             <span className="Order">1</span>
@@ -192,6 +199,7 @@ const DataList = observer(
       if (!queueEntry.music) return null;
       const { fromName } = queueEntry;
       const {
+        id,
         title,
         artists,
         album,
@@ -200,7 +208,12 @@ const DataList = observer(
       } = queueEntry.music!;
       return (
         <div style={style}>
-          <div className="Item">
+          <div
+            className="Item"
+            onContextMenu={(event) => {
+              this.handleContextMenu(event, (data as Array<QueueEntry>)[index]);
+            }}
+          >
             <div className="LeftOptions">
               <span className="Order">
                 {index + queueStore.priorityQueue.length + 2}
@@ -209,17 +222,9 @@ const DataList = observer(
                 icon={<BsIcons.BsPlayFill className={ButtonsClassNames.Icon} />}
                 className="PlayButton"
                 onClick={() => {
-                  playerStore.player.togglePlaying();
+                  queueStore.setPlayingByMusicId(id);
                 }}
               />
-              <IconButton
-                icon={
-                  <BsIcons.BsPauseFill className={ButtonsClassNames.Icon} />
-                }
-                className="PauseButton"
-                onClick={() => playerStore.player.togglePlaying()}
-              />
-              <PlayingIcon className="PlayingIcon" />
             </div>
             <div className="MusicInfo">
               <img
@@ -242,7 +247,6 @@ const DataList = observer(
 
     PriorityQueueEntryItemView = observer(({ data, index, style }) => {
       const { showPlayingFrom, priorityQueue } = this.props;
-      console.log(data);
       const { playerStore, queueStore } = this.context as RootStore;
       const queueEntry = data[index] as QueueEntry;
       if (!queueEntry.music) return null;
@@ -256,7 +260,16 @@ const DataList = observer(
       } = queueEntry.music!;
       return (
         <div style={style}>
-          <div className="Item">
+          <div
+            className="Item"
+            onContextMenu={(event) => {
+              this.handleContextMenu(
+                event,
+                (data as Array<QueueEntry>)[index],
+                true
+              );
+            }}
+          >
             <div className="LeftOptions">
               <span className="Order">{index + 2}</span>
               <IconButton
@@ -297,20 +310,31 @@ const DataList = observer(
     PlaylistEntryItem = observer(({ index, style }) => {
       const { data } = this.props;
       const { textFilter } = this.state;
-      const { playerStore } = this.context as RootStore;
-      const { music, addedString } =
+      const { playerStore, queueStore, playlistStore } = this
+        .context as RootStore;
+      const { music, addedString, playlistId, musicId } =
         textFilter.length > 0
           ? (this.filteredData as Array<PlaylistEntry>)[index]
           : (data as Array<PlaylistEntry>)[index];
       if (!music) return null;
       const { id, title, artists, album, albumArt, durationString } = music;
-      const isActive = this.isCurrentActive(id);
+      const isActive = (): boolean => {
+        const currentQueueEntry =
+          queueStore.currentQueueEntryOrQueueEntryPriority;
+        if (!currentQueueEntry) return false;
+        if (
+          currentQueueEntry.fromId == playlistId &&
+          currentQueueEntry.musicId === musicId
+        )
+          return true;
+        return false;
+      };
       if (title) {
         return (
           <div style={style}>
             <div
-              className={`Item FilterableItem ${isActive ? 'Active' : ''} ${
-                isActive && playerStore.player.playing ? 'Playing' : ''
+              className={`Item FilterableItem ${isActive() ? 'Active' : ''} ${
+                isActive() && playerStore.player.playing ? 'Playing' : ''
               }`}
               onContextMenu={(event) => {
                 this.handleContextMenu(
@@ -327,10 +351,12 @@ const DataList = observer(
                   }
                   className="PlayButton"
                   onClick={() => {
-                    if (isActive) {
+                    if (isActive()) {
                       playerStore.player.togglePlaying();
                     } else {
-                      // playerStore.player.playCurrentMainLibrary(id);
+                      const playlist = playlistStore.getById(playlistId);
+                      if (playlist)
+                        playerStore.player.playCurrentPlaylist(playlist, id);
                     }
                   }}
                 />
@@ -404,8 +430,8 @@ const DataList = observer(
 
     MusicItem = observer(({ index, style }) => {
       const { data } = this.props;
-      const { textFilter: filter } = this.state;
-      const { playerStore } = this.context as RootStore;
+      const { textFilter } = this.state;
+      const { playerStore, queueStore } = this.context as RootStore;
       const {
         id,
         title,
@@ -415,16 +441,26 @@ const DataList = observer(
         addedString,
         durationString,
       } =
-        filter.length > 0
+        textFilter.length > 0
           ? (this.filteredData as Array<Music>)[index]
           : (data as Array<Music>)[index];
-      const isActive = this.isCurrentActive(id);
+      const isActive = (): boolean => {
+        const currentQueueEntry =
+          queueStore.currentQueueEntryOrQueueEntryPriority;
+        if (!currentQueueEntry) return false;
+        if (
+          currentQueueEntry.fromType == PlayingFromType.MainLibrary &&
+          currentQueueEntry.musicId === id
+        )
+          return true;
+        return false;
+      };
       if (title) {
         return (
           <div style={style}>
             <div
-              className={`Item FilterableItem ${isActive ? 'Active' : ''} ${
-                isActive && playerStore.player.playing ? 'Playing' : ''
+              className={`Item FilterableItem ${isActive() ? 'Active' : ''} ${
+                isActive() && playerStore.player.playing ? 'Playing' : ''
               }`}
               onContextMenu={(event) => {
                 this.handleContextMenu(event, (data as Array<Music>)[index]);
@@ -438,7 +474,7 @@ const DataList = observer(
                   }
                   className="PlayButton"
                   onClick={() => {
-                    if (isActive) {
+                    if (isActive()) {
                       playerStore.player.togglePlaying();
                     } else {
                       playerStore.player.playCurrentMainLibrary(id);
