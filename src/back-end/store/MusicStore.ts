@@ -63,6 +63,11 @@ export default class MusicStore {
     }
   }
 
+  removeMusic(music: Music) {
+    this.musicList.splice(this.musicList.indexOf(music), 1);
+    this.repository.remove(music);
+  }
+
   private musicExists(music: Music): boolean {
     return this.musicList.some((x) => x.src === music.src);
   }

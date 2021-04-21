@@ -1,5 +1,6 @@
-import { BsTrashFill } from 'react-icons/bs';
+import { BsTrashFill, BsMusicNoteBeamed, BsClockFill } from 'react-icons/bs';
 import { IoClose, IoCheckmarkSharp } from 'react-icons/io5';
+import { BiCalendarEvent } from 'react-icons/bi';
 import React, { useContext, useState } from 'react';
 import { observer } from 'mobx-react';
 import toast from 'react-hot-toast';
@@ -100,18 +101,23 @@ const PlaylistHeader: React.FC<Props> = observer((props: Props) => {
               </div>
             )}
           </div>
-          <span className="HeaderMetaInfo">
-            Created on {dateCreated} • {totalSongs} song
-            {totalSongs > 1 ? 's' : ''}, {totalSongsDuration}
-          </span>
-
+          <div className="HeaderMetaInfo">
+            <div className="Date">
+              <BiCalendarEvent className="Icon" /> <span>{dateCreated}</span>
+            </div>
+            <div className="TotalSongs">
+              <BsMusicNoteBeamed className="Icon" /> <span>{totalSongs}</span>
+            </div>
+            <div className="PlaylistDuration">
+              <BsClockFill className="Icon" /> <span>{totalSongsDuration}</span>
+            </div>
+          </div>
           <div className="HeaderButtons">
             <Button
               className="PlayButton"
               text={isCurrentPlaylistPlaying() ? 'Pause' : 'Play'}
               onClick={handlePlay}
             />
-
             <IconButton
               className="DeleteButton"
               icon={<BsTrashFill className="Icon" />}

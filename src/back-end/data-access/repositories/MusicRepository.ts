@@ -11,6 +11,11 @@ export class MusicRepository extends BaseRepository {
     return result.lastID ?? 0;
   }
 
+  async remove(music: Music) {
+    const { db } = this.appDb;
+    await db.run(SQL`DELETE FROM Music WHERE id = ${music.id}`);
+  }
+
   async getAll(): Promise<Music[]> {
     try {
       const { db } = this.appDb;

@@ -9,9 +9,10 @@ import * as MdIcons from 'react-icons/md';
 import * as BiIcons from 'react-icons/bi';
 import Slider, { createSliderWithTooltip } from 'rc-slider';
 import { Observer } from 'mobx-react-lite';
+import log from 'electron-log';
+import toast from 'react-hot-toast';
 import IconButton from './IconButton';
 import noAlbumArt from '../../assets/no-album-art.png';
-import { PathData } from '../constants/RoutesInfo';
 import Navigation from '../utils/Navigation';
 import { ButtonsClassNames } from '../constants/ClassNames';
 import { StoreContext } from '../utils/StoreContext';
@@ -104,6 +105,13 @@ export default class MusicPlayer extends React.PureComponent<Props, State> {
     );
   }
 
+  handleError(reason: any) {
+    const { playerStore } = this.context as RootStore;
+    toast.error(`Couldn't play the current file.`);
+    log.error(reason);
+    playerStore.player.nextSong();
+  }
+
   render() {
     const { playerStore } = this.context as RootStore;
     const { launch } = this.state;
@@ -119,6 +127,7 @@ export default class MusicPlayer extends React.PureComponent<Props, State> {
                 playing={playerStore.player.playing}
                 volume={playerStore.player.volume}
                 muted={playerStore.player.muted}
+                onError={this.handleError}
                 onProgress={this.handleProgress}
                 onEnded={() => {
                   playerStore.player.nextSong();

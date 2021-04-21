@@ -16,11 +16,11 @@ import {
 import IconButton from '../IconButton';
 import { StoreContext } from '../../utils/StoreContext';
 import RootStore from '../../back-end/store/RootStore';
-import { Library } from '../../back-end/models';
+import { Library, PlayingFromType } from '../../back-end/models';
 
 class AudioSourcesSettings extends React.PureComponent {
   handleOnAddSource = async () => {
-    const { libraryStore } = this.context as RootStore;
+    const { libraryStore, playerStore } = this.context as RootStore;
     const result = remote.dialog.showOpenDialogSync({
       properties: ['openDirectory'],
     });
@@ -35,6 +35,8 @@ class AudioSourcesSettings extends React.PureComponent {
           success: 'Scanning has finished',
           error: 'Error while scanning',
         });
+        if (playerStore.player.playingFromType === PlayingFromType.MainLibrary)
+          playerStore.player.setPlayingFromType(PlayingFromType.None);
       }
     }
   };
@@ -89,7 +91,6 @@ class AudioSourcesSettings extends React.PureComponent {
                       </div>
                       <Switch
                         className={AudioSourcesClassNames.Switch}
-                        id={`${library.id}`}
                         onChange={() => {
                           this.handleChange(library.id);
                         }}

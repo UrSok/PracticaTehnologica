@@ -1,4 +1,5 @@
 import { makeAutoObservable, runInAction } from 'mobx';
+import log from 'electron-log';
 import * as musicMedatada from 'music-metadata';
 import MusicStore from '../store/MusicStore';
 import DateUtils from '../utils/DateUtils';
@@ -66,22 +67,31 @@ export default class Music {
     return fileName;
   }
 
-  async updateMedatada() {
-    const metadata = await musicMedatada.parseFile(this.src);
-    runInAction(() => {
-      this.title =
-        metadata.common.title !== undefined
-          ? metadata.common.title
-          : this.getTitleWithoutFileExtension();
-      this.artists = metadata.common.artists;
-      this.album = metadata.common.album;
-      this.albumArt =
-        metadata.common.picture !== undefined
-          ? `data:${
-              metadata.common.picture[0].format
-            };base64,${metadata.common.picture[0].data.toString('base64')}`
-          : undefined;
-      this.durationSeconds = metadata.format.duration ?? 0;
-    });
+  async updateMedatada(): Promise<boolean> {
+    return musicMedatada
+      .parseFile(this.src)
+      .then((metadata) => {
+        runInAction(() => {
+          this.title =
+            metadata.common.title !== undefined
+              ? metadata.common.title
+              : this.getTitleWithoutFileExtension();
+          this.artists = metadata.common.artists;
+          this.album = metadata.common.album;
+          this.albumArt =
+            metadata.common.picture !== undefined
+              ? `data:${
+                  metadata.common.picture[0].format
+                };base64,${metadata.common.picture[0].data.toString('base64')}`
+              : undefined;
+          this.durationSeconds = metadata.format.duration ?? 0;
+        });
+        return true;
+      })
+      .catch((reason) => {
+        log.error(reason);
+        this.store.removeMusic(this);
+        return false;
+      });
   }
 }

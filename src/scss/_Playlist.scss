@@ -51,7 +51,26 @@
     }
 
     .HeaderMetaInfo {
-      margin-top: 15px;
+      margin-top: 5px;
+      display: flex;
+      font-size: 13px;
+      .Icon {
+        width: 1.3em;
+        height: 1.3em;
+      }
+      div {
+        margin-right: 10px;
+        display: flex;
+        align-items: center;
+        span {
+          margin-left: 2px;
+        }
+      }
+      div:last-child {
+        span {
+          margin-left: 4px;
+        }
+      }
     }
 
     .HeaderButtons {
