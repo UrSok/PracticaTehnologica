@@ -70,6 +70,7 @@ const PlaylistHeader: React.FC<Props> = observer((props: Props) => {
     playlist.setName(localName);
     toast.success('Playlist name has been saved!');
   }
+
   return (
     <>
       <div className="PlaylistHeader">

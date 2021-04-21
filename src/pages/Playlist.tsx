@@ -17,7 +17,7 @@ const Playlist: React.FC = observer(() => {
   return (
     <div className={PagesClassNames.Playlist}>
       <ScrollToTop />
-      <PlaylistHeader playlist={playlist} />
+      <PlaylistHeader key={id} playlist={playlist} />
       <DataList data={playlist.entries} />
     </div>
   );

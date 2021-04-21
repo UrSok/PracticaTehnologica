@@ -74,7 +74,10 @@ export default class MusicPlayer extends React.PureComponent<Props, State> {
 
   handlePlayPause = () => {
     const { playerStore } = this.context as RootStore;
-    playerStore.player.togglePlaying();
+    const result = playerStore.player.togglePlaying();
+    if (!result) {
+      toast.error('Queue is empty!');
+    }
   };
 
   /* Volume Handlers */
@@ -106,10 +109,15 @@ export default class MusicPlayer extends React.PureComponent<Props, State> {
   }
 
   handleError(reason: any) {
-    const { playerStore } = this.context as RootStore;
+    const { playerStore, queueStore } = this.context as RootStore;
     toast.error(`Couldn't play the current file.`);
     log.error(reason);
-    playerStore.player.nextSong();
+    if (queueStore.currentQueueEntryOrQueueEntryPriority)
+      queueStore.removeQueueEntry(
+        queueStore.currentQueueEntryOrQueueEntryPriority
+      );
+    if (queueStore.isQueueEmpty && queueStore.isPriorityQueueEmpty)
+      playerStore.player.nextSong(true);
   }
 
   render() {
@@ -162,8 +170,12 @@ export default class MusicPlayer extends React.PureComponent<Props, State> {
                       />
                     }
                     onClick={() => {
-                      playerStore.player.prevSong();
-                      this.animate(true);
+                      const result = playerStore.player.prevSong();
+                      if (result) {
+                        this.animate(true);
+                      } else {
+                        toast.error('Queue is empty!');
+                      }
                     }}
                   />
                   <IconButton
@@ -188,8 +200,12 @@ export default class MusicPlayer extends React.PureComponent<Props, State> {
                       />
                     }
                     onClick={() => {
-                      playerStore.player.nextSong(true);
-                      this.animate();
+                      const result = playerStore.player.nextSong(true);
+                      if (result) {
+                        this.animate();
+                      } else {
+                        toast.error('Queue is empty!');
+                      }
                     }}
                   />
                   <IconButton

@@ -68,8 +68,12 @@ export default class Player {
     this.store.updateDb(this);
   }
 
-  togglePlaying() {
+  togglePlaying(): boolean {
+    const { queueStore } = this.store.rootStore;
+    if (queueStore.isQueueEmpty && queueStore.isPriorityQueueEmpty)
+      return false;
     this.playing = !this.playing;
+    return true;
   }
 
   Play() {
@@ -129,7 +133,6 @@ export default class Player {
     if (this.playingFromType === PlayingFromType.MainLibrary) {
       if (queueStore.currentQueueEntry)
         queueStore.currentQueueEntry.setState(QueueEntryState.None);
-      // What's the point of the shit above?
     } else {
       queueStore.replaceQueueFromMainLibrary(musicStore.musicList);
       this.playingFromType = PlayingFromType.MainLibrary;
@@ -174,8 +177,10 @@ export default class Player {
     }
   }
 
-  prevSong() {
+  prevSong(): boolean {
     const { queueStore } = this.store.rootStore;
+    if (queueStore.isQueueEmpty && queueStore.isPriorityQueueEmpty)
+      return false;
     if (this.played <= 0.1) {
       queueStore.prevEntry();
       if (this.repeat === Repeat.Track) this.setRepeatAll();
@@ -183,24 +188,28 @@ export default class Player {
     } else {
       this.seekTo(0);
     }
+    return true;
   }
 
-  nextSong(forced = false) {
+  nextSong(forced = false): boolean {
     const { queueStore } = this.store.rootStore;
+    if (queueStore.isQueueEmpty && queueStore.isPriorityQueueEmpty)
+      return false;
     this.seekTo(0);
     if (this.repeat === Repeat.Track) {
       if (forced) {
         this.Play();
         this.setRepeatAll();
-      } else return;
+      } else return true;
     } else if (
       !forced &&
       this.repeat === Repeat.None &&
       queueStore.isLastSong
     ) {
       this.playing = false;
-      return;
+      return true;
     }
     queueStore.nextEntry();
+    return true;
   }
 }
