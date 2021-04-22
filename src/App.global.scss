@@ -84,6 +84,7 @@ body {
 .HeaderBar {
   margin-top: 15px;
   margin-left: 10px;
+  display: flex;
   .IconButton {
     color: $sidebar-color;
     &:disabled {
@@ -124,8 +125,8 @@ body {
 }
 
 .CustomToaster {
-  margin-bottom: $player-height + 20px;
-  background-color: $main-bg-color;
-  color: $secondary-fg-color;
-  border: 2px solid $selected-bg-color;
+  margin-bottom: $player-height + 20px !important;
+  background-color: $main-bg-color !important;
+  color: $secondary-fg-color !important;
+  border: 2px solid $selected-bg-color !important;
 }

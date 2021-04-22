@@ -21,7 +21,6 @@ export default class AppDb {
   }
 
   static async init() {
-    AppDb.instance = new AppDb();
     this.instance.db.migrate().catch((reason) => {
       log.error(`${LogLocation.Database} ${reason}`);
     });

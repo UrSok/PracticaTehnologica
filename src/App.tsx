@@ -62,11 +62,13 @@ class App extends React.Component<Props, {}> {
     await playlistStore.loadPlaylists();
     await playerStore.loadPlayer();
     await queueStore.loadQueues();
-    toast.promise(libraryStore.scanPaths(), {
-      loading: 'Scanning paths',
-      success: 'Scanning has finished',
-      error: 'Error while scanning',
-    });
+    if (userDataStore.userData?.firstLaunch === false) {
+      toast.promise(libraryStore.scanPaths(), {
+        loading: 'Scanning paths',
+        success: 'Scanning has finished',
+        error: 'Error while scanning',
+      });
+    }
   };
 
   handleScroll = (e: React.UIEvent<HTMLElement>) => {

@@ -1,5 +1,5 @@
 $sidebar-bg-color: transparent !default;
-$sidebar-width: 100% !default;
+$sidebar-width: 72px !default;
 $icon-bg-color: transparent !default;
 $highlight-color: $sidebar-item-fg-hover-color !default;
 $icon-size: 1.6em !default;
@@ -8,31 +8,22 @@ $sidebar-color: $sidebar-item-fg-color !default;
 @import '~react-pro-sidebar/dist/scss/styles.scss';
 
 .pro-sidebar {
-  // position: fixed;
-  width: initial;
-  min-width: initial;
   .pro-sidebar-inner {
-    .pro-sidebar-header {
-      // background: linear-gradient(0deg,rgba(86,101,144,0) 0%, red 100%);
-      // border-bottom: 0 !important;
-    }
     .pro-sidebar-content {
-      // box-sizing: border-box;
-      // border: 20px solid;
-      // border-width: 30px;
-      // border-image-slice: 2;
-      // border-image: linear-gradient(0deg,rgba(86,101,144,0) 0%, red 100%);
       .pro-menu-item {
         .pro-item-content {
-          position: absolute;
-          width: $sidebar-width;
-          margin-left: -12px;
-          font-size: 10px;
-          font-weight: 600;
+          position: absolute !important;
+          width: $sidebar-width !important;
+          left: 0 !important;
+          font-size: 10px !important;
+          font-weight: 600 !important;
+          display: flex !important;
+          justify-content: center !important;
+          align-items: center !important;
           .pro-icon-number {
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
           }
         }
       }
