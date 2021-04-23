@@ -297,7 +297,7 @@ export default class QueueStore {
     if (index < 0 || index >= this.priorityQueue.length) return;
     const newIndex = this.isQueueEntryPriorityPlaying ? index + 1 : index;
     this.priorityQueue.splice(0, newIndex);
-    this.rootStore.playerStore.player.nextSong();
+    this.rootStore.playerStore.player.nextSong(true);
     this.rootStore.playerStore.player.Play();
     this.updateQueuesDb();
   }
